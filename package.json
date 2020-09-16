@@ -1,0 +1,21 @@
+{
+  "name": "4dgame",
+  "version": "1.0.0",
+  "description": "4D webgl rendering pipeline",
+  "main": "app.js",
+  "dependencies": {
+    "connect": "^3.7.0",
+    "serve-static": "^1.14.1",
+    "three": "^0.113.2"
+  },
+  "devDependencies": {
+    "electron": "^10.1.2",
+    "electron-packager": "^15.1.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "author": "",
+  "license": "ISC"
+}
