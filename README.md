@@ -8,3 +8,6 @@ A game set in 4D euclidian space
 ## How to run
 - bring your three.js (forked)version up to date: `cd js/three.js && git pull && cd ../..` 
 - run `npm start` to start the app
+
+## TODO
+- Write tests for known cases (blue cube must be inside red cube, blue cube must be smaller than re cube etc.)

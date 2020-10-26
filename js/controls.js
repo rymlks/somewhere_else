@@ -113,7 +113,7 @@ function handleControls(scene, camera) {
 		camera.rotation.xw = camera.rotation.xw % (Math.PI *2);
 
 		// Do not allow more than 90 degrees up/down rotation.
-		camera.rotation.yw = _clampTo180(camera.rotation.yw - mouseVertical * rotationspeed);
+		//camera.rotation.yw = _clampTo180(camera.rotation.yw - mouseVertical * rotationspeed);
 	}
 
 	if (pressedKeys[KeyCode.KEY_L] === true) {
@@ -121,6 +121,7 @@ function handleControls(scene, camera) {
 	}
 
 	camera.rotation.zw += wheelDelta * rotationspeed;
+	camera.rotation.zw = camera.rotation.zw % (Math.PI *2);	
 	
 }
 
