@@ -35,36 +35,59 @@ directionalLight.name = "white dir light 2";
 scene.add( directionalLight );
 
 
+var cubes = [];
+var color_map = {
+	'x': 1,
+	'y': 0x100,
+	'z': 0x10000,
+	'w': 1,
+}
 
-var geometry = new THREE.BoxBufferGeometry4D( 2, 2, 2, 1, 1, 1 );
-var material = new THREE.MeshLambertMaterial ( { color: 0x8080ff } );
-var frontcube = new THREE.Mesh4D( geometry, material );
-frontcube.name="frontcube";
- 
-var geometry2 = new THREE.BoxBufferGeometry4D( 2, 2, 2, 1, 1, 1 );
-var material2 = new THREE.MeshLambertMaterial ( { color: 0x80ff80 } );
-var leftcube = new THREE.Mesh4D( geometry, material2 );
-leftcube.name="leftcube";
-leftcube.position.x = -1;
-leftcube.rotation.xw = -Math.PI * 0.5;
+for (var magnitude = -1; magnitude <= 1; magnitude += 2) {
+	for (var coord of ['x', 'y', 'z', 'w']) {
+		var buff = new THREE.BoxBufferGeometry4D( 2, 2, 2, 1, 1, 1 );
+		var colorslug = 0xff;
+		if (coord === 'w') {
+			colorslug = 0x80;
+		}
+		var color = colorslug * color_map[coord];
+		var material = new THREE.MeshLambertMaterial( { color: color } );
+		var cube = new THREE.Mesh4D(buff, material);
+		cube.position[coord] = magnitude;
+		cube.rotation[coord + 'w'] = 0.5 * Math.PI * magnitude;
+		if (coord + 'w' == 'ww') {
+			cube.rotation['xz'] = Math.PI;
+			cube.rotation['zw'] = Math.PI;
+		}
+		cubes.push(cube);
+	}
+}
 
-var geometry = new THREE.BoxBufferGeometry4D( 2, 2, 2, 1, 1, 1 );
-var material = new THREE.MeshLambertMaterial ( { color: 0x80ffff } );
-var backcube = new THREE.Mesh4D( geometry, material );
-backcube.name="backcube";
-backcube.position.w = 2;
-backcube.rotation.zw = Math.PI;
-
-var geometry3 = new THREE.BoxBufferGeometry4D( 20, 2, 20, 1, 1, 1 );
-var material3 = new THREE.MeshLambertMaterial ( { color: 0x808080 } );
-var floor = new THREE.Mesh4D( geometry3, material3 );
-floor.name="floor";
-floor.position.y = -3;
-
-frontcube.add(leftcube);
-frontcube.add(backcube);
-scene.add( frontcube );
-scene.add( floor );
+//var geometry2 = new THREE.BoxBufferGeometry4D( 2, 2, 2, 1, 1, 1 );
+//var material2 = new THREE.MeshLambertMaterial ( { color: 0x80ff80 } );
+//var leftcube = new THREE.Mesh4D( geometry, material2 );
+//leftcube.name="leftcube";
+//leftcube.position.x = -1;
+//leftcube.rotation.xw = -Math.PI * 0.5;
+//
+//var geometry = new THREE.BoxBufferGeometry4D( 2, 2, 2, 1, 1, 1 );
+//var material = new THREE.MeshLambertMaterial ( { color: 0x80ffff } );
+//var backcube = new THREE.Mesh4D( geometry, material );
+//backcube.name="backcube";
+//backcube.position.w = 2;
+//backcube.rotation.zw = Math.PI;
+//
+//var geometry3 = new THREE.BoxBufferGeometry4D( 20, 2, 20, 1, 1, 1 );
+//var material3 = new THREE.MeshLambertMaterial ( { color: 0x808080 } );
+//var floor = new THREE.Mesh4D( geometry3, material3 );
+//floor.name="floor";
+//floor.position.y = -3;
+//
+//frontcube.add(leftcube);
+//frontcube.add(backcube);
+for (cube of cubes) {
+	scene.add(cube);
+}
 
 camera.position.z = 5;
 camera.position.w = 1;
