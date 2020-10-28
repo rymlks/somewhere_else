@@ -63,34 +63,12 @@ for (var magnitude = -1; magnitude <= 1; magnitude += 2) {
 	}
 }
 
-//var geometry2 = new THREE.BoxBufferGeometry4D( 2, 2, 2, 1, 1, 1 );
-//var material2 = new THREE.MeshLambertMaterial ( { color: 0x80ff80 } );
-//var leftcube = new THREE.Mesh4D( geometry, material2 );
-//leftcube.name="leftcube";
-//leftcube.position.x = -1;
-//leftcube.rotation.xw = -Math.PI * 0.5;
-//
-//var geometry = new THREE.BoxBufferGeometry4D( 2, 2, 2, 1, 1, 1 );
-//var material = new THREE.MeshLambertMaterial ( { color: 0x80ffff } );
-//var backcube = new THREE.Mesh4D( geometry, material );
-//backcube.name="backcube";
-//backcube.position.w = 2;
-//backcube.rotation.zw = Math.PI;
-//
-//var geometry3 = new THREE.BoxBufferGeometry4D( 20, 2, 20, 1, 1, 1 );
-//var material3 = new THREE.MeshLambertMaterial ( { color: 0x808080 } );
-//var floor = new THREE.Mesh4D( geometry3, material3 );
-//floor.name="floor";
-//floor.position.y = -3;
-//
-//frontcube.add(leftcube);
-//frontcube.add(backcube);
 for (cube of cubes) {
 	scene.add(cube);
 }
 
 camera.position.z = 5;
-camera.position.w = 1;
+camera.position.w = 5;
 var orbit = 3;
 
 var infodiv = document.getElementById("info");

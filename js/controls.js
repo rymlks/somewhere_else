@@ -109,7 +109,7 @@ function handleControls(scene, camera) {
 		// Do not allow more than 90 degrees up/down rotation.
 		camera.rotation.yz = _clampTo180(camera.rotation.yz - mouseVertical * rotationspeed);
 	} else {
-		camera.rotation.xw -= mouseHorizontal * rotationspeed;
+		camera.rotation.xw += mouseHorizontal * rotationspeed;
 		camera.rotation.xw = camera.rotation.xw % (Math.PI *2);
 
 		// Do not allow more than 90 degrees up/down rotation.
