@@ -43,7 +43,7 @@ var color_map = {
 	'w': 1,
 }
 
-for (var magnitude = -1; magnitude <= 1; magnitude += 2) {
+for (var magnitude = -1; magnitude <= -1; magnitude += 2) {
 	for (var coord of ['x', 'y', 'z', 'w']) {
 		var buff = new THREE.BoxBufferGeometry4D( 2, 2, 2, 1, 1, 1 );
 		var colorslug = 0xff;
@@ -59,6 +59,8 @@ for (var magnitude = -1; magnitude <= 1; magnitude += 2) {
 			cube.rotation['xz'] = Math.PI;
 			cube.rotation['zw'] = Math.PI;
 		}
+		cube.name = "tesscube " + magnitude + coord;
+
 		cubes.push(cube);
 	}
 }
@@ -77,7 +79,7 @@ function animate() {
 
 	handleControls(scene, camera);
 
-	//cube.rotation.xw += 0.004;
+	cubes[0].rotation.xw += 0.004;
 	//cube.rotation.zx += 0.004;
 
 	//cube.position.w = Math.sin(cube.rotation.xw) * orbit;
