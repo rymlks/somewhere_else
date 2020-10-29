@@ -43,7 +43,7 @@ var color_map = {
 	'w': 1,
 }
 
-for (var magnitude = -1; magnitude <= -1; magnitude += 2) {
+for (var magnitude = -1; magnitude <= 1; magnitude += 2) {
 	for (var coord of ['x', 'y', 'z', 'w']) {
 		var buff = new THREE.BoxBufferGeometry4D( 2, 2, 2, 1, 1, 1 );
 		var colorslug = 0xff;
