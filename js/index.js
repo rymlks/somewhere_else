@@ -36,12 +36,17 @@ scene.add( directionalLight );
 
 
 var cubes = [];
-var color_map = {
-	'x': 1,
-	'y': 0x100,
-	'z': 0x10000,
-	'w': 1,
-}
+var colors = [
+	0xffffff,
+	0xffff80,
+	0xff80ff,
+	0x80ffff,
+
+	0x808080,
+	0x8080ff,
+	0x80ff80,
+	0xff8080
+]
 
 for (var magnitude = -1; magnitude <= 1; magnitude += 2) {
 	for (var coord of ['x', 'y', 'z', 'w']) {
@@ -50,8 +55,8 @@ for (var magnitude = -1; magnitude <= 1; magnitude += 2) {
 		if (coord === 'w') {
 			colorslug = 0x80;
 		}
-		var color = colorslug * color_map[coord];
-		var material = new THREE.MeshLambertMaterial( { color: color } );
+		//var color = colorslug * color_map[coord];
+		var material = new THREE.MeshLambertMaterial( { color: colors.pop() } );
 		var cube = new THREE.Mesh4D(buff, material);
 		cube.position[coord] = magnitude;
 		cube.rotation[coord + 'w'] = 0.5 * Math.PI * magnitude;
