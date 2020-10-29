@@ -79,13 +79,6 @@ function animate() {
 
 	handleControls(scene, camera);
 
-	cubes[0].rotation.xw += 0.004;
-	//cube.rotation.zx += 0.004;
-
-	//cube.position.w = Math.sin(cube.rotation.xw) * orbit;
-	//cube.position.x = Math.cos(cube.rotation.xw) * orbit;
-	//cube.position.z = Math.sin(cube.rotation.xw) * orbit;
-
 	renderer.render( scene, camera );
 	infodiv.innerHTML  = "x: " + camera.position.x.toPrecision(4) + ", ";
 	infodiv.innerHTML += "y: " + camera.position.y.toPrecision(4) + ", ";
