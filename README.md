@@ -1,5 +1,5 @@
 # somewhere_else
-A game set in 4D euclidian space. Use WASD keys to move around, and use the mouse to rotate the camera. Hold shift to change your keyboard and mouse controls to 4-dimensional movement and rotation. While Shift is held, the W and S keys move alond the W axis relative to the camera, and the mouse rotates on xw and yw planes. A and D keys are unaffected by holding Shift. Rotate the scroll wheel to rotate the camera along the zw plane.
+A game set in 4D euclidian space. Use WASD keys to move around, and use the mouse to rotate the camera. Hold shift to change your keyboard and mouse controls to 4-dimensional movement and rotation. While Shift is held, the W and S keys move alond the W axis relative to the camera, and the mouse rotates on xw and yw planes. A and D keys are unaffected by holding Shift. Rotate the scroll wheel to rotate the camera along the zw plane. You can download a short demo video at https://github.com/rymlks/somewhere_else/blob/master/Somewhere%20Else%202020-11-05%2017-51-11.mp4
 
 ## Initial setup
 - Install `node` and `npm` (https://nodejs.org/en/download/)
