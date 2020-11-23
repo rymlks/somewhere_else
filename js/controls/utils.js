@@ -59,7 +59,7 @@ function keyReleased(e) {
 }
 
 function keyPressed(e) {
-	if (heldKeys[e.keyCode] === false) {
+	if (heldKeys[e.keyCode] !== true) {
 		pressedKeys[e.keyCode] = true; 
 	}
 	heldKeys[e.keyCode] = true; 

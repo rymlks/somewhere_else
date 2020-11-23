@@ -38,7 +38,7 @@ class DevScene extends THREE.Scene4D {
             0x80ff80,
             0xff8080
         ]
-        
+        /*
         for (var magnitude = -1; magnitude <= 1; magnitude += 2) {
             for (var coord of ['x', 'y', 'z', 'w']) {
                 var buff = new THREE.BoxBufferGeometry4D( 2, 2, 2, 1, 1, 1 );
@@ -48,7 +48,8 @@ class DevScene extends THREE.Scene4D {
                 }
                 //var color = colorslug * color_map[coord];
                 var material = new THREE.MeshLambertMaterial( { color: colors.pop() } );
-                var cube = new THREE.Mesh4D(buff, material);
+                var cube = new THREE.PhysicsMesh4D(buff, material);
+                cube.isAffectedByGravity = false;
                 cube.position[coord] = magnitude;
                 cube.rotation[coord + 'w'] = 0.5 * Math.PI * magnitude;
                 if (coord + 'w' == 'ww') {
@@ -60,10 +61,32 @@ class DevScene extends THREE.Scene4D {
                 cubes.push(cube);
             }
         }
+        */
+
+        for (var i=0; i<100; i+= 5) {
+            var buff = new THREE.BoxBufferGeometry4D( 2, 2, 2, 1, 1, 1 );
+            var material = new THREE.MeshLambertMaterial( { color: Math.floor(Math.random()*16777215) } );
+            var cube = new THREE.PhysicsMesh4D(buff, material);
+            cube.name = "Falling Cube " + i;
+            cube.position.y = i;
+            cube.position.w = i % 2;
+            cubes.push(cube);
+        }
         
         for (cube of cubes) {
             this.add(cube);
         }
+
+        var buff = new THREE.BoxBufferGeometry4D( 10, 0.5, 10, 1, 1, 1 );
+        var material = new THREE.MeshLambertMaterial( { color: 0xffffff } );
+        var floor = new THREE.PhysicsMesh4D(buff, material);
+        floor.name = "floor";
+        floor.isAffectedByGravity = false;
+        floor.position.y = -2.5;
+        floor.position.w = 1
+
+        this.add(floor);
+
     }
 }
 

@@ -7,6 +7,11 @@ import { pausedControls } from "../controls/PausedControls.js"
 var instance = null;
 
 class GameManager {
+    #clock;
+    #mouseAxis;
+    #mouseWheel;
+    #frameDeltas;
+
     constructor() {
         if (instance !== null) {
             throw "Only one instance of GameManager is allowed."
@@ -15,11 +20,11 @@ class GameManager {
         this.gameState = GameState.DEFAULT;
         this.speed = 5.0;
 
-        this._setUpEventHandlers();
-        this._setUpScene();
-        this._setUpInputs();
-        this._setUpTiming();
-        this._setUpControls();
+        this.#setUpInputs();
+        this.#setUpEventHandlers();
+        this.#setUpRenderingPipeline();
+        this.#setUpTiming();
+        this.#setUpControls();
 
         instance = this;
     }
@@ -33,7 +38,7 @@ class GameManager {
      */
     play() {
         this.unPause();
-        requestAnimationFrame( this._update.bind(this) );
+        requestAnimationFrame( this.#update.bind(this) );
     }
 
 
@@ -55,21 +60,28 @@ class GameManager {
 
 
     ///////////////////////////////////////////////////////////////////////////
-    // Private methods                                                       //
+    // Initialization methods                                                //
     ///////////////////////////////////////////////////////////////////////////
-    _setUpInputs() {
+
+    /**
+     * Set up properties for handling user input (mouse, keyboard, etc.)
+     */
+    #setUpInputs() {
         this.pressedKeys = pressedKeys;
         this.heldKeys = heldKeys;
         this.releasedKeys = releasedKeys;
-        this._mouseAxis = mouseAxis;
-        this._mouseWheel = mouseWheel;
+        this.#mouseAxis = mouseAxis;
+        this.#mouseWheel = mouseWheel;
 
-        this.mouseVertical = this._mouseAxis.vertical;
-        this.mouseHorizontal = this._mouseAxis.horizontal;
-        this.mouseWheel = this._mouseWheel.delta;
+        this.mouseVertical = this.#mouseAxis.vertical;
+        this.mouseHorizontal = this.#mouseAxis.horizontal;
+        this.mouseWheel = this.#mouseWheel.delta;
     }
 
-    _setUpEventHandlers() {
+    /**
+     * Attach event handler methods to the window to update input properties each time an input event is dispatched.
+     */
+    #setUpEventHandlers() {
         // Set up event handlers for controls
         window.onkeyup = keyReleased;
         window.onkeydown = keyPressed;
@@ -77,7 +89,11 @@ class GameManager {
         document.onwheel = wheelScrolled;
     }
 
-    _setUpScene() {
+    /**
+     * Instantiate THREE.js objects to handle rendering graphics to the canvas.
+     * Creates a WebGLRenderer, a PerspectiveCamera4D, and a Scene4D, and moves the camera to a default position at 0, 0, 5, 5
+     */
+    #setUpRenderingPipeline() {
         this.renderer = new THREE.WebGLRenderer();
         this.camera = new THREE.PerspectiveCamera4D( 75, window.innerWidth / window.innerHeight, 0.1, 1000, 0.1, 1000 );
         this.renderer.setSize( window.innerWidth, window.innerHeight );
@@ -89,49 +105,108 @@ class GameManager {
         this.camera.position.w = 5;
     }
 
-    _setUpTiming() {
-        this._clock = new THREE.Clock();
-        this.timeDelta = this._clock.getDelta();
+    /**
+     * Set up internal clock and properties to hold the time between frames
+     */
+    #setUpTiming() {
+        this.#clock = new THREE.Clock();
+        this.timeDelta = this.#clock.getDelta();
         this.timeScaledSpeed = this.speed * this.timeDelta;
+
+        this.#frameDeltas = [];
+        this.framesPerSecond = 0;
     }
 
-    _setUpControls() {
+    /**
+     * Set up references to functions that will handle inputs given the current GameState.
+     */
+    #setUpControls() {
         // I wish js would let me define this in one assignment statement, but oh well, here we are.
         this.controlsFunction = {}
         this.controlsFunction[GameState.DEFAULT] = mainControls;
         this.controlsFunction[GameState.PAUSED] = pausedControls;
     }
 
-    _update() {
-        this._frameSetUp();
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Game loop methods                                                     //
+    ///////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Main loop.
+     * 
+     * This method will be called once per frame; rendering the scene, handling inputs, and updating physics objects each time.
+     */
+    #update() {
+        this.#frameSetUp();
 
         // This may need to move below frame teardown
-        requestAnimationFrame( this._update.bind(this) );
+        requestAnimationFrame( this.#update.bind(this) );
 
+        this.#updatePhysicsObjects();
         this.renderer.render( this.scene, this.camera );
         this.controlsFunction[this.gameState](this);
-        this._frameTearDown();
+        this.#frameTearDown();
     }
 
-    _frameSetUp() {
-        this.timeDelta = this._clock.getDelta();
+    /**
+     * Update properties to be used by various methods this frame.
+     */
+    #frameSetUp() {
+        // Set up frame timing data
+        this.timeDelta = this.#clock.getDelta();
         this.timeScaledSpeed = this.speed * this.timeDelta;
 
-        this.mouseVertical = this._mouseAxis.vertical;
-        this.mouseHorizontal = this._mouseAxis.horizontal;
-        this.mouseWheel = this._mouseWheel.delta;
+        this.#frameDeltas.push(this.timeDelta);
+        if (this.#frameDeltas.length > 10) {
+            this.#frameDeltas.shift();
+        }
+        // Divide number of frames by the sum of the length of each frame to get frames per second
+        this.framesPerSecond = this.#frameDeltas.length / this.#frameDeltas.reduce(function(a, b){ return a + b; }, 0);
+
+        // Consume mouse movement events
+        this.mouseVertical = this.#mouseAxis.vertical;
+        this.mouseHorizontal = this.#mouseAxis.horizontal;
+        this.mouseWheel = this.#mouseWheel.delta;
     }
 
-    _frameTearDown() {
+    /**
+     * Clear any unused properties that should not persist between frames.
+     */
+    #frameTearDown() {
+        // Clear KeyDown handles
         for (var prop in this.pressedKeys) {
             if (this.pressedKeys.hasOwnProperty(prop)) {
                 delete this.pressedKeys[prop];
             }
         }
         
+        // Clear KeyUp handles
         for (var prop in this.releasedKeys) {
             if (this.releasedKeys.hasOwnProperty(prop)) {
                 delete this.releasedKeys[prop];
+            }
+        }
+    }
+
+    /**
+     * Apply physics simulation to every physics object in the scene.
+     */
+    #updatePhysicsObjects() {
+        // Do not apply physics when paused
+        if (this.gameState === GameState.PAUSED) return;
+
+        // Early update - re-compute collision boxes.
+        for (var child of this.scene.children) {
+            if (child.isPhysicsObject === true) {
+                child.preUpdate();
+            }
+        }
+
+        // Update - perform collision detection and apply movement.
+        for (var child of this.scene.children) {
+            if (child.isPhysicsObject === true) {
+                child.update(this.timeDelta, this.scene);
             }
         }
     }
