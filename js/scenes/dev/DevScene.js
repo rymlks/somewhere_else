@@ -1,4 +1,5 @@
 import * as THREE from "../../three.js/src/Three.js";
+import { Scene } from "../../three.js/src/Three.js";
 
 // TODO: Better objects definition for Scenes
 class DevScene extends THREE.Scene4D {
@@ -64,6 +65,14 @@ class DevScene extends THREE.Scene4D {
                 cubes.push(cube);
             }
         }
+
+        var tbuff = new THREE.TesseractBufferGeometry4D( 2, 2, 2, 2, 1, 1, 1, 1 );
+        var tmaterial = new THREE.MeshLambertMaterial( { color: 0x0000ff } );
+        var tess = new THREE.PhysicsMesh4D(tbuff, tmaterial);
+        tess.isAffectedByGravity = false;
+        tess.position.x += 8;
+        tess.name = "THIS IS THE CORRECT OBJECT";
+        this.add(tess);
         
         
         for (var i=0; i<100; i+= 5) {
@@ -88,6 +97,7 @@ class DevScene extends THREE.Scene4D {
         floor.position.y = -2.5;
         floor.position.w = 1
         this.add(floor);
+        
 
         var buff2 = new THREE.BoxBufferGeometry4D( 10, 0.5, 10, 1, 1, 1 );
         var material2 = new THREE.MeshLambertMaterial( { color: 0x808080 } );
