@@ -1,4 +1,5 @@
 import * as THREE from "../../three.js/src/Three.js";
+import { Scene } from "../../three.js/src/Three.js";
 
 // TODO: Better objects definition for Scenes
 class DevScene extends THREE.Scene4D {
@@ -38,7 +39,7 @@ class DevScene extends THREE.Scene4D {
             0x80ff80,
             0xff8080
         ]
-        /*
+        
         for (var magnitude = -1; magnitude <= 1; magnitude += 2) {
             for (var coord of ['x', 'y', 'z', 'w']) {
                 var buff = new THREE.BoxBufferGeometry4D( 2, 2, 2, 1, 1, 1 );
@@ -57,12 +58,22 @@ class DevScene extends THREE.Scene4D {
                     cube.rotation['zw'] = Math.PI;
                 }
                 cube.name = "tesscube " + magnitude + coord;
+
+                cube.position.x += 5;
         
                 cubes.push(cube);
             }
         }
-        */
 
+        var tbuff = new THREE.TesseractBufferGeometry4D( 2, 2, 2, 2, 1, 1, 1, 1 );
+        var tmaterial = new THREE.MeshLambertMaterial( { color: 0x0000ff } );
+        var tess = new THREE.PhysicsMesh4D(tbuff, tmaterial);
+        tess.isAffectedByGravity = false;
+        tess.position.x += 8;
+        tess.name = "THIS IS THE CORRECT OBJECT";
+        this.add(tess);
+        
+        
         for (var i=0; i<100; i+= 5) {
             var buff = new THREE.BoxBufferGeometry4D( 2, 2, 2, 1, 1, 1 );
             var material = new THREE.MeshLambertMaterial( { color: Math.floor(Math.random()*16777215) } );
@@ -86,6 +97,7 @@ class DevScene extends THREE.Scene4D {
         floor.position.w = 1
 
         this.add(floor);
+        
 
     }
 }
