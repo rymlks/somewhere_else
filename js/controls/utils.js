@@ -5,6 +5,8 @@ var forward = new THREE.Vector5(0, 0, -1, 0);
 var backward = new THREE.Vector5(0, 0, 1, 0);
 var left = new THREE.Vector5(-1, 0, 0, 0);
 var right = new THREE.Vector5(1, 0, 0, 0);
+var up = new THREE.Vector5(0, 1, 0, 0);
+var down = new THREE.Vector5(0, -1, 0, 0);
 var squidward = new THREE.Vector5(0, 0, 0, -1);
 var squodward = new THREE.Vector5(0, 0, 0, 1);
 
@@ -74,4 +76,4 @@ function wheelScrolled(e) {
 }
 
 export { keyReleased, keyPressed, mouseMoved, wheelScrolled, clampTo180,
-		forward, backward, left, right, squidward, squodward, pressedKeys, heldKeys, releasedKeys, mouseAxis, mouseWheel };
+		forward, backward, left, right, up, down, squidward, squodward, pressedKeys, heldKeys, releasedKeys, mouseAxis, mouseWheel };

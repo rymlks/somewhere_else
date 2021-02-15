@@ -1,5 +1,5 @@
 import * as THREE from "../three.js/src/Three.js";
-import { clampTo180, forward, backward, left, right, squidward, squodward } from "./utils.js"
+import { clampTo180, forward, backward, up, down, left, right, squidward, squodward } from "./utils.js"
 
 
 var rotationspeed = Math.PI * 0.0005;
@@ -17,6 +17,8 @@ function mainControls(GM) {
 	var sbackward  = new THREE.Vector5().copy(backward).multiplyScalar(GM.timeScaledSpeed);
 	var sleft = new THREE.Vector5().copy(left).multiplyScalar(GM.timeScaledSpeed);
 	var sright = new THREE.Vector5().copy(right).multiplyScalar(GM.timeScaledSpeed);
+	var sup = new THREE.Vector5().copy(up).multiplyScalar(GM.timeScaledSpeed);
+	var sdown = new THREE.Vector5().copy(down).multiplyScalar(GM.timeScaledSpeed);
 	var ssquidward = new THREE.Vector5().copy(squidward).multiplyScalar(GM.timeScaledSpeed);
 	var ssquodward = new THREE.Vector5().copy(squodward).multiplyScalar(GM.timeScaledSpeed);
 
@@ -50,6 +52,14 @@ function mainControls(GM) {
 	}
 	if (GM.heldKeys[KeyCode.KEY_A] === true) {
 		GM.camera.position.add(rotato.multiplyVector(sleft));
+	}
+
+	// Shift/Space
+	if (GM.heldKeys[KeyCode.KEY_SPACE] === true) {
+		GM.camera.position.add(sup);
+	}
+	if (GM.heldKeys[KeyCode.KEY_CAPS_LOCK] === true) {
+		GM.camera.position.add(sdown);
 	}
 
 	
