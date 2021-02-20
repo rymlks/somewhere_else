@@ -27,7 +27,7 @@ function createWindow () {
     if(i.key === 'CapsLock') {
       if(i.type === 'keyUp') {
           caps = !caps;
-          console.log('Caps: ' + caps);
+          //console.log('Caps: ' + caps);
       }
     }
   });

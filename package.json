@@ -5,6 +5,7 @@
   "main": "app.js",
   "dependencies": {
     "connect": "^3.7.0",
+    "ini": "^2.0.0",
     "keycode": "^2.2.0",
     "keycode-js": "^3.1.0",
     "keypress": "^0.2.1",
@@ -13,7 +14,7 @@
     "three": "^0.113.2"
   },
   "devDependencies": {
-    "electron": "^10.2.0",
+    "electron": "^10.4.0",
     "electron-packager": "^15.2.0",
     "electron-rebuild": "^2.3.5"
   },
