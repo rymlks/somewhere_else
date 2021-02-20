@@ -7,8 +7,8 @@ var left = new THREE.Vector5(-1, 0, 0, 0);
 var right = new THREE.Vector5(1, 0, 0, 0);
 var up = new THREE.Vector5(0, 1, 0, 0);
 var down = new THREE.Vector5(0, -1, 0, 0);
-var squidward = new THREE.Vector5(0, 0, 0, -1);
-var squodward = new THREE.Vector5(0, 0, 0, 1);
+var squidward = new THREE.Vector5(0, 0, 0, 1);
+var squodward = new THREE.Vector5(0, 0, 0, -1);
 
 function clampTo180(angle) {
 	return Math.max(-Math.PI * 0.5, Math.min(Math.PI * 0.5, angle));

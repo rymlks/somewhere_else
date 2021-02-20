@@ -2,8 +2,21 @@ import * as THREE from "../three.js/src/Three.js";
 import { clampTo180, forward, backward, up, down, left, right, squidward, squodward } from "./utils.js"
 
 
+var rotationLerp = 0.25;
+var positionLerp = 0.25;
+
 var rotationspeed = Math.PI * 0.0005;
-var theta = 0;
+var _euler = null;
+var _pos = null;
+
+var sforward = new THREE.Vector5();
+var sbackward  = new THREE.Vector5();
+var sleft = new THREE.Vector5();
+var sright = new THREE.Vector5();
+var sup = new THREE.Vector5();
+var sdown = new THREE.Vector5();
+var ssquidward = new THREE.Vector5();
+var ssquodward = new THREE.Vector5();
 
 function mainControls(GM) {
 
@@ -13,16 +26,15 @@ function mainControls(GM) {
 		return;
     }
 
-	var sforward = new THREE.Vector5().copy(forward).multiplyScalar(GM.timeScaledSpeed);
-	var sbackward  = new THREE.Vector5().copy(backward).multiplyScalar(GM.timeScaledSpeed);
-	var sleft = new THREE.Vector5().copy(left).multiplyScalar(GM.timeScaledSpeed);
-	var sright = new THREE.Vector5().copy(right).multiplyScalar(GM.timeScaledSpeed);
-	var sup = new THREE.Vector5().copy(up).multiplyScalar(GM.timeScaledSpeed);
-	var sdown = new THREE.Vector5().copy(down).multiplyScalar(GM.timeScaledSpeed);
-	var ssquidward = new THREE.Vector5().copy(squidward).multiplyScalar(GM.timeScaledSpeed);
-	var ssquodward = new THREE.Vector5().copy(squodward).multiplyScalar(GM.timeScaledSpeed);
-
-	theta += 0.25 * GM.delta;
+	// Scale directional vectors by time passed
+	sforward.copy(forward).multiplyScalar(GM.timeScaledSpeed);
+	sbackward.copy(backward).multiplyScalar(GM.timeScaledSpeed);
+	sleft.copy(left).multiplyScalar(GM.timeScaledSpeed);
+	sright.copy(right).multiplyScalar(GM.timeScaledSpeed);
+	sup.copy(up).multiplyScalar(GM.timeScaledSpeed);
+	sdown.copy(down).multiplyScalar(GM.timeScaledSpeed);
+	ssquidward.copy(squidward).multiplyScalar(GM.timeScaledSpeed);
+	ssquodward.copy(squodward).multiplyScalar(GM.timeScaledSpeed);
 
 	var walkingEuler = GM.camera.rotation.clone();
 	walkingEuler.yz = 0;
@@ -31,51 +43,55 @@ function mainControls(GM) {
 	var mouseHorizontal = GM.mouseHorizontal;
 	var mouseVertical = GM.mouseVertical;
 	var wheelDelta = GM.mouseWheel;
+	if (_euler === null) {
+		_euler = new THREE.Euler4D().copy(GM.camera.rotation);
+	}
+	if (_pos === null) {
+		_pos = new THREE.Vector5().copy(GM.camera.position);
+	}
 
 	// WASD keys
 	if (GM.heldKeys[KeyCode.KEY_W] === true) {
 		if (GM.heldKeys[KeyCode.KEY_SHIFT] !== true) {
-			GM.camera.position.add(rotato.multiplyVector(sforward));
+			_pos.add(rotato.multiplyVector(sforward));
 		} else {
-			GM.camera.position.add(rotato.multiplyVector(ssquidward));
+			_pos.add(rotato.multiplyVector(ssquidward));
 		}
 	}
 	if (GM.heldKeys[KeyCode.KEY_S] === true) {
 		if (GM.heldKeys[KeyCode.KEY_SHIFT] !== true) {
-			GM.camera.position.add(rotato.multiplyVector(sbackward));
+			_pos.add(rotato.multiplyVector(sbackward));
 		} else {
-			GM.camera.position.add(rotato.multiplyVector(ssquodward));
+			_pos.add(rotato.multiplyVector(ssquodward));
 		}
 	}
 	if (GM.heldKeys[KeyCode.KEY_D] === true) {
-		GM.camera.position.add(rotato.multiplyVector(sright));
+		_pos.add(rotato.multiplyVector(sright));
 	}
 	if (GM.heldKeys[KeyCode.KEY_A] === true) {
-		GM.camera.position.add(rotato.multiplyVector(sleft));
+		_pos.add(rotato.multiplyVector(sleft));
 	}
 
 	// Capslock/Space
 	if (GM.heldKeys[KeyCode.KEY_SPACE] === true) {
-		GM.camera.position.add(sup);
+		_pos.add(sup);
 	}
 	if (GM.heldKeys[KeyCode.KEY_CAPS_LOCK] === true) {
-		GM.camera.position.add(sdown);
+		_pos.add(sdown);
 	}
 
 	
 	// Mouse movement
 	if (GM.heldKeys[KeyCode.KEY_SHIFT] !== true) {
-		GM.camera.rotation.zx -= mouseHorizontal * rotationspeed;
-		GM.camera.rotation.zx = GM.camera.rotation.zx % (Math.PI *2);
+		_euler.zx -= mouseHorizontal * rotationspeed;
 
 		// Do not allow more than 90 degrees up/down rotation.
-		GM.camera.rotation.yz = clampTo180(GM.camera.rotation.yz - mouseVertical * rotationspeed);
+		_euler.yz = clampTo180(_euler.yz - mouseVertical * rotationspeed);
 	} else {
-		GM.camera.rotation.xw += mouseHorizontal * rotationspeed;
-		GM.camera.rotation.xw = GM.camera.rotation.xw % (Math.PI *2);
+		_euler.xw += mouseHorizontal * rotationspeed;
 
 		// Do not allow more than 90 degrees up/down rotation.
-		GM.camera.rotation.yw = clampTo180(GM.camera.rotation.yw - mouseVertical * rotationspeed);
+		_euler.yw = clampTo180(_euler.yw - mouseVertical * rotationspeed);
 	}
 
 	if (GM.heldKeys[KeyCode.KEY_L] === true) {
@@ -83,9 +99,10 @@ function mainControls(GM) {
 	}
 	
 
-	GM.camera.rotation.zw += wheelDelta * rotationspeed;
-	GM.camera.rotation.zw = GM.camera.rotation.zw % (Math.PI *2);	
-	
+	_euler.zw += wheelDelta * rotationspeed;
+
+	GM.camera.position.lerp(_pos, positionLerp);
+	GM.camera.rotation.lerp(_euler, rotationLerp);
 }
 
 export { mainControls };

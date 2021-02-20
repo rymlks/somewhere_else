@@ -1,17 +1,5 @@
-/*
-const http = require('http');
-
-const hostname = '127.0.0.1';
-const port = 3000;
-
-var connect = require('connect');
-var serveStatic = require('serve-static');
-connect().use(serveStatic(__dirname)).listen(port, function(){
-    console.log('Server running on '+port+'...');
-});
-*/
-
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, globalShortcut } = require('electron')
+const robot = require('robotjs')
 
 function createWindow () {
   // Create the browser window.
@@ -26,6 +14,23 @@ function createWindow () {
 
   // and load the index.html of the app.
   win.loadFile('index.html')
+
+  // Turn off capslock on window close
+  var caps = false;
+  var wc = win.webContents;
+  win.on('closed', _ => {
+    if (caps === true)
+      robot.keyTap("capslock");
+  });
+  wc.on('before-input-event', (e, i) => {
+    // On Capslock keyUp event, toggle caps state
+    if(i.key === 'CapsLock') {
+      if(i.type === 'keyUp') {
+          caps = !caps;
+          console.log('Caps: ' + caps);
+      }
+    }
+  });
 }
 
 app.whenReady().then(createWindow)
