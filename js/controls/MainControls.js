@@ -54,7 +54,7 @@ function mainControls(GM) {
 		GM.camera.position.add(rotato.multiplyVector(sleft));
 	}
 
-	// Shift/Space
+	// Capslock/Space
 	if (GM.heldKeys[KeyCode.KEY_SPACE] === true) {
 		GM.camera.position.add(sup);
 	}

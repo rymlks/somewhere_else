@@ -4,6 +4,12 @@ import * as THREE from "../../three.js/src/Three.js";
 class DevScene extends THREE.Scene4D {
     constructor() {
         super();
+        const loader = new THREE.TextureLoader();
+        const texture = loader.load( "assets/textures/testing.png" );
+        texture.magFilter = THREE.NearestFilter;
+        const amap = loader.load( "assets/textures/testing_map.png" );
+        amap.magFilter = THREE.NearestFilter;
+
         var light = new THREE.AmbientLight4D( 0x404040 ); // soft white light
         light.name = "grey ambient light";
         this.add( light );
@@ -14,7 +20,7 @@ class DevScene extends THREE.Scene4D {
         var buff = new THREE.BoxBufferGeometry4D( 0.1, 0.1, 0.1, 1, 1, 1 );
         var material = new THREE.MeshLambertMaterial( { color: 0xffffff } );
         var pcube = new THREE.PhysicsMesh4D(buff, material);
-        pcube.position.set(3, 0, 3, 0);
+        pcube.position.set(3, -0.5, 3, 1);
         pcube.isAffectedByGravity = false;
         var time = 0;
         pcube.update = function(delta, scene) {
@@ -46,16 +52,16 @@ class DevScene extends THREE.Scene4D {
         var cubes = [];
 
         var tbuff = new THREE.TesseractBufferGeometry4D( 2, 2, 2, 2, 1, 1, 1, 1 );
-        var tmaterial = new THREE.MeshLambertMaterial( { color: 0x0000ff } );
+        var tmaterial = new THREE.MeshLambertMaterial( { color: 0x8080ff, transparent: true, opacity: 0.5, alphaMap: amap } );
         var tess = new THREE.PhysicsMesh4D(tbuff, tmaterial);
         tess.isAffectedByGravity = false;
         tess.position.x += 8;
         tess.position.w = 0;
-        tess.name = "THIS IS THE CORRECT OBJECT";
+        tess.name = "Tesseract";
         this.add(tess);
         
         
-        for (var i=0; i<10; i+= 5) {
+        for (var i=0; i<100; i+= 5) {
             var buff = new THREE.BoxBufferGeometry4D( 2, 2, 2, 1, 1, 1 );
             var material = new THREE.MeshLambertMaterial( { color: Math.floor(Math.random()*16777215) } );
             var cube = new THREE.PhysicsMesh4D(buff, material);
