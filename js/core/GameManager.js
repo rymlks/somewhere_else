@@ -1,6 +1,6 @@
 import * as THREE from "../three.js/src/Three.js";
 import { GameState } from "./GameState.js"
-import { keyPressed, keyReleased, mouseMoved, wheelScrolled, pressedKeys, heldKeys, releasedKeys, mouseAxis, mouseWheel } from "../controls/utils.js"
+import { keyPressed, keyReleased, mouseMoved, wheelScrolled, onWindowResize, pressedKeys, heldKeys, releasedKeys, mouseAxis, mouseWheel } from "../controls/utils.js"
 import { mainControls } from "../controls/MainControls.js"
 import { pausedControls } from "../controls/PausedControls.js"
 
@@ -87,6 +87,12 @@ class GameManager {
         window.onkeydown = keyPressed;
         document.onmousemove = mouseMoved;
         document.onwheel = wheelScrolled;
+        
+        // Resize canvas on window resize
+        function updateWindow() {
+            onWindowResize(instance);
+        }
+        window.addEventListener( 'resize', updateWindow, false );
     }
 
     /**
