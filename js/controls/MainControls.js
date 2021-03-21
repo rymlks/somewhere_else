@@ -1,5 +1,5 @@
 import * as THREE from "../three.js/src/Three.js";
-import { clampTo180, forward, backward, up, down, left, right, squidward, squodward } from "./utils.js"
+import { clampTo180, forward, backward, up, down, left, right, squidward, squodward, heldKeys } from "./utils.js"
 
 
 var rotationLerp = 0.25;
@@ -78,6 +78,21 @@ function mainControls(GM) {
 	}
 	if (GM.heldKeys[KeyCode.KEY_CAPS_LOCK] === true) {
 		_pos.add(sdown);
+	}
+
+
+	// Credit to haley
+	if (GM.heldKeys[38] === true ) {
+		_euler.yw = clampTo180(_euler.yw - 10 * rotationspeed);
+	}
+	if (GM.heldKeys[40] === true ) {
+		_euler.yw = clampTo180(_euler.yw + 10 * rotationspeed);
+	}
+	if (GM.heldKeys[37] === true ) {
+		_euler.xw = _euler.xw - 10 * rotationspeed;
+	}
+	if (GM.heldKeys[39] === true ) {
+		_euler.xw = _euler.xw + 10 * rotationspeed;
 	}
 
 	

@@ -22,6 +22,12 @@ function createWindow () {
     if (caps === true)
       robot.keyTap("capslock");
   });
+  win.on('blur', _ => {
+    if (caps === true) {
+      robot.keyTap("capslock");
+      caps = !caps;
+    }
+  });
   wc.on('before-input-event', (e, i) => {
     // On Capslock keyUp event, toggle caps state
     if(i.key === 'CapsLock') {

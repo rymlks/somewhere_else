@@ -15,4 +15,4 @@ function updateInfoDiv() {
 	infodiv.innerHTML += "w: " + GM.camera.position.w.toPrecision(4) + ", ";
 	infodiv.innerHTML += "FPS: " + GM.framesPerSecond.toPrecision(4);
 }
-setInterval(updateInfoDiv, 1000);
+//setInterval(updateInfoDiv, 1000);

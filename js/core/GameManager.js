@@ -108,7 +108,7 @@ class GameManager {
         this.scene = new THREE.Scene4D();
 
         this.camera.position.z = 5;
-        this.camera.position.w = 5;
+        //this.camera.position.w = 5;
     }
 
     /**
