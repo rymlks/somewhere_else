@@ -1,3 +1,5 @@
+import { Dialogue } from "../dialogue/Dialogue.js";
+import { DialogueNode } from "../dialogue/DialogueNode.js";
 import * as THREE from "../three.js/src/Three.js";
 import { clampTo180, forward, backward, up, down, left, right, squidward, squodward, heldKeys } from "./utils.js"
 
@@ -18,6 +20,13 @@ var sdown = new THREE.Vector5();
 var ssquidward = new THREE.Vector5();
 var ssquodward = new THREE.Vector5();
 
+var dialogue = new Dialogue(new DialogueNode("start", "hello"));
+
+
+/**
+ * Handle inputs for the main game loop
+ * @param {GameManager} GM 
+ */
 function mainControls(GM) {
 
 	// Check for pause
@@ -113,6 +122,9 @@ function mainControls(GM) {
 		document.body.requestPointerLock();
 	}
 	
+	if (GM.pressedKeys[KeyCode.KEY_T] === true) {
+		GM.beginDialogue(dialogue);
+	}
 
 	_euler.zw += wheelDelta * rotationspeed;
 

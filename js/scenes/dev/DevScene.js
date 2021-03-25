@@ -131,6 +131,23 @@ class DevScene extends THREE.Scene4D {
 
         this.add(floor2);
 
+
+        const fontloader = new THREE.FontLoader();
+
+        var scene = this;
+        fontloader.load( 'assets/unlicensed/fonts/helvetiker_regular.typeface.json', function ( response ) {
+
+            var font = response;
+
+            var textGeo = new THREE.TextGeometry4D("hello thar", {font: font, size: 1, height: 0});
+            var textmat = new THREE.MeshLambertMaterial( { color: 0xFFFF00 } );
+            var textMesh = new THREE.Mesh4D(textGeo, textmat)
+            textMesh.position.y = 1;
+            textMesh.position.z = -3;
+            scene.add(textMesh);
+
+        } );
+
     }
 }
 
