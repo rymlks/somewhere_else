@@ -75,14 +75,5 @@ function wheelScrolled(e) {
 	mouseWheel._delta += e.deltaY;
 }
 
-function onWindowResize(GM){
-
-    GM.camera.aspect = window.innerWidth / window.innerHeight;
-    GM.camera.updateProjectionMatrix();
-
-    GM.renderer.setSize( window.innerWidth, window.innerHeight );
-
-}
-
-export { keyReleased, keyPressed, mouseMoved, wheelScrolled, clampTo180, onWindowResize,
+export { keyReleased, keyPressed, mouseMoved, wheelScrolled, clampTo180,
 		forward, backward, left, right, up, down, squidward, squodward, pressedKeys, heldKeys, releasedKeys, mouseAxis, mouseWheel };

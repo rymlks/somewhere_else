@@ -1,0 +1,35 @@
+
+body { 
+    margin: 0;
+    overflow-x: hidden; 
+    overflow-y: hidden; 
+}
+canvas { 
+    display: block;
+}
+.UICanvas {
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0px;
+    z-index: 9999;
+    
+    image-rendering: optimizeSpeed;             /* Older versions of FF          */
+    image-rendering: -moz-crisp-edges;          /* FF 6.0+                       */
+    image-rendering: -webkit-optimize-contrast; /* Safari                        */
+    image-rendering: -o-crisp-edges;            /* OS X & Windows Opera (12.02+) */
+    image-rendering: pixelated;                 /* Awesome future-browsers       */
+    -ms-interpolation-mode: nearest-neighbor;   /* IE                            */
+}
+
+#info {
+    position: absolute;
+    top: 0px;
+    width: 100%;
+    text-align: center;
+    z-index: 100;
+    display:block;
+    background: black;
+    color: white;
+}

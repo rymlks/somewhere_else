@@ -1,8 +1,11 @@
 import * as THREE from "../three.js/src/Three.js";
 import { GameState } from "./GameState.js"
-import { keyPressed, keyReleased, mouseMoved, wheelScrolled, onWindowResize, pressedKeys, heldKeys, releasedKeys, mouseAxis, mouseWheel } from "../controls/utils.js"
+import { keyPressed, keyReleased, mouseMoved, wheelScrolled, 
+    pressedKeys, heldKeys, releasedKeys, mouseAxis, mouseWheel } from "../controls/utils.js"
 import { mainControls } from "../controls/MainControls.js"
 import { pausedControls } from "../controls/PausedControls.js"
+import { dialogueControls } from "../controls/DialogueControls.js"
+import { DialogueManager } from "../dialogue/DialogueManager.js"
 
 var instance = null;
 
@@ -12,6 +15,8 @@ class GameManager {
     #mouseWheel;
     #frameDeltas;
 
+    #dialogueManager;
+
     constructor() {
         if (instance !== null) {
             throw "Only one instance of GameManager is allowed."
@@ -19,6 +24,7 @@ class GameManager {
 
         this.gameState = GameState.DEFAULT;
         this.speed = 5.0;
+        this.#dialogueManager = new DialogueManager(this);
 
         this.#setUpInputs();
         this.#setUpEventHandlers();
@@ -46,18 +52,46 @@ class GameManager {
      * Pause the game. Disable controls, open pause menu (TODO)
      */
     pause() {
-        this.gameState = GameState.PAUSED;
-        document.exitPointerLock();
+        this.#setGameState(GameState.PAUSED)
     }
 
     /**
      * Unpause the game. Re-enable controls. Close pause menu (TODO)
      */
     unPause() {
-        this.gameState = GameState.DEFAULT;
-        document.body.requestPointerLock();
+        this.#setGameState(GameState.DEFAULT)
     }
 
+    /**
+     * Pause the game and present text to the player.
+     * @param {string} dialogue: The yarn file to begin running 
+     */
+    beginDialogue(dialogue) {
+        this.#setGameState(GameState.DIALOGUE);
+        this.#dialogueManager.beginDialogue(dialogue);
+    }
+
+    /**
+     * Move dialogue ahead one node
+     */
+    advanceDialogue() {
+        this.#dialogueManager.advanceDialogue();
+    }
+
+    /**
+     * Unpause the game and hide the text box
+     */
+     exitDialogue() {
+        this.#setGameState(GameState.DEFAULT);
+        this.#dialogueManager.exitDialogue();
+    }
+
+    increaseDialogueSelection() {
+        this.#dialogueManager.increaseSelection();
+    }
+    decreaseDialogueSelection() {
+        this.#dialogueManager.decreaseSelection();
+    }
 
     ///////////////////////////////////////////////////////////////////////////
     // Initialization methods                                                //
@@ -88,11 +122,7 @@ class GameManager {
         document.onmousemove = mouseMoved;
         document.onwheel = wheelScrolled;
         
-        // Resize canvas on window resize
-        function updateWindow() {
-            onWindowResize(instance);
-        }
-        window.addEventListener( 'resize', updateWindow, false );
+        window.addEventListener( 'resize', this.#resize.bind(this), false );
     }
 
     /**
@@ -131,8 +161,33 @@ class GameManager {
         this.controlsFunction = {}
         this.controlsFunction[GameState.DEFAULT] = mainControls;
         this.controlsFunction[GameState.PAUSED] = pausedControls;
+        this.controlsFunction[GameState.DIALOGUE] = dialogueControls;
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Utils                                                                 //
+    ///////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Update the game state. Take actions on state change if necessary
+     * 
+     * @param {GameState} gameState The state to set the game to
+     */
+    #setGameState(gameState) {
+        switch(gameState) {
+            case GameState.PAUSED:
+            case GameState.DIALOGUE:
+                document.exitPointerLock();
+                break;
+            case GameState.DEFAULT:
+                document.body.requestPointerLock();
+                break;
+            default:
+                throw "Illegal game state reached: " + gameState;
+        }
+        
+        this.gameState = gameState;
+    }
 
     ///////////////////////////////////////////////////////////////////////////
     // Game loop methods                                                     //
@@ -150,6 +205,7 @@ class GameManager {
         requestAnimationFrame( this.#update.bind(this) );
 
         this.#updatePhysicsObjects();
+        this.#updateDialogue();
         this.renderer.render( this.scene, this.camera );
         this.controlsFunction[this.gameState](this);
         this.#frameTearDown();
@@ -200,7 +256,7 @@ class GameManager {
      */
     #updatePhysicsObjects() {
         // Do not apply physics when paused
-        if (this.gameState === GameState.PAUSED) return;
+        if (this.gameState !== GameState.DEFAULT) return;
 
         // Early update - re-compute collision boxes.
         for (var child of this.scene.children) {
@@ -215,6 +271,25 @@ class GameManager {
                 child.update(this.timeDelta, this.scene);
             }
         }
+    }
+
+    /**
+     * Advance dialogue rendering for this frame
+     */
+    #updateDialogue() {
+        this.#dialogueManager.update(this.timeDelta);
+    }
+
+    /**
+     * Resize the game window
+     */
+     #resize() {
+
+        this.camera.aspect = window.innerWidth / window.innerHeight;
+        this.camera.updateProjectionMatrix();
+    
+        this.renderer.setSize( window.innerWidth, window.innerHeight );
+        this.#dialogueManager.resize();
     }
 }
 

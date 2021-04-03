@@ -1,6 +1,9 @@
 const { app, BrowserWindow, globalShortcut } = require('electron')
 const robot = require('robotjs')
 
+const fs = require('fs');
+const yarnData = JSON.parse(fs.readFileSync('assets/yarn/test.json'));
+
 function createWindow () {
   // Create the browser window.
   const win = new BrowserWindow({

@@ -1,6 +1,7 @@
 import * as THREE from "../three.js/src/Three.js";
 import { clampTo180, forward, backward, up, down, left, right, squidward, squodward, heldKeys } from "./utils.js"
 
+const KeyCode = require('Keycode-js');
 
 var rotationLerp = 0.25;
 var positionLerp = 0.25;
@@ -18,6 +19,12 @@ var sdown = new THREE.Vector5();
 var ssquidward = new THREE.Vector5();
 var ssquodward = new THREE.Vector5();
 
+var dialogue = "assets/yarn/test.json";
+
+/**
+ * Handle inputs for the main game loop
+ * @param {GameManager} GM 
+ */
 function mainControls(GM) {
 
 	// Check for pause
@@ -113,6 +120,12 @@ function mainControls(GM) {
 		document.body.requestPointerLock();
 	}
 	
+	if (GM.pressedKeys[KeyCode.KEY_T] === true) {
+		GM.beginDialogue(dialogue);
+	}
+	if (GM.pressedKeys[KeyCode.KEY_Y] === true) {
+		GM.beginDialogue(dialogue2);
+	}
 
 	_euler.zw += wheelDelta * rotationspeed;
 
