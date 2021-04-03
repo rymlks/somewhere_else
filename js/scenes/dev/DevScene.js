@@ -14,7 +14,7 @@ class DevScene extends THREE.Scene4D {
           'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/pos-z.jpg',
           'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/neg-z.jpg',
         ]);
-        //this.background = bgtexture;
+        this.background = bgtexture;
 
         const loader = new THREE.TextureLoader();
         const texture = loader.load( "assets/textures/testing.png" );
@@ -131,7 +131,7 @@ class DevScene extends THREE.Scene4D {
 
         this.add(floor2);
 
-
+        /*
         const fontloader = new THREE.FontLoader();
 
         var scene = this;
@@ -139,14 +139,15 @@ class DevScene extends THREE.Scene4D {
 
             var font = response;
 
-            var textGeo = new THREE.TextGeometry4D("hello thar", {font: font, size: 1, height: 0});
-            var textmat = new THREE.MeshLambertMaterial( { color: 0xFFFF00 } );
+            var textGeo = new THREE.TextGeometry4D("hello\nthar", {font: font, size: 1, height: 0});
+            var textmat = new THREE.MeshBasicMaterial( { color: 0xFFFF00 } );
             var textMesh = new THREE.Mesh4D(textGeo, textmat)
             textMesh.position.y = 1;
             textMesh.position.z = -3;
             scene.add(textMesh);
 
         } );
+        */
 
     }
 }

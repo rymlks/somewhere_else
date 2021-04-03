@@ -1,12 +1,11 @@
 import * as THREE from "../three.js/src/Three.js";
 import { GameState } from "./GameState.js"
-import { keyPressed, keyReleased, mouseMoved, wheelScrolled, onWindowResize, 
+import { keyPressed, keyReleased, mouseMoved, wheelScrolled, 
     pressedKeys, heldKeys, releasedKeys, mouseAxis, mouseWheel } from "../controls/utils.js"
 import { mainControls } from "../controls/MainControls.js"
 import { pausedControls } from "../controls/PausedControls.js"
 import { dialogueControls } from "../controls/DialogueControls.js"
 import { DialogueManager } from "../dialogue/DialogueManager.js"
-import { Dialogue } from "../dialogue/Dialogue.js"
 
 var instance = null;
 
@@ -25,7 +24,7 @@ class GameManager {
 
         this.gameState = GameState.DEFAULT;
         this.speed = 5.0;
-        this.#dialogueManager = new DialogueManager();
+        this.#dialogueManager = new DialogueManager(this);
 
         this.#setUpInputs();
         this.#setUpEventHandlers();
@@ -65,11 +64,18 @@ class GameManager {
 
     /**
      * Pause the game and present text to the player.
-     * @param {Dialogue} dialogue: The dialogue to begin showing 
+     * @param {string} dialogue: The yarn file to begin running 
      */
     beginDialogue(dialogue) {
         this.#setGameState(GameState.DIALOGUE);
         this.#dialogueManager.beginDialogue(dialogue);
+    }
+
+    /**
+     * Move dialogue ahead one node
+     */
+    advanceDialogue() {
+        this.#dialogueManager.advanceDialogue();
     }
 
     /**
@@ -78,6 +84,13 @@ class GameManager {
      exitDialogue() {
         this.#setGameState(GameState.DEFAULT);
         this.#dialogueManager.exitDialogue();
+    }
+
+    increaseDialogueSelection() {
+        this.#dialogueManager.increaseSelection();
+    }
+    decreaseDialogueSelection() {
+        this.#dialogueManager.decreaseSelection();
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -109,11 +122,7 @@ class GameManager {
         document.onmousemove = mouseMoved;
         document.onwheel = wheelScrolled;
         
-        // Resize canvas on window resize
-        function updateWindow() {
-            onWindowResize(instance);
-        }
-        window.addEventListener( 'resize', updateWindow, false );
+        window.addEventListener( 'resize', this.#resize.bind(this), false );
     }
 
     /**
@@ -269,6 +278,18 @@ class GameManager {
      */
     #updateDialogue() {
         this.#dialogueManager.update(this.timeDelta);
+    }
+
+    /**
+     * Resize the game window
+     */
+     #resize() {
+
+        this.camera.aspect = window.innerWidth / window.innerHeight;
+        this.camera.updateProjectionMatrix();
+    
+        this.renderer.setSize( window.innerWidth, window.innerHeight );
+        this.#dialogueManager.resize();
     }
 }
 

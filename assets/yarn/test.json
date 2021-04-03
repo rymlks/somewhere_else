@@ -1,0 +1,32 @@
+[
+	{
+		"title": "Start",
+		"tags": "",
+		"body": "foo\nbar\n[[bar 1|SecondNode]]\n[[bar 2|ThirdNode]]",
+		"position": {
+			"x": 523,
+			"y": 31
+		},
+		"colorID": 0
+	},
+	{
+		"title": "SecondNode",
+		"tags": "",
+		"body": "Dialogue progression? Eghads.",
+		"position": {
+			"x": 346,
+			"y": 314
+		},
+		"colorID": 0
+	},
+	{
+		"title": "ThirdNode",
+		"tags": "",
+		"body": "Only a fool would have picked this one...",
+		"position": {
+			"x": 679,
+			"y": 306
+		},
+		"colorID": 6
+	}
+]

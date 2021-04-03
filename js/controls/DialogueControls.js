@@ -1,3 +1,4 @@
+const KeyCode = require('Keycode-js');
 
 /**
  * Controls for when a dialog box is open
@@ -6,6 +7,18 @@
 function dialogueControls(GM) {
 	if (GM.pressedKeys[KeyCode.KEY_ESCAPE] === true) {
         GM.exitDialogue();
+    }
+
+    if (GM.pressedKeys[KeyCode.KEY_T] === true) {
+        GM.advanceDialogue();
+    }
+
+    if (GM.pressedKeys[KeyCode.KEY_W] === true) {
+        GM.increaseDialogueSelection();
+    }
+
+    if (GM.pressedKeys[KeyCode.KEY_S] === true) {
+        GM.decreaseDialogueSelection();
     }
 }
 
