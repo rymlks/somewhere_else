@@ -10,7 +10,6 @@
     "keycode": "^2.2.0",
     "keycode-js": "^3.1.0",
     "keypress": "^0.2.1",
-    "robotjs": "^0.6.0",
     "serve-static": "^1.14.1",
     "three": "^0.127.0"
   },

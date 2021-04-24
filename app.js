@@ -1,8 +1,7 @@
 const { app, BrowserWindow, globalShortcut } = require('electron')
-const robot = require('robotjs')
+//const robot = require('robotjs')
 
 const fs = require('fs');
-const yarnData = JSON.parse(fs.readFileSync('assets/yarn/test.json'));
 
 function createWindow () {
   // Create the browser window.
@@ -22,12 +21,13 @@ function createWindow () {
   var caps = false;
   var wc = win.webContents;
   win.on('closed', _ => {
-    if (caps === true)
-      robot.keyTap("capslock");
+    if (caps === true) {
+      //robot.keyTap("capslock");
+    }
   });
   win.on('blur', _ => {
     if (caps === true) {
-      robot.keyTap("capslock");
+      //robot.keyTap("capslock");
       caps = !caps;
     }
   });
@@ -36,7 +36,6 @@ function createWindow () {
     if(i.key === 'CapsLock') {
       if(i.type === 'keyUp') {
           caps = !caps;
-          //console.log('Caps: ' + caps);
       }
     }
   });
