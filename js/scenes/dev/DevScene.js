@@ -16,11 +16,39 @@ class DevScene extends THREE.Scene4D {
         ]);
         this.background = bgtexture;
 
-        const loader = new THREE.TextureLoader();
-        const texture = loader.load( "assets/textures/testing.png" );
+        const textureLoader = new THREE.TextureLoader();
+        const texture = textureLoader.load( "assets/textures/testing.png" );
         texture.magFilter = THREE.NearestFilter;
-        const amap = loader.load( "assets/textures/testing_map.png" );
+        const amap = textureLoader.load( "assets/textures/testing_map.png" );
         amap.magFilter = THREE.NearestFilter;
+
+        var mtlLoader = new THREE.MTLLoader4D();
+        mtlLoader.setPath( 'assets/unlicensed/3d/61-low_poly_tree/low_poly_tree/' );
+        var url = "Lowpoly_tree_sample.mtl";
+        const thisscene = this;
+        mtlLoader.load( url, function( materials ) {
+
+            materials.preload();
+
+            var objLoader = new THREE.OBJLoader4D();
+            objLoader.setMaterials( materials );
+            objLoader.path = "assets/unlicensed/3d/61-low_poly_tree/low_poly_tree/";
+            objLoader.load( 
+            'Lowpoly_tree_sample.obj', 
+            function ( object ) {
+                thisscene.add( object );
+                console.log(object);
+            }, 
+            // called when loading is in progresses
+            function ( xhr ) {
+                console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+            },
+            // called when loading has errors
+            function ( error ) {
+                console.log( 'An error happened' );
+            } );
+
+        });
 
         var light = new THREE.AmbientLight4D( 0x404040 ); // soft white light
         light.name = "grey ambient light";
@@ -30,16 +58,16 @@ class DevScene extends THREE.Scene4D {
         plight.name = "white point light";
 
         var buff = new THREE.BoxGeometry4D( 0.1, 0.1, 0.1, 1, 1, 1 );
-        var material = new THREE.MeshLambertMaterial( { color: 0xffffff } );
+        var material = new THREE.MeshLambertMaterial( { color: 0xff0000 } );
         var pcube = new THREE.PhysicsMesh4D(buff, material);
-        pcube.position.set(3, -0.5, 3, 1);
+        pcube.position.set(3, -0.5, 3, 0);
         pcube.isAffectedByGravity = false;
         var time = 0;
 
         
         pcube.update = function(delta, scene) {
             time += delta;
-            pcube.position.w = Math.sin(time) * 5;
+            //pcube.position.w = Math.sin(time) * 5;
             pcube.position.z = Math.cos(time) * 5;
         }
         
