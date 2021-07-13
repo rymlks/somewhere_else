@@ -1,0 +1,1 @@
+npm rebuild --runtime=electron --target=10.4.0 --disturl=https://atom.io/download/atom-shell --abi=48

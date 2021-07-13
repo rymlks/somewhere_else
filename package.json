@@ -10,6 +10,7 @@
     "keycode": "^2.2.0",
     "keycode-js": "^3.1.0",
     "keypress": "^0.2.1",
+    "robotjs": "^0.6.0",
     "serve-static": "^1.14.1",
     "three": "^0.127.0"
   },
@@ -21,7 +22,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",
-    "rebuild": "npm rebuild --runtime=electron --target=1.1.3 --disturl=https://atom.io/download/atom-shell --abi=48"
+    "rebuild": "bash ./build_robot.sh"
   },
   "author": "",
   "license": "ISC"
