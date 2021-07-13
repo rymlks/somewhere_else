@@ -1,5 +1,5 @@
 const { app, BrowserWindow, globalShortcut } = require('electron')
-//const robot = require('robotjs')
+const robot = require('robotjs')
 
 const fs = require('fs');
 
@@ -22,12 +22,12 @@ function createWindow () {
   var wc = win.webContents;
   win.on('closed', _ => {
     if (caps === true) {
-      //robot.keyTap("capslock");
+      robot.keyTap("capslock");
     }
   });
   win.on('blur', _ => {
     if (caps === true) {
-      //robot.keyTap("capslock");
+      robot.keyTap("capslock");
       caps = !caps;
     }
   });
