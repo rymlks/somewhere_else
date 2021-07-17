@@ -1,8 +1,10 @@
 import {GameManager} from "./core/GameManager.js";
 import {DevScene} from "./scenes/dev/DevScene.js";
+import {DemoScene} from "./scenes/dev/DemoScene.js";
 
 var GM = new GameManager();
 GM.scene = new DevScene();
+//GM.scene = new DemoScene();
 GM.play();
 
 // Debug stuff
@@ -15,4 +17,4 @@ function updateInfoDiv() {
 	infodiv.innerHTML += "w: " + GM.camera.position.w.toPrecision(4) + ", ";
 	infodiv.innerHTML += "FPS: " + GM.framesPerSecond.toPrecision(4);
 }
-//setInterval(updateInfoDiv, 1000);
+setInterval(updateInfoDiv, 1000);

@@ -1,5 +1,4 @@
 import * as THREE from "../../three.js/src/Three.js";
-import { Matrix4 } from "../../three.js/src/Three.js";
 
 // TODO: Better objects definition for Scenes
 class DemoScene extends THREE.Scene4D {
@@ -12,7 +11,7 @@ class DemoScene extends THREE.Scene4D {
 
         var plight = new THREE.PointLight4D( 0xffffff, 1.0, 1000 );
         plight.name = "white point light";
-        plight.position.set(0, 3, 0, 0);
+        plight.position.set(6, 7, 8, 0);
 
         this.add(plight);
 
@@ -22,7 +21,7 @@ class DemoScene extends THREE.Scene4D {
         floor.name = "floor";
         floor.isAffectedByGravity = false;
         floor.position.set(0, -2.75, 0, -0.01);
-        this.add(floor);
+        //this.add(floor);
         
 
         var boxbuff = new THREE.BoxGeometry4D(3, 0.5, 10, 1, 1, 1 );
@@ -42,6 +41,14 @@ class DemoScene extends THREE.Scene4D {
 
         floor.add(floor3);
         floor.add(floor2);
+
+        var boxbuffsky = new THREE.TesseractGeometry4D( 5, 5, 5, 5, 1, 1, 1, 1 );
+        var skymaterial = new THREE.MeshLambertMaterial( { color: 0xff0000 } );
+        var sky = new THREE.PhysicsMesh4D(boxbuffsky, skymaterial);
+        sky.name = "sky";
+        sky.isAffectedByGravity = false;
+        sky.position.set(0,0,0,0);
+        this.add(sky);
     }
 }
 

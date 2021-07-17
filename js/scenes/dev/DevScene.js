@@ -36,6 +36,15 @@ class DevScene extends THREE.Scene4D {
             objLoader.load( 
             'Lowpoly_tree_sample.obj', 
             function ( object ) {
+                object.position.y = -1.6;
+                object.position.w = -3;
+                object.scale.x = 0.5;
+                object.scale.y = 0.5;
+                object.scale.z = 0.5;
+                object.scale.w = 0.5;
+
+                //object.rotation.zw = Math.PI * 0.5;
+                //object.rotation.xz = Math.PI;
                 thisscene.add( object );
                 console.log(object);
             }, 
@@ -114,7 +123,7 @@ class DevScene extends THREE.Scene4D {
         refcube2.isAffectedByGravity = false;
         refcube.position.x = -6;
         refcube2.position.x = 1;
-        refcube2.position.w = 1;
+        //refcube2.position.w = 1;
         refcube2.rotation.xw = Math.PI * 0.5;
         refcube.name = "refcube";
         refcube2.name = "refcube2";
@@ -145,7 +154,7 @@ class DevScene extends THREE.Scene4D {
         floor.name = "floor";
         floor.isAffectedByGravity = false;
         floor.position.y = -2.5;
-        floor.position.w = 1
+        //floor.position.w = 1
         this.add(floor);
         
 
@@ -155,7 +164,7 @@ class DevScene extends THREE.Scene4D {
         floor2.name = "floor2";
         floor2.isAffectedByGravity = false;
         floor2.position.y = -10.5;
-        floor2.position.w = 0
+        floor2.position.w = 1
 
         this.add(floor2);
 
