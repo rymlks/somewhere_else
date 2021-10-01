@@ -5,8 +5,29 @@ class DevScene extends THREE.Scene4D {
     constructor() {
         super();
 
-        const bgloader = new THREE.CubeTextureLoader4D();
+        const bgloader = new THREE.TesseractTextureLoader4D();
         const bgtexture = bgloader.load([
+          'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/pos-x.jpg',
+          'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/neg-x.jpg',
+          'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/pos-y.jpg',
+          'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/neg-y.jpg',
+          'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/pos-z.jpg',
+          'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/neg-z.jpg',
+          
+          'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/pos-x.jpg',
+          'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/neg-x.jpg',
+          'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/pos-y.jpg',
+          'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/neg-y.jpg',
+          'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/pos-z.jpg',
+          'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/neg-z.jpg',
+          
+          'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/pos-x.jpg',
+          'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/neg-x.jpg',
+          'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/pos-y.jpg',
+          'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/neg-y.jpg',
+          'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/pos-z.jpg',
+          'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/neg-z.jpg',
+          
           'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/pos-x.jpg',
           'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/neg-x.jpg',
           'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/pos-y.jpg',
@@ -62,6 +83,60 @@ class DevScene extends THREE.Scene4D {
         var light = new THREE.AmbientLight4D( 0x404040 ); // soft white light
         light.name = "grey ambient light";
         this.add( light );
+
+        var dlight = new THREE.DirectionalLight4D(0xffffff, 1.0);
+        dlight.position.set(-3, 10, -3, 0);
+        dlight.name = "grey directional light";
+        dlight.castShadow = true;
+        this.add( dlight );
+
+        this.light = dlight;
+
+        var testbuf = new THREE.BoxGeometry4D( 1, 1, 1, 1, 1, 1 );
+        var testmat = new THREE.MeshLambertMaterial( { color: 0xff0000 } );
+       
+        var c1 = new THREE.Mesh4D(testbuf, testmat);
+        c1.position.set(-2, 10, -3, 0);
+        c1.castShadow = true;
+        c1.scale.set(1.1, 1.1, 1.1, 1.1);
+        var c2 = new THREE.Mesh4D(testbuf, testmat);
+        c2.position.set(-4, 10, -3, 0);
+        c2.castShadow = true;
+        c2.scale.set(1.2, 1.2, 1.2, 1.2);
+
+        var c3 = new THREE.Mesh4D(testbuf, testmat);
+        c3.position.set(-3, 11, -3, 0);
+        c3.castShadow = true;
+        c3.scale.set(1.3, 1.3, 1.3, 1.3);
+        var c4 = new THREE.Mesh4D(testbuf, testmat);
+        c4.position.set(-3, 9, -3, 0);
+        c4.castShadow = true;
+        c4.scale.set(1.4, 1.4, 1.4, 1.4);
+
+        var c5 = new THREE.Mesh4D(testbuf, testmat);
+        c5.position.set(-3, 10, -2, 0);
+        c5.castShadow = true;
+        c5.scale.set(1.5, 1.5, 1.5, 1.5);
+        var c6 = new THREE.Mesh4D(testbuf, testmat);
+        c6.position.set(-3, 10, -4, 0);
+        c6.castShadow = true;
+        c6.scale.set(1.6, 1.6, 1.6, 1.6);
+
+        
+       
+        var c7 = new THREE.Mesh4D(testbuf, testmat);
+        c7.position.set(-3, 10, -6, 0);
+        c7.castShadow = true;
+        c7.receiveShadow = true;
+        c7.scale.set(10, 10, 1, 1);
+
+        this.add(c1);
+        this.add(c2);
+        this.add(c3);
+        this.add(c4);
+        this.add(c5);
+        this.add(c6);
+        this.add(c7);
         
         var plight = new THREE.PointLight4D( 0xffffff, 1.0, 1000 );
         plight.name = "white point light";
@@ -69,7 +144,8 @@ class DevScene extends THREE.Scene4D {
         var buff = new THREE.BoxGeometry4D( 0.1, 0.1, 0.1, 1, 1, 1 );
         var material = new THREE.MeshLambertMaterial( { color: 0xff0000 } );
         var pcube = new THREE.PhysicsMesh4D(buff, material);
-        pcube.position.set(3, -0.5, 3, 0);
+        pcube.position.set(-3, 10, -3, 0);
+        pcube.rotation.zw = Math.PI;
         pcube.isAffectedByGravity = false;
         var time = 0;
 
@@ -83,8 +159,8 @@ class DevScene extends THREE.Scene4D {
 
         pcube.name = "white point light cube";
 
-        pcube.add(plight);
-        this.add( pcube );
+        //pcube.add(plight);
+        //this.add( pcube );
         
         var cubes = [];
 
@@ -116,15 +192,17 @@ class DevScene extends THREE.Scene4D {
         this.add(tess);
 
         var cbuff = new THREE.BoxGeometry4D( 2, 2, 2, 1, 1, 1 );
-        var cmaterial = new THREE.MeshLambertMaterial( { color: 0x8080ff, transparent: true, opacity: 0.75, alphaMap: amap } );
+        var cmaterial = new THREE.MeshLambertMaterial( { color: 0x8080ff, transparent: false, opacity: 0.95, alphaMap: amap } );
+        var cmaterial2 = new THREE.MeshLambertMaterial( { color: 0x80ff80, transparent: false, opacity: 0.95, alphaMap: amap } );
         var refcube = new THREE.PhysicsMesh4D(cbuff, cmaterial);
-        var refcube2 = new THREE.PhysicsMesh4D(cbuff, cmaterial);
+        var refcube2 = new THREE.PhysicsMesh4D(cbuff, cmaterial2);
         refcube.isAffectedByGravity = false;
         refcube2.isAffectedByGravity = false;
         refcube.position.x = -6;
-        refcube2.position.x = 1;
+        refcube2.position.z = 0;
+        refcube2.position.w = 1;
         //refcube2.position.w = 1;
-        refcube2.rotation.xw = Math.PI * 0.5;
+        refcube2.rotation.zw = -Math.PI * 0.5;
         refcube.name = "refcube";
         refcube2.name = "refcube2";
 
@@ -141,6 +219,9 @@ class DevScene extends THREE.Scene4D {
             cube.name = "Falling Cube " + i;
             cube.position.y = i;
             cube.position.w = i % 2;
+            cube.castShadow = true;
+            cube.receiveShadow = true;
+            cube.isAffectedByGravity = true;
             cubes.push(cube);
         }
         
@@ -154,6 +235,8 @@ class DevScene extends THREE.Scene4D {
         floor.name = "floor";
         floor.isAffectedByGravity = false;
         floor.position.y = -2.5;
+        floor.castShadow = true;
+        floor.receiveShadow = true;
         //floor.position.w = 1
         this.add(floor);
         
@@ -165,6 +248,8 @@ class DevScene extends THREE.Scene4D {
         floor2.isAffectedByGravity = false;
         floor2.position.y = -10.5;
         floor2.position.w = 1
+        floor2.castShadow = true;
+        floor2.receiveShadow = true;
 
         this.add(floor2);
 

@@ -6,6 +6,7 @@ import { mainControls } from "../controls/MainControls.js"
 import { pausedControls } from "../controls/PausedControls.js"
 import { dialogueControls } from "../controls/DialogueControls.js"
 import { DialogueManager } from "../dialogue/DialogueManager.js"
+import { QuadScene } from "../scenes/dev/QuadScene.js";
 
 var instance = null;
 
@@ -130,14 +131,18 @@ class GameManager {
      * Creates a WebGLRenderer, a PerspectiveCamera4D, and a Scene4D, and moves the camera to a default position at 0, 0, 5, 5
      */
     #setUpRenderingPipeline() {
-        this.renderer = new THREE.WebGLRenderer();
+        this.renderer = new THREE.WebGLRenderer({logarithmicDepthBuffer: true});
         this.camera = new THREE.PerspectiveCamera4D( 75, window.innerWidth / window.innerHeight, 0.1, 1000, 0.1, 1000 );
         this.renderer.setSize( window.innerWidth, window.innerHeight );
+        //this.renderer.shadowMap.enabled = true
         document.body.appendChild( this.renderer.domElement );
         
         this.scene = new THREE.Scene4D();
+        this.quadScene = new QuadScene();
+        this.quadCamera = new THREE.OrthographicCamera4D( -50, 50 ,50, -50, -1000, 1000 );
 
         this.camera.position.z = 5;
+        this.quadCamera.position.z = 100;
         //this.camera.position.w = 5;
     }
 
@@ -207,6 +212,10 @@ class GameManager {
         this.#updatePhysicsObjects();
         this.#updateDialogue();
         this.renderer.render( this.scene, this.camera );
+
+        //this.quadScene.quadMaterial.uniforms.map.value = this.scene.light.shadow.map;
+        //this.renderer.render( this.quadScene, this.quadCamera );
+
         this.controlsFunction[this.gameState](this);
         this.#frameTearDown();
     }
