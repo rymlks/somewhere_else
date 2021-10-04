@@ -20,8 +20,7 @@ class DemoScene extends THREE.Scene4D {
         var floor = new THREE.PhysicsMesh4D(buff, material);
         floor.name = "floor";
         floor.isAffectedByGravity = false;
-        floor.position.set(0, -2.75, 0, -0.01);
-        //this.add(floor);
+        floor.position.set(0, -2.75, 0, 0.001);
         
 
         var boxbuff = new THREE.BoxGeometry4D(3, 0.5, 10, 1, 1, 1 );
@@ -29,7 +28,7 @@ class DemoScene extends THREE.Scene4D {
         floor2.name = "floor2";
         floor2.isAffectedByGravity = false;
 
-        floor2.position.set(6.5, 0, -4, -5);
+        floor2.position.set(0, 0, -3.5, -5);
         floor2.rotation.xw = Math.PI * 0.5;
         floor2.rotation.zx = Math.PI * 0.5;
 
@@ -49,6 +48,7 @@ class DemoScene extends THREE.Scene4D {
         sky.isAffectedByGravity = false;
         sky.position.set(0,0,0,0);
         this.add(sky);
+        //this.add(floor);
     }
 }
 
