@@ -1,10 +1,13 @@
 import {GameManager} from "./core/GameManager.js";
 import {DevScene} from "./scenes/dev/DevScene.js";
 import {DemoScene} from "./scenes/dev/DemoScene.js";
+import {EditorScene} from "./scenes/util/EditorScene.js";
+import {QuadScene} from "./scenes/util/QuadScene.js";
 
 var GM = new GameManager();
-GM.scene = new DevScene();
+//GM.scene = new EditorScene();
 //GM.scene = new DemoScene();
+GM.scene = new DevScene();
 GM.play();
 
 // Debug stuff

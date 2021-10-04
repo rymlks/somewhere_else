@@ -1,10 +1,11 @@
 import * as THREE from "../three.js/src/Three.js";
 import { GameState } from "./GameState.js"
 import { keyPressed, keyReleased, mouseMoved, wheelScrolled, 
-    pressedKeys, heldKeys, releasedKeys, mouseAxis, mouseWheel } from "../controls/utils.js"
+    pressedKeys, heldKeys, releasedKeys, mouseAxis, mouseWheel, forward, squidward } from "../controls/utils.js"
 import { mainControls } from "../controls/MainControls.js"
 import { pausedControls } from "../controls/PausedControls.js"
 import { dialogueControls } from "../controls/DialogueControls.js"
+import { editorControls } from "../controls/EditorControls.js"
 import { DialogueManager } from "../dialogue/DialogueManager.js"
 import { QuadScene } from "../scenes/dev/QuadScene.js";
 
@@ -18,12 +19,15 @@ class GameManager {
 
     #dialogueManager;
 
+    #previousGameState;
+
     constructor() {
         if (instance !== null) {
             throw "Only one instance of GameManager is allowed."
         }
 
         this.gameState = GameState.DEFAULT;
+        this.#previousGameState = GameState.DEFAULT;
         this.speed = 5.0;
         this.#dialogueManager = new DialogueManager(this);
 
@@ -60,7 +64,14 @@ class GameManager {
      * Unpause the game. Re-enable controls. Close pause menu (TODO)
      */
     unPause() {
-        this.#setGameState(GameState.DEFAULT)
+        this.#setGameState(this.#previousGameState)
+    }
+
+    /**
+     * Enter level editor mode.
+     */
+    beginEditor() {
+        this.#setGameState(GameState.EDITOR);
     }
 
     /**
@@ -167,6 +178,7 @@ class GameManager {
         this.controlsFunction[GameState.DEFAULT] = mainControls;
         this.controlsFunction[GameState.PAUSED] = pausedControls;
         this.controlsFunction[GameState.DIALOGUE] = dialogueControls;
+        this.controlsFunction[GameState.EDITOR] = editorControls;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -181,16 +193,19 @@ class GameManager {
     #setGameState(gameState) {
         switch(gameState) {
             case GameState.PAUSED:
+                // pass
             case GameState.DIALOGUE:
                 document.exitPointerLock();
                 break;
+            case GameState.EDITOR:
+                // pass
             case GameState.DEFAULT:
                 document.body.requestPointerLock();
                 break;
             default:
                 throw "Illegal game state reached: " + gameState;
         }
-        
+        this.#previousGameState = this.gameState;
         this.gameState = gameState;
     }
 
@@ -208,6 +223,16 @@ class GameManager {
 
         // This may need to move below frame teardown
         requestAnimationFrame( this.#update.bind(this) );
+
+        for (var obj of this.scene.children) {
+            if (obj.isGizmo === true) {
+                var pos = new THREE.Vector5().copy(this.camera.position);
+                var offset = new THREE.Vector5().copy(forward).add(squidward).normalize().multiplyScalar(obj.staticDistance);
+	            var rotato = new THREE.Matrix5().makeRotationFromEuler(this.camera.rotation);
+                pos.add(rotato.multiplyVector(offset));
+                obj.position.set(pos.x, pos.y, pos.z, pos.w);
+            }
+        }
 
         this.#updatePhysicsObjects();
         this.#updateDialogue();

@@ -4,8 +4,8 @@ import { flyControls } from "./FlyControls.js"
  * Handle inputs for the main game loop
  * @param {GameManager} GM 
  */
-function mainControls(GM) {
+function editorControls(GM) {
 	flyControls(GM);
 }
 
-export { mainControls };
+export { editorControls };

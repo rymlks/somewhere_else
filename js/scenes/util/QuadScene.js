@@ -1,6 +1,5 @@
 import * as THREE from "../../three.js/src/Three.js";
 
-// TODO: Better objects definition for Scenes
 class QuadScene extends THREE.Scene4D {
     constructor() {
         super();

@@ -1,9 +1,13 @@
 import * as THREE from "../../three.js/src/Three.js";
+import { Gizmo } from "../../objectLoaders/gizmo.js";
 
 // TODO: Better objects definition for Scenes
 class DevScene extends THREE.Scene4D {
     constructor() {
         super();
+        var gizmo = new Gizmo();
+        gizmo.name = "gizmo";
+        this.add(gizmo);
 
         const bgloader = new THREE.TesseractTextureLoader4D();
         const bgtexture = bgloader.load([
