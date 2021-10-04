@@ -5,7 +5,7 @@ import { Gizmo } from "../../objectLoaders/gizmo.js";
 class DevScene extends THREE.Scene4D {
     constructor() {
         super();
-        var gizmo = new Gizmo();
+        var gizmo = new Gizmo(true);
         gizmo.name = "gizmo";
         this.add(gizmo);
 

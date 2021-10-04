@@ -1,7 +1,7 @@
 import * as THREE from "../three.js/src/Three.js";
 import { GameState } from "./GameState.js"
 import { keyPressed, keyReleased, mouseMoved, wheelScrolled, 
-    pressedKeys, heldKeys, releasedKeys, mouseAxis, mouseWheel, forward, squidward } from "../controls/utils.js"
+    pressedKeys, heldKeys, releasedKeys, mouseAxis, mouseWheel } from "../controls/utils.js"
 import { mainControls } from "../controls/MainControls.js"
 import { pausedControls } from "../controls/PausedControls.js"
 import { dialogueControls } from "../controls/DialogueControls.js"
@@ -224,16 +224,6 @@ class GameManager {
         // This may need to move below frame teardown
         requestAnimationFrame( this.#update.bind(this) );
 
-        for (var obj of this.scene.children) {
-            if (obj.isGizmo === true) {
-                var pos = new THREE.Vector5().copy(this.camera.position);
-                var offset = new THREE.Vector5().copy(forward).add(squidward).normalize().multiplyScalar(obj.staticDistance);
-	            var rotato = new THREE.Matrix5().makeRotationFromEuler(this.camera.rotation);
-                pos.add(rotato.multiplyVector(offset));
-                obj.position.set(pos.x, pos.y, pos.z, pos.w);
-            }
-        }
-
         this.#updatePhysicsObjects();
         this.#updateDialogue();
         this.renderer.render( this.scene, this.camera );
@@ -302,7 +292,7 @@ class GameManager {
         // Update - perform collision detection and apply movement.
         for (var child of this.scene.children) {
             if (child.isPhysicsObject === true) {
-                child.update(this.timeDelta, this.scene);
+                child.update(this.timeDelta, this.scene, this);
             }
         }
     }

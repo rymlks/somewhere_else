@@ -1,13 +1,15 @@
 import * as THREE from "../three.js/src/Three.js";
 
-class Gizmo extends THREE.Group4D {
+class Gizmo extends THREE.PhysicsGroup4D {
 
     isGizmo = true;
-
-    staticDistance = 10;
+    alwaysOnTop = true;
     
-    constructor() {
+    constructor( centered ) {
         super();
+        this.centered = centered !== undefined ? centered : false;
+        
+        this.offset = new THREE.Vector5(0, 0, -5, -3, 1);
 
         var thisobj = this;
 
@@ -24,25 +26,33 @@ class Gizmo extends THREE.Group4D {
             objLoader.load( 
             'gizmo.obj', 
             function ( object ) {
-                object.children[0].material.color = new THREE.Color(0, 1, 0);
-                thisobj.add( object );
+                console.log(object);
 
-                var horiz = object.clone();
+                var physMesh = new THREE.PhysicsMesh4D(object.children[0].geometry, object.children[0].material);
+
+                physMesh.name = "Gizmo Y";
+                physMesh.material.color = new THREE.Color(0, 1, 0);
+                thisobj.add( physMesh );
+
+                var horiz = physMesh.clone();
+                horiz.name = "Gizmo X";
                 horiz.rotation.xy = -Math.PI * 0.5;
-                horiz.children[0].material = horiz.children[0].material.clone()
-                horiz.children[0].material.color = new THREE.Color(1, 0, 0);
+                horiz.material = horiz.material.clone()
+                horiz.material.color = new THREE.Color(1, 0, 0);
                 thisobj.add(horiz);
 
-                var depth = object.clone();
+                var depth = physMesh.clone();
+                depth.name = "Gizmo Z";
                 depth.rotation.yz = -Math.PI * 0.5;
-                depth.children[0].material = depth.children[0].material.clone()
-                depth.children[0].material.color = new THREE.Color(0, 0, 1);
+                depth.material = depth.material.clone()
+                depth.material.color = new THREE.Color(0, 0, 1);
                 thisobj.add(depth);
 
-                var spiss = object.clone();
+                var spiss = physMesh.clone();
+                spiss.name = "Gizmo W";
                 spiss.rotation.yw = -Math.PI * 0.5;
-                spiss.children[0].material = spiss.children[0].material.clone()
-                spiss.children[0].material.color = new THREE.Color(1, 1, 0);
+                spiss.material = spiss.material.clone()
+                spiss.material.color = new THREE.Color(1, 1, 0);
                 thisobj.add(spiss);
             }, 
             // called when loading is in progresses
@@ -56,6 +66,17 @@ class Gizmo extends THREE.Group4D {
 
         });
 
+    }
+    
+    update(delta, scene, GM) {
+        if (this.centered === true) {
+            var pos = new THREE.Vector5().copy(GM.camera.position);
+            var rotato = new THREE.Matrix5().makeRotationFromEuler(GM.camera.rotation);
+            pos.add(rotato.multiplyVector(this.offset));
+            this.position.set(pos.x, pos.y, pos.z, pos.w);
+        } else {
+            super.update(delta, scene);
+        }
     }
 }
 

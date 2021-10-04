@@ -6,9 +6,15 @@ class EditorScene extends THREE.Scene4D {
 
     constructor() {
         super();
-        var gizmo = new Gizmo();
+        var gizmo = new Gizmo( true );
         gizmo.name = "gizmo";
+        gizmo.isAffectedByGravity = false;
         this.add(gizmo);
+        
+        var sittingGizmo = new Gizmo( false );
+        sittingGizmo.name = "sittingGizmo";
+        sittingGizmo.isAffectedByGravity = false;
+        this.add(sittingGizmo);
 
         var light = new THREE.AmbientLight4D( 0x404040 ); // soft white light
         light.name = "grey ambient light";

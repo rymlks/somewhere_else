@@ -5,9 +5,9 @@ import {EditorScene} from "./scenes/util/EditorScene.js";
 import {QuadScene} from "./scenes/util/QuadScene.js";
 
 var GM = new GameManager();
-//GM.scene = new EditorScene();
+GM.scene = new EditorScene();
 //GM.scene = new DemoScene();
-GM.scene = new DevScene();
+//GM.scene = new DevScene();
 GM.play();
 
 // Debug stuff
