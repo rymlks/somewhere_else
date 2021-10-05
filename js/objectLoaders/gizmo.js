@@ -8,7 +8,6 @@ class Gizmo extends THREE.PhysicsGroup4D {
     constructor( centered ) {
         super();
         this.centered = centered !== undefined ? centered : false;
-        
         this.offset = new THREE.Vector5(0, 0, -5, -3, 1);
 
         var thisobj = this;
@@ -28,10 +27,13 @@ class Gizmo extends THREE.PhysicsGroup4D {
             function ( object ) {
                 console.log(object);
 
+                var renderLayer = thisobj.centered ? THREE.MaxRenderLayer : 0;
+
                 var physMesh = new THREE.PhysicsMesh4D(object.children[0].geometry, object.children[0].material);
 
                 physMesh.name = "Gizmo Y";
                 physMesh.material.color = new THREE.Color(0, 1, 0);
+                physMesh.renderLayer = renderLayer;
                 thisobj.add( physMesh );
 
                 var horiz = physMesh.clone();
@@ -65,6 +67,10 @@ class Gizmo extends THREE.PhysicsGroup4D {
             } );
 
         });
+
+        if (this.centered) {
+            this.renderLayer = THREE.MaxRenderLayer;
+        }
 
     }
     

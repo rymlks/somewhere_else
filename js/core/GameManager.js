@@ -7,7 +7,7 @@ import { pausedControls } from "../controls/PausedControls.js"
 import { dialogueControls } from "../controls/DialogueControls.js"
 import { editorControls } from "../controls/EditorControls.js"
 import { DialogueManager } from "../dialogue/DialogueManager.js"
-import { QuadScene } from "../scenes/dev/QuadScene.js";
+import { QuadScene } from "../scenes/util/QuadScene.js";
 
 var instance = null;
 

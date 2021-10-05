@@ -1,5 +1,5 @@
 import * as THREE from "../three.js/src/Three.js";
-import { clampTo180, forward, backward, up, down, left, right, squidward, squodward, heldKeys } from "./utils.js"
+import { clampTo180, forward, backward, up, down, left, right, squidward, squodward } from "./utils.js"
 
 const KeyCode = require('Keycode-js');
 
@@ -115,6 +115,11 @@ function flyControls(GM) {
         cam.position.copy(GM.camera.position);
         cam.rotation.copy(GM.camera.rotation);
         GM.camera = cam;
+	}
+
+	// Press R to reset rotation
+	if (GM.pressedKeys[KeyCode.KEY_R]) {
+		_euler.set(0, 0, 0, 0, 0, 0);
 	}
 	
 	// Mouse movement
