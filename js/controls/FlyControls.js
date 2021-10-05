@@ -134,16 +134,17 @@ function flyControls(GM) {
 		// Do not allow more than 90 degrees up/down rotation.
 		_euler.yw = clampTo180(_euler.yw - mouseVertical * rotationspeed);
 	}
-
-	if (GM.heldKeys[KeyCode.KEY_L] === true) {
-		document.body.requestPointerLock();
-	}
 	
+	// Dialogue
 	if (GM.pressedKeys[KeyCode.KEY_T] === true) {
 		GM.beginDialogue(dialogue);
 	}
 	if (GM.pressedKeys[KeyCode.KEY_Y] === true) {
 		GM.beginDialogue(dialogue2);
+	}
+
+	if (GM.heldKeys[KeyCode.KEY_L] === true) {
+		document.body.requestPointerLock();
 	}
 
 	_euler.zw += wheelDelta * rotationspeed;

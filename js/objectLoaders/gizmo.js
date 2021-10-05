@@ -27,7 +27,7 @@ class Gizmo extends THREE.PhysicsGroup4D {
             function ( object ) {
                 console.log(object);
 
-                var renderLayer = thisobj.centered ? THREE.MaxRenderLayer : 0;
+                var renderLayer = THREE.MaxRenderLayer;
 
                 var physMesh = new THREE.PhysicsMesh4D(object.children[0].geometry, object.children[0].material);
 

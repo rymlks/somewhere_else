@@ -1,7 +1,9 @@
 import * as THREE from "../three.js/src/Three.js";
 import { GameState } from "./GameState.js"
-import { keyPressed, keyReleased, mouseMoved, wheelScrolled, 
-    pressedKeys, heldKeys, releasedKeys, mouseAxis, mouseWheel } from "../controls/utils.js"
+import { keyPressed, keyReleased, 
+    pressedKeys, heldKeys, releasedKeys, 
+    mousePressed, mouseReleased, mouseMoved, wheelScrolled, 
+    pressedMouseButtons, heldMouseButtons, releasedMouseButtons, mouseAxis, mouseWheel } from "../controls/utils.js"
 import { mainControls } from "../controls/MainControls.js"
 import { pausedControls } from "../controls/PausedControls.js"
 import { dialogueControls } from "../controls/DialogueControls.js"
@@ -116,6 +118,11 @@ class GameManager {
         this.pressedKeys = pressedKeys;
         this.heldKeys = heldKeys;
         this.releasedKeys = releasedKeys;
+
+        this.pressedMouseButtons = pressedMouseButtons;
+        this.heldMouseButtons = heldMouseButtons;
+        this.releasedMouseButtons = releasedMouseButtons;
+
         this.#mouseAxis = mouseAxis;
         this.#mouseWheel = mouseWheel;
 
@@ -133,6 +140,8 @@ class GameManager {
         window.onkeydown = keyPressed;
         document.onmousemove = mouseMoved;
         document.onwheel = wheelScrolled;
+        document.onmousedown = mousePressed;
+        document.onmouseup = mouseReleased;
         
         window.addEventListener( 'resize', this.#resize.bind(this), false );
     }
@@ -209,6 +218,18 @@ class GameManager {
         this.gameState = gameState;
     }
 
+    /**
+     * Destroy every property in an object
+     * @param {*} object 
+     */
+    #clearObject(object) {
+        for (var prop in object) {
+            if (object.hasOwnProperty(prop)) {
+                delete object[prop];
+            }
+        }
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     // Game loop methods                                                     //
     ///////////////////////////////////////////////////////////////////////////
@@ -261,18 +282,16 @@ class GameManager {
      */
     #frameTearDown() {
         // Clear KeyDown handles
-        for (var prop in this.pressedKeys) {
-            if (this.pressedKeys.hasOwnProperty(prop)) {
-                delete this.pressedKeys[prop];
-            }
-        }
+        this.#clearObject(this.pressedKeys);
         
         // Clear KeyUp handles
-        for (var prop in this.releasedKeys) {
-            if (this.releasedKeys.hasOwnProperty(prop)) {
-                delete this.releasedKeys[prop];
-            }
-        }
+        this.#clearObject(this.releasedKeys);
+
+        // Clear MouseDown handles
+        this.#clearObject(this.pressedMouseButtons);
+        
+        // Clear MouseUp handles
+        this.#clearObject(this.releasedMouseButtons);
     }
 
     /**
