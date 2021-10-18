@@ -1,13 +1,16 @@
 import * as THREE from "../three.js/src/Three.js";
 
+var _gizmoRotation = new THREE.Matrix5();
+
 class Gizmo extends THREE.PhysicsGroup4D {
 
     isGizmo = true;
     alwaysOnTop = true;
     
-    constructor( centered ) {
+    constructor( centered, noCollision ) {
         super();
         this.centered = centered !== undefined ? centered : false;
+        this.noCollision = noCollision !== undefined ? noCollision : true;
         this.offset = new THREE.Vector5(0, 0, -5, -3, 1);
 
         var thisobj = this;
@@ -25,35 +28,69 @@ class Gizmo extends THREE.PhysicsGroup4D {
             objLoader.load( 
             'gizmo.obj', 
             function ( object ) {
-                console.log(object);
+                //console.log(object);
 
                 var renderLayer = THREE.MaxRenderLayer;
 
-                var physMesh = new THREE.PhysicsMesh4D(object.children[0].geometry, object.children[0].material);
+                var vertical = new THREE.PhysicsMesh4D(object.children[0].geometry, object.children[0].material);
+                vertical.isGizmo = true;
+                vertical.noCollision = thisobj.noCollision;
 
-                physMesh.name = "Gizmo Y";
-                physMesh.material.color = new THREE.Color(0, 1, 0);
-                physMesh.renderLayer = renderLayer;
-                thisobj.add( physMesh );
+                vertical.name = "Gizmo Y";
+                vertical._gizmoDirection = new THREE.Vector5(0, 1, 0, 0, 1);
+                vertical.gizmoDirection = new THREE.Vector4(0, 1, 0, 0);
 
-                var horiz = physMesh.clone();
+                vertical.material.color = new THREE.Color(0, 1, 0);
+                vertical.renderLayer = renderLayer;
+                vertical.geometry.computeBoundingBox();
+                vertical.geometry.boundingBox.applyMatrix5(vertical.matrixWorld);
+                thisobj.add( vertical );
+
+
+
+                var horiz = vertical.clone();
+                horiz.isGizmo = true;
+                horiz.noCollision = thisobj.noCollision;
                 horiz.name = "Gizmo X";
+                horiz._gizmoDirection = new THREE.Vector5(1, 0, 0, 0, 1);
+                horiz.gizmoDirection = new THREE.Vector4(1, 0, 0, 0);
+
                 horiz.rotation.xy = -Math.PI * 0.5;
-                horiz.material = horiz.material.clone()
+                horiz.material = horiz.material.clone();
+                horiz.geometry = horiz.geometry.clone();
+                horiz.geometry.boundingBox = horiz.geometry.boundingBox.clone();
                 horiz.material.color = new THREE.Color(1, 0, 0);
                 thisobj.add(horiz);
 
-                var depth = physMesh.clone();
+
+
+                var depth = vertical.clone();
+                depth.isGizmo = true;
+                depth.noCollision = thisobj.noCollision;
                 depth.name = "Gizmo Z";
+                depth._gizmoDirection = new THREE.Vector5(0, 0, -1, 0, 1);
+                depth.gizmoDirection = new THREE.Vector4(0, 0, -1, 0);
+
                 depth.rotation.yz = -Math.PI * 0.5;
-                depth.material = depth.material.clone()
+                depth.material = depth.material.clone();
+                depth.geometry = depth.geometry.clone();
+                depth.geometry.boundingBox = depth.geometry.boundingBox.clone();
                 depth.material.color = new THREE.Color(0, 0, 1);
                 thisobj.add(depth);
 
-                var spiss = physMesh.clone();
+
+
+                var spiss = vertical.clone();
+                spiss.isGizmo = true;
+                spiss.noCollision = thisobj.noCollision;
                 spiss.name = "Gizmo W";
+                spiss._gizmoDirection = new THREE.Vector5(0, 0, 0, -1, 1);
+                spiss.gizmoDirection = new THREE.Vector4(0, 0, 0, -1);
+
                 spiss.rotation.yw = -Math.PI * 0.5;
-                spiss.material = spiss.material.clone()
+                spiss.material = spiss.material.clone();
+                spiss.geometry = spiss.geometry.clone();
+                spiss.geometry.boundingBox = spiss.geometry.boundingBox.clone();
                 spiss.material.color = new THREE.Color(1, 1, 0);
                 thisobj.add(spiss);
             }, 
@@ -71,6 +108,19 @@ class Gizmo extends THREE.PhysicsGroup4D {
         if (this.centered) {
             this.renderLayer = THREE.MaxRenderLayer;
         }
+
+
+        function onRotationChange() {
+
+            _gizmoRotation.makeRotationFromEuler(this);
+    
+            for (var child of thisobj.children) {
+                var newDir = child._gizmoDirection.clone().applyMatrix5(_gizmoRotation);
+                child.gizmoDirection = new THREE.Vector4(newDir.x, newDir.y, newDir.z, newDir.w);
+            }
+    
+        }
+        this.rotation._onChange( onRotationChange );
 
     }
     

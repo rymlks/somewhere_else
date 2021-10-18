@@ -1,5 +1,6 @@
 import * as THREE from "../three.js/src/Three.js";
 import { clampTo180, forward, backward, up, down, left, right, squidward, squodward } from "./utils.js"
+import { tabToChangeCamera } from "./TabToChangeCamera.js";
 
 const KeyCode = require('Keycode-js');
 
@@ -102,21 +103,6 @@ function flyControls(GM) {
 		_euler.xw = _euler.xw + 10 * rotationspeed;
 	}
 
-	// Tab to switch perspective
-	if (GM.pressedKeys[KeyCode.KEY_TAB] && GM.camera.isOrthographicCamera4D === true) {
-		console.log("make perspec");
-		var cam = new THREE.DoublyPerspectiveCamera4D().copy(GM.camera);
-        cam.position.copy(GM.camera.position);
-        cam.rotation.copy(GM.camera.rotation);
-        GM.camera = cam;
-	} else if (GM.pressedKeys[KeyCode.KEY_TAB] && GM.camera.isPerspectiveCamera4D === true) {
-		console.log("make ortho");
-		var cam = new THREE.PerspectiveCamera4D().copy(GM.camera);
-        cam.position.copy(GM.camera.position);
-        cam.rotation.copy(GM.camera.rotation);
-        GM.camera = cam;
-	}
-
 	// Press R to reset rotation
 	if (GM.pressedKeys[KeyCode.KEY_R]) {
 		_euler.set(0, 0, 0, 0, 0, 0);
@@ -146,6 +132,8 @@ function flyControls(GM) {
 	if (GM.heldKeys[KeyCode.KEY_L] === true) {
 		document.body.requestPointerLock();
 	}
+
+	tabToChangeCamera(GM);
 
 	_euler.zw += wheelDelta * rotationspeed;
 

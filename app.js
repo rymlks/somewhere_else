@@ -4,6 +4,9 @@ const robot = require('robotjs')
 const fs = require('fs');
 
 function createWindow () {
+  //globalShortcut.unregister("CommandOrControl+W");
+  //globalShortcut.unregister("CommandOrControl+A");
+
   // Create the browser window.
   const win = new BrowserWindow({
     width: 800,
@@ -12,7 +15,7 @@ function createWindow () {
       nodeIntegration: true
     },
     acceptFirstMouse: true
-  })
+  });
 
   // and load the index.html of the app.
   win.loadFile('index.html')
@@ -38,6 +41,17 @@ function createWindow () {
           caps = !caps;
       }
     }
+  });
+  
+  globalShortcut.register("CommandOrControl+W", () => {
+    console.log("CommandOrControl+W is pressed: Shortcut Disabled");
+    wc.sendInputEvent({type: "keyDown", keyCode: "W"});
+    wc.sendInputEvent({type: "keyDown", keyCode: "CommandOrControl"});
+  });
+  globalShortcut.register("CommandOrControl+A", () => {
+      console.log("CommandOrControl+A is pressed: Shortcut Disabled");
+      wc.sendInputEvent({type: "keyDown", keyCode: "A"});
+      wc.sendInputEvent({type: "keyDown", keyCode: "CommandOrControl"});
   });
 }
 

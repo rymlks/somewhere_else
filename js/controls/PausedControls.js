@@ -1,3 +1,5 @@
+import { tabToChangeCamera } from './TabToChangeCamera.js';
+
 const KeyCode = require('Keycode-js');
 
 /**
@@ -8,6 +10,8 @@ function pausedControls(GM) {
 	if (GM.pressedKeys[KeyCode.KEY_ESCAPE] === true) {
         GM.unPause();
     }
+    
+    tabToChangeCamera(GM);
 }
 
 export { pausedControls };

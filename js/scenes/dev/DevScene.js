@@ -9,7 +9,7 @@ class DevScene extends THREE.Scene4D {
         gizmo.name = "gizmo";
         this.add(gizmo);
 
-        const bgloader = new THREE.TesseractTextureLoader4D();
+        const bgloader = new THREE.CubeTextureLoader4D();
         const bgtexture = bgloader.load([
           'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/pos-x.jpg',
           'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/neg-x.jpg',

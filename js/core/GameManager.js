@@ -158,11 +158,11 @@ class GameManager {
         document.body.appendChild( this.renderer.domElement );
         
         this.scene = new THREE.Scene4D();
-        this.quadScene = new QuadScene();
-        this.quadCamera = new THREE.OrthographicCamera4D( -50, 50 ,50, -50, -1000, 1000 );
+        //this.quadScene = new QuadScene();
+        //this.quadCamera = new THREE.OrthographicCamera4D( -50, 50 ,50, -50, -1000, 1000 );
 
         this.camera.position.z = 5;
-        this.quadCamera.position.z = 100;
+        //this.quadCamera.position.z = 100;
         //this.camera.position.w = 5;
     }
 
@@ -175,7 +175,10 @@ class GameManager {
         this.timeScaledSpeed = this.speed * this.timeDelta;
 
         this.#frameDeltas = [];
+        this.FPSBufferSize = 10;
         this.framesPerSecond = 0;
+        this.secondsPerFrame = Infinity;
+        this.maxSecondsPerFrame = Infinity;
     }
 
     /**
@@ -265,11 +268,13 @@ class GameManager {
         this.timeScaledSpeed = this.speed * this.timeDelta;
 
         this.#frameDeltas.push(this.timeDelta);
-        if (this.#frameDeltas.length > 10) {
+        if (this.#frameDeltas.length > this.FPSBufferSize) {
             this.#frameDeltas.shift();
         }
         // Divide number of frames by the sum of the length of each frame to get frames per second
         this.framesPerSecond = this.#frameDeltas.length / this.#frameDeltas.reduce(function(a, b){ return a + b; }, 0);
+        this.secondsPerFrame = 1 / this.framesPerSecond;
+        this.maxSecondsPerFrame = this.#frameDeltas.reduce(function(a, b){ return Math.max(a, b); }, 0);
 
         // Consume mouse movement events
         this.mouseVertical = this.#mouseAxis.vertical;
@@ -299,7 +304,7 @@ class GameManager {
      */
     #updatePhysicsObjects() {
         // Do not apply physics when paused
-        if (this.gameState !== GameState.DEFAULT) return;
+        if (this.gameState === GameState.PAUSED) return;
 
         // Early update - re-compute collision boxes.
         for (var child of this.scene.children) {
