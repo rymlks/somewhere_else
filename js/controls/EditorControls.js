@@ -28,17 +28,36 @@ function editorControls(GM) {
 	}
 
 	flyControls(GM);
+	mouseControls(GM);
+	numKeys(GM);
+	keyboardButtons(GM);
+}
 
+function keyboardButtons(GM) {
 	if (GM.pressedKeys[KeyCode.KEY_BACK_QUOTE]) {
 		GM.renderer.showBoundingBoxes = !GM.renderer.showBoundingBoxes;
 	}
+	if (GM.pressedKeys[KeyCode.KEY_BACK_SPACE]) {
+		// Not sure if memory leak...
+		selection.material.dispose();
+		selection.geometry.dispose();
+		GM.scene.remove(selection);
+		deselect();
+	}
+	if (GM.pressedKeys[KeyCode.KEY_G]) {
+		selection.isAffectedByGravity = ! (selection.isAffectedByGravity === true);
+		console.log(selection.isAffectedByGravity);
+	}
+}
+
+function mouseControls(GM) {
 	
 	var rayPlane = new THREE.RayPlane4D();
 	rayPlane.applyMatrix5(GM.camera.matrixWorld);
+	var obj = rayPlane.cast(10, GM.scene);
 
 	// LMB clicked
 	if (GM.pressedMouseButtons[0] === true) {
-		var obj = rayPlane.cast(10, GM.scene);
 		//console.log(obj);
 
 		if (obj === null) {
@@ -71,14 +90,23 @@ function editorControls(GM) {
 	// RMB held down
 	if (GM.heldMouseButtons[2] === true) {
 	}
-	
+}
+
+var addedObjects = 0;
+function numKeys(GM) {
+	if (GM.pressedKeys[KeyCode.KEY_1]) {
+        var buff = new THREE.TesseractGeometry4D( 1, 1, 1, 1 );
+        var material = new THREE.MeshLambertMaterial( { color: 0xffffff } );
+        var tess = new THREE.PhysicsMesh4D(buff, material);
+        tess.name = "Added Tesseract " + addedObjects++;
+        tess.isAffectedByGravity = false;
+        tess.position.copy(GM.camera.position);
+        GM.scene.add(tess);
+	}
 }
 
 function select(object) {
 	deselect();
-
-	//gizmo.rotation.copy(object.rotation);
-	//gizmo.position.copy(object.position);
 
 	gizmo.setActive(true);
 	object.add(gizmo);

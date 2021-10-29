@@ -24,7 +24,7 @@ class EditorScene extends THREE.Scene4D {
         const textureLoader = new THREE.TextureLoader();
         const amap = textureLoader.load( "assets/textures/testing_map.png" );
         var buff = new THREE.TesseractGeometry4D( 1, 1, 1, 1 );
-        var material = new THREE.MeshLambertMaterial( { color: 0xffffff, transparent: true, opacity: 0.5 } );
+        var material = new THREE.MeshLambertMaterial( { color: 0x0000ff, transparent: true, opacity: 1.0 } );
         var floor = new THREE.PhysicsMesh4D(buff, material);
         floor.name = "floor";
         floor.isAffectedByGravity = false;

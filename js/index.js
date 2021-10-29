@@ -20,6 +20,6 @@ function updateInfoDiv() {
 	infodiv.innerHTML += "y: " + GM.camera.position.y.toPrecision(4) + ", ";
 	infodiv.innerHTML += "z: " + GM.camera.position.z.toPrecision(4) + ", ";
 	infodiv.innerHTML += "w: " + GM.camera.position.w.toPrecision(4) + ", ";
-	infodiv.innerHTML += "MSFP: " + (GM.maxSecondsPerFrame * 1000).toPrecision(4);
+	infodiv.innerHTML += "MSPF: " + (GM.maxSecondsPerFrame * 1000).toPrecision(4);
 }
 setInterval(updateInfoDiv, 1000);
