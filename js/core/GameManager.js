@@ -1,12 +1,15 @@
 import * as THREE from "../three.js/src/Three.js";
 import { GameState } from "./GameState.js"
-import { keyPressed, keyReleased, mouseMoved, wheelScrolled, 
-    pressedKeys, heldKeys, releasedKeys, mouseAxis, mouseWheel } from "../controls/utils.js"
+import { keyPressed, keyReleased, 
+    pressedKeys, heldKeys, releasedKeys, 
+    mousePressed, mouseReleased, mouseMoved, wheelScrolled, 
+    pressedMouseButtons, heldMouseButtons, releasedMouseButtons, mouseAxis, mouseWheel } from "../controls/utils.js"
 import { mainControls } from "../controls/MainControls.js"
 import { pausedControls } from "../controls/PausedControls.js"
 import { dialogueControls } from "../controls/DialogueControls.js"
+import { editorControls } from "../controls/EditorControls.js"
 import { DialogueManager } from "../dialogue/DialogueManager.js"
-import { QuadScene } from "../scenes/dev/QuadScene.js";
+import { QuadScene } from "../scenes/util/QuadScene.js";
 
 var instance = null;
 
@@ -18,12 +21,15 @@ class GameManager {
 
     #dialogueManager;
 
+    #previousGameState;
+
     constructor() {
         if (instance !== null) {
             throw "Only one instance of GameManager is allowed."
         }
 
         this.gameState = GameState.DEFAULT;
+        this.#previousGameState = GameState.DEFAULT;
         this.speed = 5.0;
         this.#dialogueManager = new DialogueManager(this);
 
@@ -60,7 +66,14 @@ class GameManager {
      * Unpause the game. Re-enable controls. Close pause menu (TODO)
      */
     unPause() {
-        this.#setGameState(GameState.DEFAULT)
+        this.#setGameState(this.#previousGameState)
+    }
+
+    /**
+     * Enter level editor mode.
+     */
+    beginEditor() {
+        this.#setGameState(GameState.EDITOR);
     }
 
     /**
@@ -105,6 +118,11 @@ class GameManager {
         this.pressedKeys = pressedKeys;
         this.heldKeys = heldKeys;
         this.releasedKeys = releasedKeys;
+
+        this.pressedMouseButtons = pressedMouseButtons;
+        this.heldMouseButtons = heldMouseButtons;
+        this.releasedMouseButtons = releasedMouseButtons;
+
         this.#mouseAxis = mouseAxis;
         this.#mouseWheel = mouseWheel;
 
@@ -122,6 +140,8 @@ class GameManager {
         window.onkeydown = keyPressed;
         document.onmousemove = mouseMoved;
         document.onwheel = wheelScrolled;
+        document.onmousedown = mousePressed;
+        document.onmouseup = mouseReleased;
         
         window.addEventListener( 'resize', this.#resize.bind(this), false );
     }
@@ -138,11 +158,11 @@ class GameManager {
         document.body.appendChild( this.renderer.domElement );
         
         this.scene = new THREE.Scene4D();
-        this.quadScene = new QuadScene();
-        this.quadCamera = new THREE.OrthographicCamera4D( -50, 50 ,50, -50, -1000, 1000 );
+        //this.quadScene = new QuadScene();
+        //this.quadCamera = new THREE.OrthographicCamera4D( -50, 50 ,50, -50, -1000, 1000 );
 
         this.camera.position.z = 5;
-        this.quadCamera.position.z = 100;
+        //this.quadCamera.position.z = 100;
         //this.camera.position.w = 5;
     }
 
@@ -155,7 +175,10 @@ class GameManager {
         this.timeScaledSpeed = this.speed * this.timeDelta;
 
         this.#frameDeltas = [];
+        this.FPSBufferSize = 10;
         this.framesPerSecond = 0;
+        this.secondsPerFrame = Infinity;
+        this.maxSecondsPerFrame = Infinity;
     }
 
     /**
@@ -167,6 +190,7 @@ class GameManager {
         this.controlsFunction[GameState.DEFAULT] = mainControls;
         this.controlsFunction[GameState.PAUSED] = pausedControls;
         this.controlsFunction[GameState.DIALOGUE] = dialogueControls;
+        this.controlsFunction[GameState.EDITOR] = editorControls;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -181,17 +205,32 @@ class GameManager {
     #setGameState(gameState) {
         switch(gameState) {
             case GameState.PAUSED:
+                // pass
             case GameState.DIALOGUE:
                 document.exitPointerLock();
                 break;
+            case GameState.EDITOR:
+                // pass
             case GameState.DEFAULT:
                 document.body.requestPointerLock();
                 break;
             default:
                 throw "Illegal game state reached: " + gameState;
         }
-        
+        this.#previousGameState = this.gameState;
         this.gameState = gameState;
+    }
+
+    /**
+     * Destroy every property in an object
+     * @param {*} object 
+     */
+    #clearObject(object) {
+        for (var prop in object) {
+            if (object.hasOwnProperty(prop)) {
+                delete object[prop];
+            }
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -229,11 +268,13 @@ class GameManager {
         this.timeScaledSpeed = this.speed * this.timeDelta;
 
         this.#frameDeltas.push(this.timeDelta);
-        if (this.#frameDeltas.length > 10) {
+        if (this.#frameDeltas.length > this.FPSBufferSize) {
             this.#frameDeltas.shift();
         }
         // Divide number of frames by the sum of the length of each frame to get frames per second
         this.framesPerSecond = this.#frameDeltas.length / this.#frameDeltas.reduce(function(a, b){ return a + b; }, 0);
+        this.secondsPerFrame = 1 / this.framesPerSecond;
+        this.maxSecondsPerFrame = this.#frameDeltas.reduce(function(a, b){ return Math.max(a, b); }, 0);
 
         // Consume mouse movement events
         this.mouseVertical = this.#mouseAxis.vertical;
@@ -246,18 +287,16 @@ class GameManager {
      */
     #frameTearDown() {
         // Clear KeyDown handles
-        for (var prop in this.pressedKeys) {
-            if (this.pressedKeys.hasOwnProperty(prop)) {
-                delete this.pressedKeys[prop];
-            }
-        }
+        this.#clearObject(this.pressedKeys);
         
         // Clear KeyUp handles
-        for (var prop in this.releasedKeys) {
-            if (this.releasedKeys.hasOwnProperty(prop)) {
-                delete this.releasedKeys[prop];
-            }
-        }
+        this.#clearObject(this.releasedKeys);
+
+        // Clear MouseDown handles
+        this.#clearObject(this.pressedMouseButtons);
+        
+        // Clear MouseUp handles
+        this.#clearObject(this.releasedMouseButtons);
     }
 
     /**
@@ -265,7 +304,7 @@ class GameManager {
      */
     #updatePhysicsObjects() {
         // Do not apply physics when paused
-        if (this.gameState !== GameState.DEFAULT) return;
+        if (this.gameState === GameState.PAUSED) return;
 
         // Early update - re-compute collision boxes.
         for (var child of this.scene.children) {
@@ -277,7 +316,7 @@ class GameManager {
         // Update - perform collision detection and apply movement.
         for (var child of this.scene.children) {
             if (child.isPhysicsObject === true) {
-                child.update(this.timeDelta, this.scene);
+                child.update(this.timeDelta, this.scene, this);
             }
         }
     }

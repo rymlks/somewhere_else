@@ -1,11 +1,15 @@
 import * as THREE from "../../three.js/src/Three.js";
+import { Gizmo } from "../../objectLoaders/gizmo.js";
 
 // TODO: Better objects definition for Scenes
 class DevScene extends THREE.Scene4D {
     constructor() {
         super();
+        var gizmo = new Gizmo(true);
+        gizmo.name = "gizmo";
+        this.add(gizmo);
 
-        const bgloader = new THREE.TesseractTextureLoader4D();
+        const bgloader = new THREE.CubeTextureLoader4D();
         const bgtexture = bgloader.load([
           'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/pos-x.jpg',
           'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/neg-x.jpg',

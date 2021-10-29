@@ -52,6 +52,9 @@ class WheelMovement {
 var pressedKeys = {};
 var heldKeys = {};
 var releasedKeys = {};
+var pressedMouseButtons = {};
+var heldMouseButtons = {};
+var releasedMouseButtons = {};
 var mouseAxis = new MouseMovement();
 var mouseWheel = new WheelMovement();
 
@@ -71,9 +74,24 @@ function mouseMoved(e) {
 	mouseAxis._horizontal += e.movementX;
 	mouseAxis._vertical += e.movementY;
 }
+
 function wheelScrolled(e) {
 	mouseWheel._delta += e.deltaY;
 }
 
-export { keyReleased, keyPressed, mouseMoved, wheelScrolled, clampTo180,
-		forward, backward, left, right, up, down, squidward, squodward, pressedKeys, heldKeys, releasedKeys, mouseAxis, mouseWheel };
+function mouseReleased(e) { 
+	heldMouseButtons[e.button] = false; 
+	releasedMouseButtons[e.button] = true; 
+}
+
+function mousePressed(e) { 
+	if (heldMouseButtons[e.button] !== true) {
+		pressedMouseButtons[e.button] = true; 
+	}
+	heldMouseButtons[e.button] = true; 
+}
+
+export { keyReleased, keyPressed, mouseReleased, mousePressed, mouseMoved, wheelScrolled, clampTo180,
+		 forward, backward, left, right, up, down, squidward, squodward, 
+		 pressedKeys, heldKeys, releasedKeys, pressedMouseButtons, heldMouseButtons, releasedMouseButtons,
+		 mouseAxis, mouseWheel };
