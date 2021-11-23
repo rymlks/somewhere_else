@@ -52,10 +52,10 @@ function flyControls(GM) {
 	var mouseVertical = GM.mouseVertical;
 	var wheelDelta = GM.mouseWheel;
 	if (_euler === null) {
-		_euler = new THREE.Euler4D().copy(GM.camera.rotation);
+		_euler = new THREE.Euler4D().copy(GM.player.rotation);
 	}
 	if (_pos === null) {
-		_pos = new THREE.Vector5().copy(GM.camera.position);
+		_pos = new THREE.Vector5().copy(GM.player.position);
 	}
 
 	// WASD keys
@@ -137,7 +137,7 @@ function flyControls(GM) {
 
 	_euler.zw += wheelDelta * rotationspeed;
 
-	GM.camera.position.lerp(_pos, positionLerp);
+	GM.player.position.lerp(_pos, positionLerp);
 	GM.camera.rotation.lerp(_euler, rotationLerp);
 }
 

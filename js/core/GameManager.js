@@ -107,6 +107,11 @@ class GameManager {
         this.#dialogueManager.decreaseSelection();
     }
 
+    setScene(scene) {
+        this.scene = scene;
+        this.scene.add(this.player);
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     // Initialization methods                                                //
     ///////////////////////////////////////////////////////////////////////////
@@ -158,10 +163,19 @@ class GameManager {
         document.body.appendChild( this.renderer.domElement );
         
         this.scene = new THREE.Scene4D();
+
+        var playerMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff, transparent: true, opacity: 0 } );
+        var playerGeometry = new THREE.GlomeCapsuleGeometry4D( );
+        this.player = new THREE.PhysicsMesh4D(playerGeometry, playerMaterial);
+        this.player.isAffectedByGravity = false;
+        this.player.renderLayer = -1;
+        this.player.add(this.camera);
+        this.scene.add(this.player);
+
         //this.quadScene = new QuadScene();
         //this.quadCamera = new THREE.OrthographicCamera4D( -50, 50 ,50, -50, -1000, 1000 );
 
-        this.camera.position.z = 5;
+        //this.camera.position.z = 5;
         //this.quadCamera.position.z = 100;
         //this.camera.position.w = 5;
     }
