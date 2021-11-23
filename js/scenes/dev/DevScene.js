@@ -148,7 +148,7 @@ class DevScene extends THREE.Scene4D {
         var buff = new THREE.BoxGeometry4D( 0.1, 0.1, 0.1, 1, 1, 1 );
         var material = new THREE.MeshLambertMaterial( { color: 0xff0000 } );
         var pcube = new THREE.PhysicsMesh4D(buff, material);
-        pcube.position.set(-3, 10, -3, 0);
+        pcube.position.set(-3, 3, -3, 0);
         pcube.rotation.zw = Math.PI;
         pcube.isAffectedByGravity = false;
         var time = 0;
@@ -157,19 +157,19 @@ class DevScene extends THREE.Scene4D {
         pcube.update = function(delta, scene) {
             time += delta;
             //pcube.position.w = Math.sin(time) * 5;
-            pcube.position.z = Math.cos(time) * 5;
+            //pcube.position.z = Math.cos(time) * 5;
         }
         
 
         pcube.name = "white point light cube";
 
-        //pcube.add(plight);
-        //this.add( pcube );
+        pcube.add(plight);
+        this.add( pcube );
         
         var cubes = [];
 
         var tbuff = new THREE.TesseractGeometry4D( 2, 2, 2, 2, 1, 1, 1, 1 );
-        var tmaterial = new THREE.MeshLambertMaterial( { color: 0x8080ff, transparent: true, opacity: 0xff } );
+        var tmaterial = new THREE.MeshLambertMaterial( { color: 0x8080ff, transparent: true, opacity: 0.5 } );
         var tess = new THREE.PhysicsMesh4D(tbuff, tmaterial);
         tess.isAffectedByGravity = false;
         tess.position.x += 8;
@@ -185,10 +185,10 @@ class DevScene extends THREE.Scene4D {
 
         
         tess.update = function(delta, scene) {
-            tess.rotation.zw += delta;
-            tess.rotation.xy += delta;
-            tess.rotation.yz += delta;
-            tess.rotation.xw += delta;
+            //tess.rotation.zw += delta;
+            //tess.rotation.xy += delta;
+            //tess.rotation.yz += delta;
+            tess.rotation.xw -= delta;
         }
         
         
@@ -257,7 +257,7 @@ class DevScene extends THREE.Scene4D {
 
         this.add(floor2);
 
-        /*
+
         const fontloader = new THREE.FontLoader();
 
         var scene = this;
@@ -270,10 +270,53 @@ class DevScene extends THREE.Scene4D {
             var textMesh = new THREE.Mesh4D(textGeo, textmat)
             textMesh.position.y = 1;
             textMesh.position.z = -3;
+            textMesh.position.x = 20;
+            textMesh.rotation.zx = -Math.PI * 0.5;
             scene.add(textMesh);
 
         } );
+
+        var cylmat = new THREE.MeshLambertMaterial( { color: 0x326e2d } );
+        /*
+        var basebuf = new THREE.SphereBufferGeometry4D(  );
+        var testbuf = new THREE.ModelExtrudeGeometry4D(basebuf, {});
+        var cylmat = new THREE.MeshLambertMaterial( { color: 0x326e2d } );
+        var cylmesh = new THREE.PhysicsMesh4D( testbuf, cylmat );
+        cylmesh.name = "3d cylinder";
+        cylmesh.isAffectedByGravity = false;
+        cylmesh.position.x = 2.5;
+        cylmesh.position.y = 0;
+        cylmesh.position.z = -2;
+        cylmesh.position.w = -1;
+        this.add(cylmesh);
+
+        cylmesh.update = function(delta, scene) {
+            cylmesh.rotation.zw += delta;
+            cylmesh.rotation.xy += delta;
+            cylmesh.rotation.yz += delta;
+            cylmesh.rotation.xw += delta;
+        }
         */
+
+
+        var spherbuf = new THREE.GlomeGeometry4D(  );
+        var sphere = new THREE.PhysicsMesh4D( spherbuf, cylmat );
+        sphere.position.x = -2.5;
+        sphere.position.y = -0;
+        sphere.position.z = 2;
+        sphere.position.w = 1;
+        this.add(sphere);
+
+        
+
+        sphere.update = function(delta, scene) {
+            sphere.rotation.zw += delta;
+            sphere.rotation.xy += delta;
+            sphere.rotation.yz += delta;
+            sphere.rotation.xw += delta;
+        }
+
+        
 
     }
 }
