@@ -100,7 +100,7 @@ function numKeys(GM) {
         var tess = new THREE.PhysicsMesh4D(buff, material);
         tess.name = "Added Tesseract " + addedObjects++;
         tess.isAffectedByGravity = false;
-        tess.position.copy(GM.camera.position);
+        tess.position.copy(GM.player.position);
         GM.scene.add(tess);
 	}
 }

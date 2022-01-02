@@ -74,6 +74,15 @@ class GameManager {
      */
     beginEditor() {
         this.#setGameState(GameState.EDITOR);
+        this.player.noCollision = true;
+    }
+
+    /**
+     * Exit level editor mode.
+     */
+    endEditor() {
+        this.#setGameState(GameState.DEFAULT);
+        //this.player.noCollision = false;
     }
 
     /**
@@ -156,9 +165,10 @@ class GameManager {
      * Creates a WebGLRenderer, a PerspectiveCamera4D, and a Scene4D, and moves the camera to a default position at 0, 0, 5, 5
      */
     #setUpRenderingPipeline() {
-        this.renderer = new THREE.WebGLRenderer({logarithmicDepthBuffer: true});
+        this.resolution = 800;
+        this.renderer = new THREE.WebGLRenderer({logarithmicDepthBuffer: true, antialias: false});
         this.camera = new THREE.PerspectiveCamera4D( 75, window.innerWidth / window.innerHeight, 0.1, 1000, 0.1, 1000 );
-        this.renderer.setSize( window.innerWidth, window.innerHeight );
+        this.#resize();
         //this.renderer.shadowMap.enabled = true
         document.body.appendChild( this.renderer.domElement );
         
@@ -167,17 +177,19 @@ class GameManager {
         var playerMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff, transparent: true, opacity: 0 } );
         var playerGeometry = new THREE.GlomeCapsuleGeometry4D( );
         this.player = new THREE.PhysicsMesh4D(playerGeometry, playerMaterial);
+        this.camera.position.y = 1;
+        this.camera.position.w = 0.2;
         this.player.isAffectedByGravity = false;
         this.player.renderLayer = -1;
         this.player.add(this.camera);
+
+        this.player.position.z = 5;
+        this.player.position.w = 1.2;
         this.scene.add(this.player);
 
         //this.quadScene = new QuadScene();
         //this.quadCamera = new THREE.OrthographicCamera4D( -50, 50 ,50, -50, -1000, 1000 );
-
-        //this.camera.position.z = 5;
         //this.quadCamera.position.z = 100;
-        //this.camera.position.w = 5;
     }
 
     /**
@@ -346,13 +358,14 @@ class GameManager {
      * Resize the game window
      */
      #resize() {
-
         this.camera.aspect = window.innerWidth / window.innerHeight;
         this.camera.updateProjectionMatrix();
-    
+
+        var maxDim = Math.max(window.innerWidth, window.innerHeight);
+        this.renderer.setPixelRatio(this.resolution / maxDim);
         this.renderer.setSize( window.innerWidth, window.innerHeight );
         this.#dialogueManager.resize();
     }
 }
 
-export {GameManager}
+export {GameManager, instance as GM}

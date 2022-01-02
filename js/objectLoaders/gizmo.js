@@ -126,7 +126,7 @@ class Gizmo extends THREE.PhysicsGroup4D {
     
     update(delta, scene, GM) {
         if (this.centered === true) {
-            var pos = new THREE.Vector5().copy(GM.camera.position);
+            var pos = new THREE.Vector5().copy(GM.player.position);
             var rotato = new THREE.Matrix5().makeRotationFromEuler(GM.camera.rotation);
             pos.add(rotato.multiplyVector(this.offset));
             this.position.set(pos.x, pos.y, pos.z, pos.w);

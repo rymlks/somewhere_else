@@ -1,5 +1,5 @@
 import * as THREE from "../../three.js/src/Three.js";
-import { Gizmo } from "../../objectLoaders/gizmo.js";
+import { Gizmo } from "../../objectLoaders/Gizmo.js";
 
 // TODO: Better objects definition for Scenes
 class DevScene extends THREE.Scene4D {
@@ -7,7 +7,7 @@ class DevScene extends THREE.Scene4D {
         super();
         var gizmo = new Gizmo(true);
         gizmo.name = "gizmo";
-        this.add(gizmo);
+        //this.add(gizmo);
 
         const bgloader = new THREE.CubeTextureLoader4D();
         const bgtexture = bgloader.load([
@@ -245,7 +245,7 @@ class DevScene extends THREE.Scene4D {
         this.add(floor);
         
 
-        var buff2 = new THREE.BoxGeometry4D( 10, 0.5, 10, 1, 1, 1 );
+        var buff2 = new THREE.BoxGeometry4D( 100, 0.5, 100, 1, 1, 1 );
         var material2 = new THREE.MeshLambertMaterial( { color: 0x808080 } );
         var floor2 = new THREE.PhysicsMesh4D( buff2, material2 );
         floor2.name = "floor2";
@@ -299,7 +299,7 @@ class DevScene extends THREE.Scene4D {
         */
 
 
-        var spherbuf = new THREE.GlomeGeometry4D(  );
+        var spherbuf = new THREE.SphereGeometry4D(  );
         var sphere = new THREE.PhysicsMesh4D( spherbuf, cylmat );
         sphere.position.x = -2.5;
         sphere.position.y = -0;
@@ -307,16 +307,14 @@ class DevScene extends THREE.Scene4D {
         sphere.position.w = 1;
         this.add(sphere);
 
-        
 
-        sphere.update = function(delta, scene) {
-            sphere.rotation.zw += delta;
-            sphere.rotation.xy += delta;
-            sphere.rotation.yz += delta;
-            sphere.rotation.xw += delta;
-        }
-
-        
+        var spherbuf2 = new THREE.SphereGeometry4D(  );
+        var sphere2 = new THREE.PhysicsMesh4D( spherbuf2, cylmat );
+        sphere2.position.x = -2.4;
+        sphere2.position.y = 5;
+        sphere2.position.z = 2.1;
+        sphere2.position.w = 1;
+        this.add(sphere2);
 
     }
 }

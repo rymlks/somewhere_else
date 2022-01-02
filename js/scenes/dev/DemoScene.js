@@ -1,4 +1,5 @@
 import * as THREE from "../../three.js/src/Three.js";
+import {GM} from "../../core/GameManager.js";
 
 // TODO: Better objects definition for Scenes
 class DemoScene extends THREE.Scene4D {
@@ -60,19 +61,18 @@ class DemoScene extends THREE.Scene4D {
         floor.add(floor2);
 
         var boxbuffsky = new THREE.TesseractGeometry4D( 5, 5, 5, 5, 1, 1, 1, 1 );
-        var numVerts = 50;
-        var glombuffsky = new THREE.GlomeCapsuleGeometry4D( 1, 2, 10, 20, 20 );
+        var glombuffsky = new THREE.GlomeGeometry4D( 5, 10, 20, 20 );
         var skymaterial = new THREE.MeshLambertMaterial( { color: 0xffffff, transparent: true, opacity: 1 } );
         var sky = new THREE.PhysicsMesh4D(glombuffsky, skymaterial);
         sky.name = "sky";
         sky.isAffectedByGravity = false;
         sky.position.set(0,0,0,0);
-        this.add(sky);
+        GM.player.add(sky);
         //this.add(floor);
 
         sky.update = function(delta, scene) {
-            var step = delta * 2.5;
-            sky.rotation.zx += step * 0.1;
+            //var step = delta * 2.5;
+            //sky.rotation.zx += step * 0.1;
             //sky.rotation.xy += step * 0.2;
             //sky.rotation.yz += step * 0.3;
             //sky.rotation.xw += step * 0.5;

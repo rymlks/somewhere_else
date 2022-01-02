@@ -10,7 +10,7 @@ var positionLerp = 0.25;
 
 var rotationspeed = Math.PI * 0.0005;
 var _euler = null;
-var _pos = null;
+var _vel = null;
 
 var sforward = new THREE.Vector5();
 var sbackward  = new THREE.Vector5();
@@ -27,7 +27,7 @@ var dialogue = "assets/yarn/test.json";
  * Handle inputs for the main game loop
  * @param {GameManager} GM 
  */
-function flyControls(GM) {
+function walkControls(GM) {
 
 	// Check for pause
 	if (GM.pressedKeys[KeyCode.KEY_ESCAPE] === true) {
@@ -55,38 +55,31 @@ function flyControls(GM) {
 	if (_euler === null) {
 		_euler = new THREE.Euler4D().copy(GM.player.rotation);
 	}
-	if (_pos === null) {
-		_pos = new THREE.Vector5().copy(GM.player.position);
+	if (_vel === null) {
+		_vel = new THREE.Vector5();
 	}
+    _vel.set(0,0,0,0,0);
 
 	// WASD keys
 	if (GM.heldKeys[KeyCode.KEY_W] === true) {
 		if (GM.heldKeys[KeyCode.KEY_SHIFT] !== true) {
-			_pos.add(rotato.multiplyVector(sforward));
+			_vel.add(rotato.multiplyVector(sforward));
 		} else {
-			_pos.add(rotato.multiplyVector(ssquidward));
+			_vel.add(rotato.multiplyVector(ssquidward));
 		}
 	}
 	if (GM.heldKeys[KeyCode.KEY_S] === true) {
 		if (GM.heldKeys[KeyCode.KEY_SHIFT] !== true) {
-			_pos.add(rotato.multiplyVector(sbackward));
+			_vel.add(rotato.multiplyVector(sbackward));
 		} else {
-			_pos.add(rotato.multiplyVector(ssquodward));
+			_vel.add(rotato.multiplyVector(ssquodward));
 		}
 	}
 	if (GM.heldKeys[KeyCode.KEY_D] === true) {
-		_pos.add(rotato.multiplyVector(sright));
+		_vel.add(rotato.multiplyVector(sright));
 	}
 	if (GM.heldKeys[KeyCode.KEY_A] === true) {
-		_pos.add(rotato.multiplyVector(sleft));
-	}
-
-	// Capslock/Space
-	if (GM.heldKeys[KeyCode.KEY_SPACE] === true) {
-		_pos.add(sup);
-	}
-	if (GM.heldKeys[KeyCode.KEY_CAPS_LOCK] === true) {
-		_pos.add(sdown);
+		_vel.add(rotato.multiplyVector(sleft));
 	}
 
 
@@ -139,8 +132,10 @@ function flyControls(GM) {
 
 	_euler.zw += wheelDelta * rotationspeed;
 
-	GM.player.position.lerp(_pos, positionLerp);
+    _vel.multiplyScalar(2);
+
+	GM.player.velocity.add(_vel);
 	GM.camera.rotation.lerp(_euler, rotationLerp);
 }
 
-export { flyControls };
+export { walkControls };
