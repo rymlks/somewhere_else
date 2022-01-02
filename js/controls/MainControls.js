@@ -1,3 +1,4 @@
+import { walkControls } from "./WalkControls.js"
 import { flyControls } from "./FlyControls.js"
 
 /**

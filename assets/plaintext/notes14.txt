@@ -1,0 +1,90 @@
+I'm going to complain about math for a minute
+
+Just, humor me for a second. You have no idea how hard it is to have nobody to complain to about this.
+
+Modern geometry has become so dependent on the cross-product.
+
+God bless Mr. Lagrange for his contributions to mathematics, but my god is it a crutch for higher dimensional geometry.
+
+I'm not sure if anybody really cares to remember the cross-product from school, but basically it goes like this:
+
+You have two arrows, and the cross product takes those two arrows and gives you a new arrow that points away from those other two.
+
+Really handy thing to have when you deal with lots of arrows that really, really can't be pointing towards each other like I do.
+
+But the way it's made, the third arrow is supposed to be at exactly right angles to the two original arrows.
+
+In three dimensions, there's only two possible answers to that question, assuming the first two arrows aren't identical.
+
+And Lagrange, the genius that he was (that wasn't sarcasm, he was really clever), came up with a way to consistently pick
+one of those two answers, and the user could always know which answer to expect.
+
+It's such a useful function, that everybody everywhere on your planet uses it possibly millions of times a day
+and you don't even realise it's happening.
+
+But in 4 dimensions, there's an infinite number of these possible answers for that third arrow.
+
+How do I pick one?
+
+Lagrange used the order in which the two input arrows (they're actually called 'vectors' by the way) was given.
+
+This works, because there's only two ways to order two things. Give me A and B, or give me B and A. Pretty elegant.
+
+There's not enough information for me to know which arrow someone wants when they give me two arrows.
+
+There's so many of them. Yeah, I could check the order, and that would eliminate one of the infinitely many possibilities.
+
+That leaves, let me check.. yes infinity minus 1 possibilities left. All I need is to find infinity more things I can take one answer away for.
+
+That's obviously too much to ask.
+
+I can't ask the user for an infinite amount of information for such a simple question.
+
+Why do I care?
+
+Well, this whole world hinges on it.
+
+You may not know how any of these things made it here, but I spent a lot of time hiding in fear of the cross-product.
+
+Everywhere I would use a cross product, I tiptoed around it carefully, soas not to disturb the beast.
+
+All these shapes have vectors pointing away from them, and all of them I painstakingly crafted myself, rather than calculating them.
+
+It's a weakness I can't run from anymore. I have to solve this problem for the world to hold itself together.
+
+No pressure, right?
+
+It forces me to do something unthinkable.
+
+I have to read into the mind of Lagrange. I have to do what he did. I have to invent mathematics.
+
+I can do it. 
+I know I can, because I know you can do it.
+Maybe not right this second, but if I gave you the time, and the necessity, you would do it.
+
+I know I don't know you very well. You know I don't know you very well. But I believe in a world without destiny.
+
+If you believe in a world without destiny, you must believe you can do anything that DaVinci, Einstein, Newton or any of those famous
+"smart people" could do.
+
+Because they weren't smart.
+
+You aren't smart either. To be smart is to be destined. You must have been born with a destiny for intelligence to be smart.
+
+If you believe you can control your own life, then nobody in the history of time has ever been smart.
+
+I believe it.
+
+I believe there is no such thing as smartness.
+
+Just do as you can in this moment. In this moment, we have thousands of years of knowledge from people who invented math for us.
+
+None of these people were special.
+
+You're not special either.
+
+You and Einstein are of the same kind.
+
+You and I are of the same kind.
+
+The only difference is that Einstein took the time.

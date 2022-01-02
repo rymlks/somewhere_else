@@ -5,9 +5,9 @@ import {EditorScene} from "./scenes/util/EditorScene.js";
 import {QuadScene} from "./scenes/util/QuadScene.js";
 
 var GM = new GameManager();
-//GM.scene = new EditorScene();
-GM.setScene(new DemoScene());
-//GM.scene = new DevScene();
+//GM.setScene(new EditorScene());
+//GM.setScene(new DemoScene());
+GM.setScene(new DevScene());
 GM.play();
 //GM.beginEditor();
 GM.FPSBufferSize = 100;
@@ -21,5 +21,12 @@ function updateInfoDiv() {
 	infodiv.innerHTML += "z: " + GM.player.position.z.toPrecision(4) + ", ";
 	infodiv.innerHTML += "w: " + GM.player.position.w.toPrecision(4) + ", ";
 	infodiv.innerHTML += "MSPF: " + (GM.maxSecondsPerFrame * 1000).toPrecision(4);
+
+	if (GM.maxSecondsPerFrame > 1.0 / 30.0) {
+		infodiv.style.border = "1px solid red";
+	} else {
+		infodiv.style.border = "none";
+	}
+
 }
 setInterval(updateInfoDiv, 1000);

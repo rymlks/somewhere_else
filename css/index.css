@@ -6,6 +6,7 @@ body {
 }
 canvas { 
     display: block;
+    image-rendering: pixelated;
 }
 .UICanvas {
     top: 0px;
