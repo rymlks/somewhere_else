@@ -12,6 +12,9 @@ var rotationspeed = Math.PI * 0.0005;
 var _euler = null;
 var _pos = null;
 
+var controllerRotationMultiplier = 10;
+var controllerDeadZone = .075; //+ .0625 / 16;
+
 var sforward = new THREE.Vector5();
 var sbackward  = new THREE.Vector5();
 var sleft = new THREE.Vector5();
@@ -23,12 +26,18 @@ var ssquodward = new THREE.Vector5();
 
 var dialogue = "assets/yarn/test.json";
 
+function buttonPressed(b) {
+	if (typeof(b) == "object") {
+	  return b.pressed;
+	}
+	return b == 1.0;
+  }
+
 /**
  * Handle inputs for the main game loop
  * @param {GameManager} GM 
  */
 function flyControls(GM) {
-
 	// Check for pause
 	if (GM.pressedKeys[KeyCode.KEY_ESCAPE] === true) {
 		GM.pause();
@@ -59,85 +68,124 @@ function flyControls(GM) {
 		_pos = new THREE.Vector5().copy(GM.player.position);
 	}
 
-	// WASD keys
-	if (GM.heldKeys[KeyCode.KEY_W] === true) {
-		if (GM.heldKeys[KeyCode.KEY_SHIFT] !== true) {
-			_pos.add(rotato.multiplyVector(sforward));
-		} else {
-			_pos.add(rotato.multiplyVector(ssquidward));
+	var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
+	if (gamepads) {
+		var gp = gamepads[0];
+
+		for (var [i, button] of gp.buttons.entries()) {
+			if (buttonPressed(button)) {
+				console.log(`button ${i} pressed`);
+			}
 		}
-	}
-	if (GM.heldKeys[KeyCode.KEY_S] === true) {
-		if (GM.heldKeys[KeyCode.KEY_SHIFT] !== true) {
-			_pos.add(rotato.multiplyVector(sbackward));
-		} else {
-			_pos.add(rotato.multiplyVector(ssquodward));
+
+		// var newArray = [];
+		// for (var i = 0; i < gp.axes.length; i++) {
+		// 	newArray.push(gp.axes[i].toFixed(2));
+		// }
+		// console.log(`Axes: ${newArray}`);
+
+		var [xmove, ymove, xrot, _, _, yrot] = gp.axes.slice(0, 6);
+		if (Math.abs(xmove) > controllerDeadZone || Math.abs(ymove) > controllerDeadZone) {
+			_pos.add(rotato.multiplyVector(sforward).multiplyScalar(-ymove));
+			_pos.add(rotato.multiplyVector(sleft).multiplyScalar(-xmove));
 		}
-	}
-	if (GM.heldKeys[KeyCode.KEY_D] === true) {
-		_pos.add(rotato.multiplyVector(sright));
-	}
-	if (GM.heldKeys[KeyCode.KEY_A] === true) {
-		_pos.add(rotato.multiplyVector(sleft));
-	}
 
-	// Capslock/Space
-	if (GM.heldKeys[KeyCode.KEY_SPACE] === true) {
-		_pos.add(sup);
-	}
-	if (GM.heldKeys[KeyCode.KEY_CAPS_LOCK] === true) {
-		_pos.add(sdown);
-	}
+		if (Math.abs(xrot) > controllerDeadZone || Math.abs(yrot) > controllerDeadZone) {
+			_euler.zx -= xrot * controllerRotationMultiplier * rotationspeed;
 
+			// Do not allow more than 90 degrees up/down rotation.
+			_euler.yz = clampTo180(_euler.yz - yrot * controllerRotationMultiplier * rotationspeed);
+		}
 
-	// Credit to haley, arrows for 4d rotations
-	if (GM.heldKeys[KeyCode.KEY_UP] === true ) {
-		_euler.yw = clampTo180(_euler.yw - 10 * rotationspeed);
-	}
-	if (GM.heldKeys[KeyCode.KEY_DOWN] === true ) {
-		_euler.yw = clampTo180(_euler.yw + 10 * rotationspeed);
-	}
-	if (GM.heldKeys[KeyCode.KEY_LEFT] === true ) {
-		_euler.xw = _euler.xw - 10 * rotationspeed;
-	}
-	if (GM.heldKeys[KeyCode.KEY_RIGHT] === true ) {
-		_euler.xw = _euler.xw + 10 * rotationspeed;
-	}
-
-	// Press R to reset rotation
-	if (GM.pressedKeys[KeyCode.KEY_R]) {
-		_euler.set(0, 0, 0, 0, 0, 0);
-	}
-	
-	// Mouse movement
-	if (GM.heldKeys[KeyCode.KEY_SHIFT] !== true) {
-		_euler.zx -= mouseHorizontal * rotationspeed;
-
-		// Do not allow more than 90 degrees up/down rotation.
-		_euler.yz = clampTo180(_euler.yz - mouseVertical * rotationspeed);
+		// Down = left stick press (crouch / sink)
+		if (buttonPressed(gp.buttons[10])) {
+			_pos.add(sdown);
+		}
+		// Up = right stick press (rocket boosters)
+		if (buttonPressed(gp.buttons[11])) {
+			_pos.add(sup);
+		}
 	} else {
-		_euler.xw += mouseHorizontal * rotationspeed;
+		// WASD keys
+		if (GM.heldKeys[KeyCode.KEY_W] === true) {
+			if (GM.heldKeys[KeyCode.KEY_SHIFT] !== true) {
+				_pos.add(rotato.multiplyVector(sforward));
+			} else {
+				_pos.add(rotato.multiplyVector(ssquidward));
+			}
+		}
+		if (GM.heldKeys[KeyCode.KEY_S] === true) {
+			if (GM.heldKeys[KeyCode.KEY_SHIFT] !== true) {
+				_pos.add(rotato.multiplyVector(sbackward));
+			} else {
+				_pos.add(rotato.multiplyVector(ssquodward));
+			}
+		}
+		if (GM.heldKeys[KeyCode.KEY_D] === true) {
+			_pos.add(rotato.multiplyVector(sright));
+		}
+		if (GM.heldKeys[KeyCode.KEY_A] === true) {
+			_pos.add(rotato.multiplyVector(sleft));
+		}
 
-		// Do not allow more than 90 degrees up/down rotation.
-		_euler.yw = clampTo180(_euler.yw - mouseVertical * rotationspeed);
-	}
+		// Capslock/Space
+		if (GM.heldKeys[KeyCode.KEY_SPACE] === true) {
+			_pos.add(sup);
+		}
+		if (GM.heldKeys[KeyCode.KEY_CAPS_LOCK] === true) {
+			_pos.add(sdown);
+		}
+
+
+		// Credit to haley, arrows for 4d rotations
+		if (GM.heldKeys[KeyCode.KEY_UP] === true ) {
+			_euler.yw = clampTo180(_euler.yw - 10 * rotationspeed);
+		}
+		if (GM.heldKeys[KeyCode.KEY_DOWN] === true ) {
+			_euler.yw = clampTo180(_euler.yw + 10 * rotationspeed);
+		}
+		if (GM.heldKeys[KeyCode.KEY_LEFT] === true ) {
+			_euler.xw = _euler.xw - 10 * rotationspeed;
+		}
+		if (GM.heldKeys[KeyCode.KEY_RIGHT] === true ) {
+			_euler.xw = _euler.xw + 10 * rotationspeed;
+		}
+
+		// Press R to reset rotation
+		if (GM.pressedKeys[KeyCode.KEY_R]) {
+			_euler.set(0, 0, 0, 0, 0, 0);
+		}
+
+		// Mouse movement
+		if (GM.heldKeys[KeyCode.KEY_SHIFT] !== true) {
+			_euler.zx -= mouseHorizontal * rotationspeed;
+
+			// Do not allow more than 90 degrees up/down rotation.
+			_euler.yz = clampTo180(_euler.yz - mouseVertical * rotationspeed);
+		} else {
+			_euler.xw += mouseHorizontal * rotationspeed;
+
+			// Do not allow more than 90 degrees up/down rotation.
+			_euler.yw = clampTo180(_euler.yw - mouseVertical * rotationspeed);
+		}
 	
-	// Dialogue
-	if (GM.pressedKeys[KeyCode.KEY_T] === true) {
-		GM.beginDialogue(dialogue);
-	}
-	if (GM.pressedKeys[KeyCode.KEY_Y] === true) {
-		GM.beginDialogue(dialogue2);
-	}
+		// Dialogue
+		if (GM.pressedKeys[KeyCode.KEY_T] === true) {
+			GM.beginDialogue(dialogue);
+		}
+		if (GM.pressedKeys[KeyCode.KEY_Y] === true) {
+			GM.beginDialogue(dialogue2);
+		}
 
-	if (GM.heldKeys[KeyCode.KEY_L] === true) {
-		document.body.requestPointerLock();
+		if (GM.heldKeys[KeyCode.KEY_L] === true) {
+			document.body.requestPointerLock();
+		}
+
+		tabToChangeCamera(GM);
+		toggleEditorControls(GM);
+
+		_euler.zw += wheelDelta * rotationspeed;
 	}
-
-	tabToChangeCamera(GM);
-	toggleEditorControls(GM);
-
-	_euler.zw += wheelDelta * rotationspeed;
 
 	GM.player.position.lerp(_pos, positionLerp);
 	GM.camera.rotation.lerp(_euler, rotationLerp);

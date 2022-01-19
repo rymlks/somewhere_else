@@ -179,7 +179,7 @@ class GameManager {
         this.player = new THREE.PhysicsMesh4D(playerGeometry, playerMaterial);
         this.camera.position.y = 1;
         this.camera.position.w = 0.2;
-        this.player.isAffectedByGravity = false;
+        this.player.isAffectedByGravity = true;
         this.player.renderLayer = -1;
         this.player.add(this.camera);
 
