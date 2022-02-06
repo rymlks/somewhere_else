@@ -1,4 +1,4 @@
-import * as THREE from "../../three.js/src/Three.js";
+import * as THREE from "../../three.js/build/three.module.js";
 import {GM} from "../../core/GameManager.js";
 
 // TODO: Better objects definition for Scenes

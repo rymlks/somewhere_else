@@ -23,7 +23,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron .",
+    "start": "cd js/three.js & npm run-script build & cd ../.. & electron .",
+    "build": "rollup -c utils/build/rollup.config.js",
     "rebuild": "bash ./build_robot.sh"
   },
   "author": "",

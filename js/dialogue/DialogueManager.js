@@ -1,5 +1,5 @@
 import { DialogueMode } from "../dialogue/DialogueMode.js";
-import * as THREE from "../three.js/src/Three.js";
+import * as THREE from "../three.js/build/three.module.js";
 
 const bondage = require('bondage');
 const fs = require('fs');

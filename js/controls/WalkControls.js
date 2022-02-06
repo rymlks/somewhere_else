@@ -1,4 +1,4 @@
-import * as THREE from "../three.js/src/Three.js";
+import * as THREE from "../three.js/build/three.module.js";
 import { clampTo180, forward, backward, up, down, left, right, squidward, squodward } from "./utils.js"
 import { tabToChangeCamera } from "./TabToChangeCamera.js";
 import { toggleEditorControls } from "./ToggleEditorControls.js";

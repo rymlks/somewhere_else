@@ -1,4 +1,4 @@
-import * as THREE from "../../three.js/src/Three.js";
+import * as THREE from "../../three.js/build/three.module.js";
 
 class QuadScene extends THREE.Scene4D {
     constructor() {

@@ -1,4 +1,4 @@
-import * as THREE from "../three.js/src/Three.js";
+import * as THREE from "../three.js/build/three.module.js";
 import { GameState } from "./GameState.js"
 import { keyPressed, keyReleased, 
     pressedKeys, heldKeys, releasedKeys, 
