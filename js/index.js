@@ -9,7 +9,7 @@ var GM = new GameManager();
 //GM.setScene(new DemoScene());
 GM.setScene(new DevScene());
 GM.play();
-//GM.beginEditor();
+GM.beginEditor();
 GM.FPSBufferSize = 100;
 
 // Debug stuff

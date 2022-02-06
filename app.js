@@ -3,6 +3,9 @@ const robot = require('robotjs')
 
 const fs = require('fs');
 
+app.commandLine.appendSwitch ("disable-http-cache");
+const path = require("path");
+
 function createWindow () {
   //globalShortcut.unregister("CommandOrControl+W");
   //globalShortcut.unregister("CommandOrControl+A");
@@ -12,13 +15,19 @@ function createWindow () {
     width: 800,
     height: 600,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      contextIsolation: false,
     },
     acceptFirstMouse: true
   });
 
   // and load the index.html of the app.
-  win.loadFile('index.html')
+  var index = 'index.html';
+  if (process.argv.includes('editor')) {
+    index = `${__dirname}/js/three.js/editor/index.html`;
+    console.log("Launching into editor...\n");
+  }
+  win.loadFile(index, {"extraHeaders" : "pragma: no-cache\n"});
 
   // Turn off capslock on window close
   var caps = false;
