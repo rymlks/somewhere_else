@@ -1,8 +1,7 @@
 import * as THREE from "../three.js/build/three.module.js"
 import { flyControls } from "./FlyControls.js"
 import { Gizmo } from "../objectLoaders/Gizmo.js"
-
-const KeyCode = require('Keycode-js');
+import { KeyCode } from  "../volatile/requires.js"
         
 var gizmo = new Gizmo( false, false );
 gizmo.name = "Selection Gizmo";

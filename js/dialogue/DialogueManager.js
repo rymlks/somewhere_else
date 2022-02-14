@@ -1,8 +1,6 @@
 import { DialogueMode } from "../dialogue/DialogueMode.js";
 import * as THREE from "../three.js/build/three.module.js";
-
-const bondage = require('bondage');
-const fs = require('fs');
+import { bondage, fs } from  "../volatile/requires.js"
 
 class DialogueManager {
 
@@ -42,7 +40,7 @@ class DialogueManager {
 
     constructor(GM) {
         this.#GM = GM;
-        this.runner = new bondage.Runner();
+        // this.runner = new bondage.Runner();
         this.refreshSeconds = 0.1;
         this.#currentDialogue = undefined;
         this.#resetNodeProgress();

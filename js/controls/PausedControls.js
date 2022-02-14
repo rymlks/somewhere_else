@@ -1,6 +1,5 @@
 import { tabToChangeCamera } from './TabToChangeCamera.js';
-
-const KeyCode = require('Keycode-js');
+import { KeyCode } from  "../volatile/requires.js"
 
 /**
  * Controls for when the game is paused
