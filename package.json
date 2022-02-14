@@ -4,6 +4,9 @@
   "description": "4D webgl rendering pipeline",
   "main": "app.js",
   "dependencies": {
+    "@babel/core": "^7.0.0",
+    "@rollup/plugin-commonjs": "^21.0.1",
+    "@rollup/plugin-node-resolve": "^13.1.3",
     "bondage": "^2.2.0",
     "connect": "^3.7.0",
     "ini": "^2.0.0",
@@ -12,16 +15,20 @@
     "keypress": "^0.2.1",
     "robotjs": "^0.6.0",
     "serve-static": "^1.14.1",
+    "signals": "^1.0.0",
     "three": "^0.127.0"
   },
   "devDependencies": {
-    "electron": "^10.4.0",
+    "@rollup/plugin-babel": "^5.3.0",
+    "electron": "^17.0.0",
     "electron-packager": "^15.2.0",
-    "electron-rebuild": "^2.3.5"
+    "electron-rebuild": "^3.2.7",
+    "rollup": "^2.67.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron .",
+    "start": "cd js/three.js & npm run-script build & cd ../.. & electron .",
+    "build": "rollup -c utils/build/rollup.config.js & cp css/index.css build/itch.io/css & cp index.html build/itch.io",
     "rebuild": "bash ./build_robot.sh"
   },
   "author": "",

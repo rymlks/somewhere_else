@@ -3,6 +3,10 @@ const robot = require('robotjs')
 
 const fs = require('fs');
 
+app.commandLine.appendSwitch ("disable-http-cache");
+const path = require("path");
+const editor = process.argv.includes('editor')
+
 function createWindow () {
   //globalShortcut.unregister("CommandOrControl+W");
   //globalShortcut.unregister("CommandOrControl+A");
@@ -11,14 +15,24 @@ function createWindow () {
   const win = new BrowserWindow({
     width: 800,
     height: 600,
+    // TODO: Don't make this conditional. Editor should also be secure.
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: editor, // is default value after Electron v5
+      contextIsolation: !editor, // protect against prototype pollution
+      enableRemoteModule: editor, // turn off remote
+      preload: path.join(__dirname, "preload.js"), // use a preload script
+      webSecurity: !editor  // Enable web security settings (idk what that actually means)
     },
     acceptFirstMouse: true
   });
 
   // and load the index.html of the app.
-  win.loadFile('index.html')
+  var index = 'index.html';
+  if (editor) {
+    index = `js/three.js/editor/index.html`;
+    console.log("Launching into editor...\n");
+  }
+  win.loadFile(index, {"extraHeaders" : "pragma: no-cache\n"});
 
   // Turn off capslock on window close
   var caps = false;
