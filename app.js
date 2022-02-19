@@ -9,14 +9,17 @@ function createWindow () {
 
   // Create the browser window.
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1,
+    height: 1,
     webPreferences: {
       nodeIntegration: true,
     },
     acceptFirstMouse: true,
     autoHideMenuBar: true,
+    show: false,
   });
+  win.maximize();
+  win.show()
 
   // and load the index.html of the app.
   win.loadFile('index.html')

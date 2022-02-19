@@ -105,6 +105,14 @@ function flyControls(GM) {
 		if (buttonPressed(gp.buttons[11])) {
 			_pos.add(sup);
 		}
+		// Top button = ana (positive w)
+		if (buttonPressed(gp.buttons[1])) {
+			_pos.add(rotato.multiplyVector(ssquidward));
+		}
+		// Bottom button = kata (negative w)
+		if (buttonPressed(gp.buttons[3])) {
+			_pos.add(rotato.multiplyVector(ssquodward));
+		}
 	} else {
 		// WASD keys
 		if (GM.heldKeys[KeyCode.KEY_W] === true) {
