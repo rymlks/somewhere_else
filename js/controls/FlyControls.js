@@ -68,9 +68,8 @@ function flyControls(GM) {
 	}
 
 	var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
-	if (gamepads) {
-		var gp = gamepads[0];
-
+	var gp;
+	if (gamepads && (gp = gamepads[0])) {
 		for (var [i, button] of gp.buttons.entries()) {
 			if (buttonPressed(button)) {
 				console.log(`button ${i} pressed`);
@@ -83,7 +82,9 @@ function flyControls(GM) {
 		// }
 		// console.log(`Axes: ${newArray}`);
 
-		var [xmove, ymove, xrot, _, _, yrot] = gp.axes.slice(0, 6);
+		// On my windows machine, there are 2 extra axes for shoulders. Should see if can get on OSX
+		// var [xmove, ymove, xrot, _, _, yrot] = gp.axes.slice(0, 6);
+		var [xmove, ymove, xrot, yrot] = gp.axes.slice(0, 4);
 		if (Math.abs(xmove) > controllerDeadZone || Math.abs(ymove) > controllerDeadZone) {
 			_pos.add(rotato.multiplyVector(sforward).multiplyScalar(-ymove));
 			_pos.add(rotato.multiplyVector(sleft).multiplyScalar(-xmove));
@@ -108,8 +109,9 @@ function flyControls(GM) {
 		if (buttonPressed(gp.buttons[1])) {
 			_pos.add(rotato.multiplyVector(ssquidward));
 		}
-		// Bottom button = kata (negative w)
+		// Right button = kata (negative w)
 		if (buttonPressed(gp.buttons[3])) {
+			// Sadly, 3 is bottom button on Windows
 			_pos.add(rotato.multiplyVector(ssquodward));
 		}
 	} else {
