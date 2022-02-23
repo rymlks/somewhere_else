@@ -96,6 +96,16 @@ function flyControls(GM) {
 			// Do not allow more than 90 degrees up/down rotation.
 			_euler.yz = clampTo180(_euler.yz - yrot * controllerRotationMultiplier * rotationspeed);
 		}
+		var horiz = 0;
+		if (buttonPressed(gp.buttons[14])) { horiz -= 1; }
+		if (buttonPressed(gp.buttons[15])) { horiz += 1; }
+		_euler.xw += horiz * controllerRotationMultiplier * rotationspeed;
+
+		// Do not allow more than 90 degrees up/down rotation.
+		var vert = 0;
+		if (buttonPressed(gp.buttons[12])) { vert += 1; }
+		if (buttonPressed(gp.buttons[13])) { vert -= 1; }
+		_euler.yw = clampTo180(_euler.yw - vert * controllerRotationMultiplier * rotationspeed);
 
 		// Down = left stick press (crouch / sink)
 		if (buttonPressed(gp.buttons[10])) {
@@ -106,14 +116,18 @@ function flyControls(GM) {
 			_pos.add(sup);
 		}
 		// Top button = ana (positive w)
-		if (buttonPressed(gp.buttons[1])) {
+		if (buttonPressed(gp.buttons[3])) {
+			// 3 is top on osx, 1 is top on win
 			_pos.add(rotato.multiplyVector(ssquidward));
 		}
 		// Right button = kata (negative w)
-		if (buttonPressed(gp.buttons[3])) {
-			// Sadly, 3 is bottom button on Windows
+		if (buttonPressed(gp.buttons[1])) {
+			// 1 is right on osx
+			// (3 is bottom button on win)
 			_pos.add(rotato.multiplyVector(ssquodward));
 		}
+
+		tabToChangeCamera(GM);
 	} else {
 		// WASD keys
 		if (GM.heldKeys[KeyCode.KEY_W] === true) {
