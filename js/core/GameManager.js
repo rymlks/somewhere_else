@@ -1,4 +1,4 @@
-import * as THREE from "../three.js/src/Three.js";
+import * as THREE from "../three.js/build/three.module.js";
 import { GameState } from "./GameState.js"
 import { keyPressed, keyReleased, 
     pressedKeys, heldKeys, releasedKeys, 
@@ -129,6 +129,7 @@ class GameManager {
      * Set up properties for handling user input (mouse, keyboard, etc.)
      */
     #setUpInputs() {
+
         this.pressedKeys = pressedKeys;
         this.heldKeys = heldKeys;
         this.releasedKeys = releasedKeys;
@@ -190,6 +191,12 @@ class GameManager {
         //this.quadScene = new QuadScene();
         //this.quadCamera = new THREE.OrthographicCamera4D( -50, 50 ,50, -50, -1000, 1000 );
         //this.quadCamera.position.z = 100;
+
+        document.body.requestPointerLock = document.body.requestPointerLock ||
+             element.mozRequestPointerLock ||
+             element.webkitRequestPointerLock;
+
+        document.body.requestPointerLock();
     }
 
     /**

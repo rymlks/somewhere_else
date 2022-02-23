@@ -5,8 +5,14 @@ A game set in 4D euclidian space. Use WASD keys to move around, and use the mous
 - Install `node` and `npm` (https://nodejs.org/en/download/)
 - Set up submodules with `git submodule init` and `git submodule update` (may take several minutes)
 - Run `npm install` to install packages
+- Run `cd js/three.js` and `npm install` again to install three.js's dependencies
+- Run `cd ../..` to get back to the root directory
 - Run `bash ./build_robot.sh` to build robotjs for your system. I have no idea why running `npm rebuild` does not do this for you.
 
 ## How to run
 - Bring your three.js (forked) version up to date: `git submodule update`
 - Run `npm start` to start the app
+
+## How to build
+- Run `npm run-script build` - the output will be in the `build` directory
+- Zip the contents of `build/itch.io` for uploading

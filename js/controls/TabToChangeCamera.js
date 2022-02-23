@@ -1,5 +1,5 @@
-import * as THREE from "../three.js/src/Three.js";
-const KeyCode = require('Keycode-js');
+import * as THREE from "../three.js/build/three.module.js";
+import { KeyCode } from  "../volatile/requires.js"
 
 /**
  * Handle inputs for the main game loop

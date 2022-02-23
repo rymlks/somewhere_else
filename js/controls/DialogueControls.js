@@ -1,4 +1,4 @@
-const KeyCode = require('Keycode-js');
+import { KeyCode } from  "../volatile/requires.js"
 
 /**
  * Controls for when a dialog box is open
