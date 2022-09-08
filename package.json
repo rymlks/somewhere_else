@@ -28,7 +28,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "cd js/three.js & npm run-script build & cd ../.. & electron .",
-    "build": "rollup -c utils/build/rollup.config.js & cp css/index.css build/itch.io/css & cp index.html build/itch.io",
+    "build": "rollup -c utils/build/rollup.config.js & cp css/index.css build/itch.io/css & cp index.html build/itch.io & cp -r assets build/itch.io",
     "rebuild": "bash ./build_robot.sh"
   },
   "author": "",

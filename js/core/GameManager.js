@@ -28,7 +28,7 @@ class GameManager {
             throw "Only one instance of GameManager is allowed."
         }
 
-        this.gameState = GameState.DEFAULT;
+        this.gameState = GameState.PAUSED;
         this.#previousGameState = GameState.DEFAULT;
         this.speed = 5.0;
         this.#dialogueManager = new DialogueManager(this);
@@ -50,7 +50,7 @@ class GameManager {
      * Begin playing the game
      */
     play() {
-        this.unPause();
+        //this.unPause();
         requestAnimationFrame( this.#update.bind(this) );
     }
 
@@ -67,6 +67,7 @@ class GameManager {
      */
     unPause() {
         this.#setGameState(this.#previousGameState)
+        document.body.requestPointerLock()
     }
 
     /**
@@ -154,10 +155,11 @@ class GameManager {
         window.onkeyup = keyReleased;
         window.onkeydown = keyPressed;
         document.onmousemove = mouseMoved;
-        document.onwheel = wheelScrolled;
+        document.onwheel = undefined; // sadface
         document.onmousedown = mousePressed;
         document.onmouseup = mouseReleased;
-        
+
+        document.addEventListener('wheel', wheelScrolled, {passive: false}); 
         window.addEventListener( 'resize', this.#resize.bind(this), false );
     }
 
@@ -170,7 +172,7 @@ class GameManager {
         this.renderer = new THREE.WebGLRenderer({logarithmicDepthBuffer: true, antialias: false});
         this.camera = new THREE.PerspectiveCamera4D( 75, window.innerWidth / window.innerHeight, 0.1, 1000, 0.1, 1000 );
         this.#resize();
-        //this.renderer.shadowMap.enabled = true
+        this.renderer.shadowMap.enabled = true
         document.body.appendChild( this.renderer.domElement );
         
         this.scene = new THREE.Scene4D();
@@ -184,7 +186,7 @@ class GameManager {
         this.player.renderLayer = -1;
         this.player.add(this.camera);
 
-        this.player.position.z = 5;
+        this.player.position.z = -5;
         this.player.position.w = 1.2;
         this.scene.add(this.player);
 

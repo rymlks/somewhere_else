@@ -61,6 +61,8 @@ var mouseWheel = new WheelMovement();
 function keyReleased(e) { 
 	heldKeys[e.keyCode] = false; 
 	releasedKeys[e.keyCode] = true; 
+	
+	e.preventDefault()
 }
 
 function keyPressed(e) {
@@ -68,20 +70,28 @@ function keyPressed(e) {
 		pressedKeys[e.keyCode] = true; 
 	}
 	heldKeys[e.keyCode] = true; 
+	
+	e.preventDefault()
 }
 
 function mouseMoved(e) {
 	mouseAxis._horizontal += e.movementX;
 	mouseAxis._vertical += e.movementY;
+	
+	e.preventDefault()
 }
 
 function wheelScrolled(e) {
 	mouseWheel._delta += e.deltaY;
+	
+	e.preventDefault()
 }
 
 function mouseReleased(e) { 
 	heldMouseButtons[e.button] = false; 
 	releasedMouseButtons[e.button] = true; 
+	
+	e.preventDefault()
 }
 
 function mousePressed(e) { 
@@ -89,6 +99,8 @@ function mousePressed(e) {
 		pressedMouseButtons[e.button] = true; 
 	}
 	heldMouseButtons[e.button] = true; 
+	
+	e.preventDefault()
 }
 
 export { keyReleased, keyPressed, mouseReleased, mousePressed, mouseMoved, wheelScrolled, clampTo180,

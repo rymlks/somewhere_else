@@ -1,0 +1,6 @@
+"UnlitGeneric"
+{
+	"$basetexture" "skybox/fiolet_skydn"
+	"$ignorez" "1"
+	"$nofog" "1"
+}

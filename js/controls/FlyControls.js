@@ -129,7 +129,7 @@ function flyControls(GM) {
 		GM.beginDialogue(dialogue2);
 	}
 
-	if (GM.heldKeys[KeyCode.KEY_L] === true) {
+	if (GM.heldKeys[KeyCode.KEY_L] === true || GM.pressedMouseButtons[0] === true) {
 		document.body.requestPointerLock();
 	}
 

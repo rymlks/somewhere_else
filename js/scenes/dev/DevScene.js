@@ -5,12 +5,64 @@ import { Gizmo } from "../../objectLoaders/Gizmo.js";
 class DevScene extends THREE.Scene4D {
     constructor() {
         super();
+
+
+        /*
+        var testEuler = new THREE.Euler4D(0.1, 0.2, 0.3, 0.4, 0.5, 0.6);
+        var testMat = new THREE.Matrix5().makeRotationFromEuler(testEuler);
+
+        var outputEuler = new THREE.Euler4D().setFromRotationMatrix(testMat);
+        console.log(testEuler);
+        console.log(testMat);
+        console.log(outputEuler);
+
+        
+        var t1buff = new THREE.BoxGeometry4D( 2, 2, 2, 1, 1, 1 );
+        var t1material = new THREE.MeshLambertMaterial( { color: 0x00ff00 } );
+        var t1cube = new THREE.PhysicsMesh4D(t1buff, t1material);
+        t1cube.name = "test cube control ";
+        t1cube.position.y = 1;
+        t1cube.position.x = 10;
+        t1cube.rotation.copy(testEuler);
+        t1cube.castShadow = false;
+        t1cube.receiveShadow = false;
+        t1cube.isAffectedByGravity = false;
+
+        
+        var t2buff = new THREE.BoxGeometry4D( 2, 2, 2, 1, 1, 1 );
+        var t2material = new THREE.MeshLambertMaterial( { color: 0x00ff00 } );
+        var t2cube = new THREE.PhysicsMesh4D(t2buff, t2material);
+        t2cube.name = "test cube control ";
+        t2cube.position.y = 1;
+        t2cube.position.x = 14;
+        t2cube.rotation.copy(outputEuler);
+        t2cube.castShadow = false;
+        t2cube.receiveShadow = false;
+        t2cube.isAffectedByGravity = false;
+
+        this.add(t1cube);
+        this.add(t2cube);
+        */
+
+
+
+
+
         var gizmo = new Gizmo(true);
         gizmo.name = "gizmo";
         //this.add(gizmo);
 
         const bgloader = new THREE.CubeTextureLoader4D();
         const bgtexture = bgloader.load([
+            'assets/unlicensed/textures/interstellar_skybox/xpos.png',
+            'assets/unlicensed/textures/interstellar_skybox/xneg.png',
+            'assets/unlicensed/textures/interstellar_skybox/ypos.png',
+            'assets/unlicensed/textures/interstellar_skybox/yneg.png',
+            'assets/unlicensed/textures/interstellar_skybox/zpos.png',
+            'assets/unlicensed/textures/interstellar_skybox/zneg.png',
+          
+
+          /*
           'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/pos-x.jpg',
           'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/neg-x.jpg',
           'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/pos-y.jpg',
@@ -31,20 +83,14 @@ class DevScene extends THREE.Scene4D {
           'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/neg-y.jpg',
           'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/pos-z.jpg',
           'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/neg-z.jpg',
-          
-          'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/pos-x.jpg',
-          'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/neg-x.jpg',
-          'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/pos-y.jpg',
-          'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/neg-y.jpg',
-          'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/pos-z.jpg',
-          'https://threejsfundamentals.org/threejs/resources/images/cubemaps/computer-history-museum/neg-z.jpg',
+          */
         ]);
         this.background = bgtexture;
 
         const textureLoader = new THREE.TextureLoader();
         const texture = textureLoader.load( "assets/textures/testing.png" );
         texture.magFilter = THREE.NearestFilter;
-        const amap = textureLoader.load( "assets/textures/testing_map.png" );
+        const amap = textureLoader.load( "assets/textures/testing_map_2.png" );
         amap.magFilter = THREE.NearestFilter;
 
         var mtlLoader = new THREE.MTLLoader4D();
@@ -88,7 +134,7 @@ class DevScene extends THREE.Scene4D {
         light.name = "grey ambient light";
         this.add( light );
 
-        var dlight = new THREE.DirectionalLight4D(0xffffff, 1.0);
+        var dlight = new THREE.DirectionalLight4D(0xffffff, 0.5);
         dlight.position.set(-3, 10, -3, 0);
         dlight.name = "grey directional light";
         dlight.castShadow = true;
@@ -134,6 +180,7 @@ class DevScene extends THREE.Scene4D {
         c7.receiveShadow = true;
         c7.scale.set(10, 10, 1, 1);
 
+        /*
         this.add(c1);
         this.add(c2);
         this.add(c3);
@@ -141,8 +188,9 @@ class DevScene extends THREE.Scene4D {
         this.add(c5);
         this.add(c6);
         this.add(c7);
+        */
         
-        var plight = new THREE.PointLight4D( 0xffffff, 1.0, 1000 );
+        var plight = new THREE.PointLight4D( 0xffffff, 0.1, 1000 );
         plight.name = "white point light";
 
         var buff = new THREE.BoxGeometry4D( 0.1, 0.1, 0.1, 1, 1, 1 );
@@ -196,8 +244,8 @@ class DevScene extends THREE.Scene4D {
         this.add(tess);
 
         var cbuff = new THREE.BoxGeometry4D( 2, 2, 2, 1, 1, 1 );
-        var cmaterial = new THREE.MeshLambertMaterial( { color: 0x8080ff, transparent: false, opacity: 0.95, alphaMap: amap } );
-        var cmaterial2 = new THREE.MeshLambertMaterial( { color: 0x80ff80, transparent: false, opacity: 0.95, alphaMap: amap } );
+        var cmaterial = new THREE.MeshLambertMaterial( { color: 0x8080ff, transparent: true, opacity: 0.75, alphaMap: amap } );
+        var cmaterial2 = new THREE.MeshLambertMaterial( { color: 0x80ff80, transparent: true, opacity: 0.75, alphaMap: amap } );
         var refcube = new THREE.PhysicsMesh4D(cbuff, cmaterial);
         var refcube2 = new THREE.PhysicsMesh4D(cbuff, cmaterial2);
         refcube.isAffectedByGravity = false;
@@ -245,7 +293,7 @@ class DevScene extends THREE.Scene4D {
         this.add(floor);
         
 
-        var buff2 = new THREE.BoxGeometry4D( 100, 0.5, 100, 1, 1, 1 );
+        var buff2 = new THREE.BoxGeometry4D( 20, 0.5, 20, 1, 1, 1 );
         var material2 = new THREE.MeshLambertMaterial( { color: 0x808080 } );
         var floor2 = new THREE.PhysicsMesh4D( buff2, material2 );
         floor2.name = "floor2";
@@ -265,13 +313,23 @@ class DevScene extends THREE.Scene4D {
 
             var font = response;
 
-            var textGeo = new THREE.TextGeometry4D("hello\nthar", {font: font, size: 1, height: 0});
-            var textmat = new THREE.MeshBasicMaterial( { color: 0xFFFF00 } );
+            var textGeo = new THREE.TextGeometry4D(
+                "This is a work in progress.\n" + 
+                "Epilepsy warning: Graphical bugs may flash quickly.\n\n" + 
+                "Use WASD keys + Mouse to move\n" +
+                "Use Space + CAPS to go up and down\n" +
+                "Click twice to lock the cursor\n" +
+                "Hold shift to enter 4D mode\n" +
+                "Press ~ to toggle camera type\n" +
+                "Press R to reset camera orientation\n" +
+                "Use the scrollwheel for an additional 4D rotation\n\n" +
+                "Press ESC to start", {font: font, size: 1, height: 0});
+            var textmat = new THREE.MeshBasicMaterial( { color: 0x380404 } );
             var textMesh = new THREE.Mesh4D(textGeo, textmat)
-            textMesh.position.y = 1;
-            textMesh.position.z = -3;
-            textMesh.position.x = 20;
-            textMesh.rotation.zx = -Math.PI * 0.5;
+            textMesh.position.y = 9;
+            textMesh.position.z = -25;
+            textMesh.position.x = -15;
+            //textMesh.rotation.zx = -Math.PI * 0.5;
             scene.add(textMesh);
 
         } );
