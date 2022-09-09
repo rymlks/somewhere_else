@@ -108,7 +108,7 @@ class DevScene extends THREE.Scene4D {
             'Lowpoly_tree_sample.obj', 
             function ( object ) {
                 object.position.y = -1.6;
-                object.position.w = -3;
+                //object.position.w = -3;
                 object.scale.x = 0.5;
                 object.scale.y = 0.5;
                 object.scale.z = 0.5;
@@ -116,7 +116,7 @@ class DevScene extends THREE.Scene4D {
 
                 //object.rotation.zw = Math.PI * 0.5;
                 //object.rotation.xz = Math.PI;
-                thisscene.add( object );
+                //thisscene.add( object );
                 console.log(object);
             }, 
             // called when loading is in progresses
@@ -132,15 +132,8 @@ class DevScene extends THREE.Scene4D {
 
         var light = new THREE.AmbientLight4D( 0x404040 ); // soft white light
         light.name = "grey ambient light";
-        this.add( light );
+        //this.add( light );
 
-        var dlight = new THREE.DirectionalLight4D(0xffffff, 0.5);
-        dlight.position.set(-3, 10, -3, 0);
-        dlight.name = "grey directional light";
-        dlight.castShadow = true;
-        this.add( dlight );
-
-        this.light = dlight;
 
         var testbuf = new THREE.BoxGeometry4D( 1, 1, 1, 1, 1, 1 );
         var testmat = new THREE.MeshLambertMaterial( { color: 0xff0000 } );
@@ -192,27 +185,6 @@ class DevScene extends THREE.Scene4D {
         
         var plight = new THREE.PointLight4D( 0xffffff, 0.1, 1000 );
         plight.name = "white point light";
-
-        var buff = new THREE.BoxGeometry4D( 0.1, 0.1, 0.1, 1, 1, 1 );
-        var material = new THREE.MeshLambertMaterial( { color: 0xff0000 } );
-        var pcube = new THREE.PhysicsMesh4D(buff, material);
-        pcube.position.set(-3, 3, -3, 0);
-        pcube.rotation.zw = Math.PI;
-        pcube.isAffectedByGravity = false;
-        var time = 0;
-
-        
-        pcube.update = function(delta, scene) {
-            time += delta;
-            //pcube.position.w = Math.sin(time) * 5;
-            //pcube.position.z = Math.cos(time) * 5;
-        }
-        
-
-        pcube.name = "white point light cube";
-
-        pcube.add(plight);
-        this.add( pcube );
         
         var cubes = [];
 
@@ -241,7 +213,7 @@ class DevScene extends THREE.Scene4D {
         
         
         
-        this.add(tess);
+        //this.add(tess);
 
         var cbuff = new THREE.BoxGeometry4D( 2, 2, 2, 1, 1, 1 );
         var cmaterial = new THREE.MeshLambertMaterial( { color: 0x8080ff, transparent: true, opacity: 0.75, alphaMap: amap } );
@@ -261,36 +233,7 @@ class DevScene extends THREE.Scene4D {
         refcube.update = function(delta, scene) { }
 
         refcube.add(refcube2);
-        this.add(refcube);
-        
-        
-        for (var i=0; i<10; i+= 5) {
-            var buff = new THREE.BoxGeometry4D( 2, 2, 2, 1, 1, 1 );
-            var material = new THREE.MeshLambertMaterial( { color: Math.floor(Math.random()*16777215) } );
-            var cube = new THREE.PhysicsMesh4D(buff, material);
-            cube.name = "Falling Cube " + i;
-            cube.position.y = i;
-            cube.position.w = i % 2;
-            cube.castShadow = true;
-            cube.receiveShadow = true;
-            cube.isAffectedByGravity = true;
-            cubes.push(cube);
-        }
-        
-        for (cube of cubes) {
-            this.add(cube);
-        }
-
-        var buff = new THREE.BoxGeometry4D( 10, 0.5, 10, 1, 1, 1 );
-        var material = new THREE.MeshLambertMaterial( { color: 0xffffff } );
-        var floor = new THREE.PhysicsMesh4D(buff, material);
-        floor.name = "floor";
-        floor.isAffectedByGravity = false;
-        floor.position.y = -2.5;
-        floor.castShadow = true;
-        floor.receiveShadow = true;
-        //floor.position.w = 1
-        this.add(floor);
+        //this.add(refcube);
         
 
         var buff2 = new THREE.BoxGeometry4D( 20, 0.5, 20, 1, 1, 1 );
@@ -303,12 +246,13 @@ class DevScene extends THREE.Scene4D {
         floor2.castShadow = true;
         floor2.receiveShadow = true;
 
-        this.add(floor2);
+        //this.add(floor2);
 
 
         const fontloader = new THREE.FontLoader();
 
         var scene = this;
+        /*
         fontloader.load( 'assets/unlicensed/fonts/helvetiker_regular.typeface.json', function ( response ) {
 
             var font = response;
@@ -333,6 +277,7 @@ class DevScene extends THREE.Scene4D {
             scene.add(textMesh);
 
         } );
+        */
 
         var cylmat = new THREE.MeshLambertMaterial( { color: 0x326e2d } );
         /*
@@ -363,7 +308,7 @@ class DevScene extends THREE.Scene4D {
         sphere.position.y = -0;
         sphere.position.z = 2;
         sphere.position.w = 1;
-        this.add(sphere);
+        //this.add(sphere);
 
 
         var spherbuf2 = new THREE.SphereGeometry4D(  );
@@ -372,7 +317,175 @@ class DevScene extends THREE.Scene4D {
         sphere2.position.y = 5;
         sphere2.position.z = 2.1;
         sphere2.position.w = 1;
-        this.add(sphere2);
+        //this.add(sphere2);
+
+
+
+        var dlight = new THREE.DirectionalLight4D(0xff0000, 0.5);
+        dlight.position.set(0, 0, 3, 0);
+        dlight.name = "grey directional light";
+        dlight.castShadow = true;
+        this.add( dlight );
+        this.light = dlight;
+
+        var buff = new THREE.BoxGeometry4D( 0.1, 0.1, 0.1, 1, 1, 1 );
+        var material = new THREE.MeshLambertMaterial( { color: 0xff0000 } );
+        var pcube = new THREE.PhysicsMesh4D(buff, material);
+        pcube.position.set(0, 0, -3, 0);
+        pcube.rotation.zw = Math.PI;
+        pcube.isAffectedByGravity = false;
+        var time = 0;
+
+
+        
+        
+        pcube.update = function(delta, scene) {
+            time += delta;
+            pcube.rotation.xy = time;
+            pcube.rotation.yz = time;
+            pcube.rotation.zx = time;
+            //pcube.position.w = Math.sin(time) * 5;
+            //pcube.position.z = Math.cos(time) * 5;
+        }
+        
+
+        pcube.name = "white point light cube";
+
+        //pcube.add(dlight);
+        //this.add( pcube );
+
+        var buff = new THREE.BoxGeometry4D( 10, 0.5, 10, 1, 1, 1 );
+        var material = new THREE.MeshLambertMaterial( { color: 0xffffff } );
+        var floor = new THREE.PhysicsMesh4D(buff, material);
+        floor.name = "floor";
+        floor.isAffectedByGravity = false;
+        floor.position.y = -2.5;
+        floor.castShadow = true;
+        floor.receiveShadow = true;
+        //floor.position.w = 1
+        //this.add(floor);
+
+        var bfloatingcube = new THREE.BoxGeometry4D( 1, 1, 1, 1, 1, 1 );
+        var fmaterial = new THREE.MeshLambertMaterial( { color: 0xffffff } );
+        var floatingcube = new THREE.PhysicsMesh4D(bfloatingcube, fmaterial);
+        floatingcube.name = "floating cube";
+        floatingcube.isAffectedByGravity = false;
+        floatingcube.position.z = -3;
+        floatingcube.position.y = 999;
+        floatingcube.castShadow = true;
+        floatingcube.receiveShadow = true;
+        //floor.position.w = 1
+        //this.add(floatingcube);
+
+        //dlight.target = floatingcube;
+
+
+        /*
+        var shader = THREE.UnpackDepthRGBAShader;
+
+        var uniforms = THREE.UniformsUtils.clone( shader.uniforms );
+        this.quadMaterial = new THREE.ShaderMaterial( {
+            uniforms: uniforms,
+            vertexShader: shader.vertexShader,
+            fragmentShader: shader.fragmentShader
+        } );
+        */
+
+        
+        this.quadMaterial = new THREE.ShaderMaterial({
+
+            uniforms:{
+                map: { type: "t", value: null},
+            },
+            vertexShader:
+            [
+                "varying vec2 vUv;",
+                "#include <common>",
+                "void main ()",
+                "{",
+                    "vUv = vec2(uv.x, 1.0 - uv.y);",
+                    "vec4 transformed = vec4( position );",
+                    "vec5 mvPosition = vec5( transformed.x, transformed.y, transformed.z, transformed.w, 1.0 );",
+                    "mvPosition = multiply(modelViewMatrix, mvPosition);",
+                    "vec4 mvPosition3D = xyzw(mvPosition);",
+                    "mvPosition3D.w = 1.0;",
+                    "gl_Position = projectionMatrix * mvPosition3D;",
+                "}",
+            ].join("\n"),
+
+            fragmentShader:
+            [
+                "uniform sampler2D map;",
+                "varying vec2 vUv;",
+
+                "float unpack_depth (const in vec4 rgba_depth)",
+                "{",
+                    "const vec4 bit_shift = vec4 (1.0 / (256.0 * 256.0 * 256.0), 1.0 / (256.0 * 256.0), 1.0 / 256.0, 1.0);",
+                    "float depth = dot (rgba_depth, bit_shift);",
+                    "return depth;",
+                "}",
+
+                "void main()",
+                "{",
+                    "vec4 rgbaDepth = texture2D (map, vUv);",
+                    "float fDepth = unpack_depth (rgbaDepth);",
+                    "gl_FragColor = vec4 (vec3 (fDepth), 1.0);",
+                    "//gl_FragColor = vec4(rgbaDepth.x, rgbaDepth.y, rgbaDepth.z, 1.0);",
+                "}"
+            ].join("\n"),
+            blending: THREE.NoBlending,
+            depthTest: false,
+            depthWrite: false,
+        })
+        //this.quadMaterial.uniforms.map.value = this.light.shadow.map.texture
+        //this.quadMaterial.uniforms.map.value = amap
+        
+
+        var dgeo = new THREE.PlaneGeometry4D(5, 5);
+        var dmesh = new THREE.Mesh4D(dgeo, this.quadMaterial)
+        dmesh.position.z = -20;
+
+        //this.add( dmesh );
+
+        floatingcube.update = function(delta, scene) {
+            /*
+            thisscene.light.shadow.camera.matrixAutoUpdate = false;
+            thisscene.light.shadow.camera.matrixWorld = new THREE.Matrix5();
+            thisscene.light.shadow.camera.matrixWorldInverse = new THREE.Matrix5();
+            thisscene.light.shadow.camera.matrix = new THREE.Matrix5();
+            thisscene.light.shadow.camera.matrix = new THREE.Matrix5();
+            thisscene.light.shadow.camera.projectionMatrix4D = new THREE.Matrix5();
+            thisscene.light.shadow.camera.projectionMatrix = new THREE.Matrix4();
+            */
+            //thisscene.light.shadow.camera.rotation.set(0,0,0,0,0,0);
+            thisscene.quadMaterial.uniforms.map.value = thisscene.light.shadow.map.texture;
+        }
+
+
+
+        
+        var numcubes = 50;
+        var radius = 50;
+        var size = 10;
+        
+        for (var i=0; i<numcubes; i+= 1) {
+            var buff = new THREE.BoxBufferGeometry4D( size, size, size, 1, 1, 1 );
+            var material = new THREE.MeshLambertMaterial( { color: Math.floor(Math.random()*16777215) } );
+            var cube = new THREE.Mesh4D(buff, material);
+            cube.name = "Falling Cube " + i;
+            cube.position.set(Math.random() * radius - radius/2, Math.random() * radius - radius/2, Math.random() * radius - radius/2, 0);
+            
+            //cube.position.y = i;
+            //cube.position.w = i % 2;
+            cube.castShadow = true;
+            cube.receiveShadow = true;
+            cube.isAffectedByGravity = true;
+            cubes.push(cube);
+        }
+        
+        for (cube of cubes) {
+            //this.add(cube);
+        }
 
     }
 }

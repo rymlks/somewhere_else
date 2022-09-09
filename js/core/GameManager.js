@@ -171,6 +171,7 @@ class GameManager {
         this.resolution = 800;
         this.renderer = new THREE.WebGLRenderer({logarithmicDepthBuffer: true, antialias: false});
         this.camera = new THREE.PerspectiveCamera4D( 75, window.innerWidth / window.innerHeight, 0.1, 1000, 0.1, 1000 );
+        //this.camera = new THREE.OrthographicCamera4D();
         this.#resize();
         this.renderer.shadowMap.enabled = true
         document.body.appendChild( this.renderer.domElement );
@@ -190,9 +191,9 @@ class GameManager {
         this.player.position.w = 1.2;
         this.scene.add(this.player);
 
-        //this.quadScene = new QuadScene();
-        //this.quadCamera = new THREE.OrthographicCamera4D( -50, 50 ,50, -50, -1000, 1000 );
-        //this.quadCamera.position.z = 100;
+        this.quadScene = new QuadScene();
+        this.quadCamera = new THREE.OrthographicCamera4D( -50, 50 ,50, -50, -1000, 1000 );
+        this.quadCamera.position.z = 100;
 
         document.body.requestPointerLock = document.body.requestPointerLock ||
              element.mozRequestPointerLock ||
@@ -285,10 +286,11 @@ class GameManager {
 
         this.#updatePhysicsObjects();
         this.#updateDialogue();
+        //this.scene.light.shadow.camera = this.camera.clone();
         this.renderer.render( this.scene, this.camera );
 
-        //this.quadScene.quadMaterial.uniforms.map.value = this.scene.light.shadow.map;
-        //this.renderer.render( this.quadScene, this.quadCamera );
+        this.quadScene.quadMaterial.uniforms.map.value = this.scene.light.shadow.map.texture;
+        this.renderer.render( this.quadScene, this.quadCamera );
 
         this.controlsFunction[this.gameState](this);
         this.#frameTearDown();
