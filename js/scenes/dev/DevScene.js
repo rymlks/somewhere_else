@@ -132,7 +132,7 @@ class DevScene extends THREE.Scene4D {
 
         var light = new THREE.AmbientLight4D( 0x404040 ); // soft white light
         light.name = "grey ambient light";
-        //this.add( light );
+        this.add( light );
 
 
         var testbuf = new THREE.BoxGeometry4D( 1, 1, 1, 1, 1, 1 );
@@ -321,8 +321,8 @@ class DevScene extends THREE.Scene4D {
 
 
 
-        var dlight = new THREE.DirectionalLight4D(0xff0000, 0.5);
-        dlight.position.set(0, 0, 3, 0);
+        var dlight = new THREE.DirectionalLight4D(0xff0000, 1);
+        dlight.position.set(0, 0, 0, 0);
         dlight.name = "grey directional light";
         dlight.castShadow = true;
         this.add( dlight );
@@ -370,14 +370,21 @@ class DevScene extends THREE.Scene4D {
         var floatingcube = new THREE.PhysicsMesh4D(bfloatingcube, fmaterial);
         floatingcube.name = "floating cube";
         floatingcube.isAffectedByGravity = false;
-        floatingcube.position.z = -3;
-        floatingcube.position.y = 999;
+        floatingcube.position.z = -10;
+        floatingcube.position.y = 0;
         floatingcube.castShadow = true;
         floatingcube.receiveShadow = true;
         //floor.position.w = 1
-        //this.add(floatingcube);
+        this.add(floatingcube);
 
-        //dlight.target = floatingcube;
+        dlight.target = floatingcube;
+
+        var giveshadow = floatingcube.clone();
+        giveshadow.isAffectedByGravity = false;
+        giveshadow.position.z = -30;
+        giveshadow.scale.x = 30;
+        giveshadow.scale.y = 30;
+        this.add(giveshadow);
 
 
         /*
@@ -418,19 +425,35 @@ class DevScene extends THREE.Scene4D {
                 "uniform sampler2D map;",
                 "varying vec2 vUv;",
 
+                "const float PackUpscale = 256. / 255.; // fraction -> 0..1 (including 1)",
+                "const float UnpackDownscale = 255. / 256.; // 0..1 -> fraction (excluding 1)",
+                "const vec3 PackFactors = vec3( 256. * 256. * 256., 256. * 256.,  256. );",
+                "const vec4 UnpackFactors = UnpackDownscale / vec4( PackFactors, 1. );",
+
                 "float unpack_depth (const in vec4 rgba_depth)",
                 "{",
                     "const vec4 bit_shift = vec4 (1.0 / (256.0 * 256.0 * 256.0), 1.0 / (256.0 * 256.0), 1.0 / 256.0, 1.0);",
                     "float depth = dot (rgba_depth, bit_shift);",
                     "return depth;",
                 "}",
+                
+
+                "float unpackRGBAToDepth( const in vec4 v ) {",
+                    "return dot( v, UnpackFactors );",
+                "}",
 
                 "void main()",
                 "{",
                     "vec4 rgbaDepth = texture2D (map, vUv);",
-                    "float fDepth = unpack_depth (rgbaDepth);",
-                    "gl_FragColor = vec4 (vec3 (fDepth), 1.0);",
-                    "//gl_FragColor = vec4(rgbaDepth.x, rgbaDepth.y, rgbaDepth.z, 1.0);",
+                    "float fDepth = unpackRGBAToDepth (rgbaDepth);",
+                    "if (fDepth < 1.0) {",
+                        "gl_FragColor = vec4 (vec3 (0.0), 1.0);",
+                    "}", 
+                    "else {",
+                        "gl_FragColor = vec4 (vec3 (1.0), 1.0);",
+                    "}",
+                    "//gl_FragColor = vec4 (vec3 (fDepth), 1.0);",
+                    "//gl_FragColor = vec4(rgbaDepth.x, rgbaDepth.y, rgbaDepth.z, rgbaDepth.a);",
                 "}"
             ].join("\n"),
             blending: THREE.NoBlending,
@@ -445,7 +468,7 @@ class DevScene extends THREE.Scene4D {
         var dmesh = new THREE.Mesh4D(dgeo, this.quadMaterial)
         dmesh.position.z = -20;
 
-        //this.add( dmesh );
+        this.add( dmesh );
 
         floatingcube.update = function(delta, scene) {
             /*
@@ -458,22 +481,24 @@ class DevScene extends THREE.Scene4D {
             thisscene.light.shadow.camera.projectionMatrix = new THREE.Matrix4();
             */
             //thisscene.light.shadow.camera.rotation.set(0,0,0,0,0,0);
-            thisscene.quadMaterial.uniforms.map.value = thisscene.light.shadow.map.texture;
+            //thisscene.quadMaterial.uniforms.map.value = thisscene.light.shadow.map.texture;
         }
 
 
 
         
-        var numcubes = 50;
-        var radius = 50;
-        var size = 10;
+        var numcubes = 100;
+        var radius = 10;
+        var size = 1;
         
         for (var i=0; i<numcubes; i+= 1) {
             var buff = new THREE.BoxBufferGeometry4D( size, size, size, 1, 1, 1 );
-            var material = new THREE.MeshLambertMaterial( { color: Math.floor(Math.random()*16777215) } );
+            //var material = new THREE.MeshLambertMaterial( { color: Math.floor(Math.random()*16777215) } );
+            var material = new THREE.MeshLambertMaterial( { color: 0x00ff00 } );
+            //var material = new THREE.MeshDepthMaterial( { depthPacking: THREE.RGBADepthPacking } );
             var cube = new THREE.Mesh4D(buff, material);
             cube.name = "Falling Cube " + i;
-            cube.position.set(Math.random() * radius - radius/2, Math.random() * radius - radius/2, Math.random() * radius - radius/2, 0);
+            cube.position.set(Math.random() * radius, Math.random() * radius - radius/2, Math.random() * radius - radius/2, Math.random() * radius - radius/2);
             
             //cube.position.y = i;
             //cube.position.w = i % 2;
@@ -484,7 +509,7 @@ class DevScene extends THREE.Scene4D {
         }
         
         for (cube of cubes) {
-            //this.add(cube);
+            this.add(cube);
         }
 
     }

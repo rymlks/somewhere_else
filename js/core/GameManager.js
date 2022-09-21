@@ -40,6 +40,8 @@ class GameManager {
         this.#setUpControls();
 
         instance = this;
+        
+        this.renderTarget = new THREE.WebGLRenderTarget(1024, 1024);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -287,10 +289,18 @@ class GameManager {
         this.#updatePhysicsObjects();
         this.#updateDialogue();
         //this.scene.light.shadow.camera = this.camera.clone();
+        
+        var oldrendertarget = this.renderer.getRenderTarget();
+        this.renderer.setRenderTarget(this.renderTarget);
+        this.renderer.render( this.scene, this.scene.light.shadow.camera );
+        this.renderer.setRenderTarget(oldrendertarget);
+        
+        //this.scene.quadMaterial.uniforms.map.value = this.renderTarget.texture;
+        this.scene.quadMaterial.uniforms.map.value = this.scene.light.shadow.map.texture;
+
         this.renderer.render( this.scene, this.camera );
 
-        this.quadScene.quadMaterial.uniforms.map.value = this.scene.light.shadow.map.texture;
-        this.renderer.render( this.quadScene, this.quadCamera );
+        //this.renderer.render( this.quadScene, this.quadCamera );
 
         this.controlsFunction[this.gameState](this);
         this.#frameTearDown();
