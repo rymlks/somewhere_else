@@ -321,18 +321,23 @@ class DevScene extends THREE.Scene4D {
 
 
 
-        var dlight = new THREE.DirectionalLight4D(0xff0000, 1);
+        var dlight = new THREE.DirectionalLight4D(0xffffff, 1);
         dlight.position.set(0, 0, 0, 0);
         dlight.name = "grey directional light";
         dlight.castShadow = true;
-        this.add( dlight );
+
+        dlight.shadow.camera.rotation._onChangeCallback = function() {
+            console.log("Changed!");;
+        }
+
+        //this.add( dlight );
         this.light = dlight;
 
         var buff = new THREE.BoxGeometry4D( 0.1, 0.1, 0.1, 1, 1, 1 );
         var material = new THREE.MeshLambertMaterial( { color: 0xff0000 } );
         var pcube = new THREE.PhysicsMesh4D(buff, material);
-        pcube.position.set(0, 0, -3, 0);
-        pcube.rotation.zw = Math.PI;
+        pcube.position.set(0, 0, 1, 0);
+        //pcube.rotation.zw = Math.PI;
         pcube.isAffectedByGravity = false;
         var time = 0;
 
@@ -351,8 +356,8 @@ class DevScene extends THREE.Scene4D {
 
         pcube.name = "white point light cube";
 
-        //pcube.add(dlight);
-        //this.add( pcube );
+        pcube.add(dlight);
+        this.add( pcube );
 
         var buff = new THREE.BoxGeometry4D( 10, 0.5, 10, 1, 1, 1 );
         var material = new THREE.MeshLambertMaterial( { color: 0xffffff } );
@@ -366,7 +371,7 @@ class DevScene extends THREE.Scene4D {
         //this.add(floor);
 
         var bfloatingcube = new THREE.BoxGeometry4D( 1, 1, 1, 1, 1, 1 );
-        var fmaterial = new THREE.MeshLambertMaterial( { color: 0xffffff } );
+        var fmaterial = new THREE.MeshLambertMaterial( { color: 0xff0000 } );
         var floatingcube = new THREE.PhysicsMesh4D(bfloatingcube, fmaterial);
         floatingcube.name = "floating cube";
         floatingcube.isAffectedByGravity = false;
@@ -377,7 +382,7 @@ class DevScene extends THREE.Scene4D {
         //floor.position.w = 1
         this.add(floatingcube);
 
-        dlight.target = floatingcube;
+        //dlight.target = floatingcube;
 
         var giveshadow = floatingcube.clone();
         giveshadow.isAffectedByGravity = false;
@@ -453,7 +458,7 @@ class DevScene extends THREE.Scene4D {
                         "gl_FragColor = vec4 (vec3 (1.0), 1.0);",
                     "}",
                     "//gl_FragColor = vec4 (vec3 (fDepth), 1.0);",
-                    "//gl_FragColor = vec4(rgbaDepth.x, rgbaDepth.y, rgbaDepth.z, rgbaDepth.a);",
+                    "gl_FragColor = vec4(rgbaDepth.x, rgbaDepth.y, rgbaDepth.z, rgbaDepth.a);",
                 "}"
             ].join("\n"),
             blending: THREE.NoBlending,
@@ -493,18 +498,19 @@ class DevScene extends THREE.Scene4D {
         
         for (var i=0; i<numcubes; i+= 1) {
             var buff = new THREE.BoxBufferGeometry4D( size, size, size, 1, 1, 1 );
-            //var material = new THREE.MeshLambertMaterial( { color: Math.floor(Math.random()*16777215) } );
-            var material = new THREE.MeshLambertMaterial( { color: 0x00ff00 } );
+            var material = new THREE.MeshLambertMaterial( { color: Math.floor(Math.random()*16777215) } );
+            //var material = new THREE.MeshLambertMaterial( { color: 0x00ff00 } );
             //var material = new THREE.MeshDepthMaterial( { depthPacking: THREE.RGBADepthPacking } );
             var cube = new THREE.Mesh4D(buff, material);
             cube.name = "Falling Cube " + i;
-            cube.position.set(Math.random() * radius, Math.random() * radius - radius/2, Math.random() * radius - radius/2, Math.random() * radius - radius/2);
+            cube.position.set(Math.random() * radius - radius/2, Math.random() * radius - radius/2, Math.random() * radius - radius/2, Math.random() * radius - radius/2);
             
             //cube.position.y = i;
             //cube.position.w = i % 2;
             cube.castShadow = true;
             cube.receiveShadow = true;
             cube.isAffectedByGravity = true;
+            //cube.rotation.zx = 0.2;
             cubes.push(cube);
         }
         
