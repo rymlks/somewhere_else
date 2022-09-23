@@ -4,10 +4,11 @@ import {DemoScene} from "./scenes/dev/DemoScene.js";
 import {EditorScene} from "./scenes/util/EditorScene.js";
 import {QuadScene} from "./scenes/util/QuadScene.js";
 
+var devScene = new DevScene();
 var GM = new GameManager();
 //GM.setScene(new EditorScene());
 //GM.setScene(new DemoScene());
-GM.setScene(new DevScene());
+GM.setScene(devScene);
 GM.play();
 //GM.beginEditor();
 GM.FPSBufferSize = 100;

@@ -50,7 +50,7 @@ class GameManager {
      * Begin playing the game
      */
     play() {
-        //this.unPause();
+        this.unPause();
         requestAnimationFrame( this.#update.bind(this) );
     }
 
@@ -208,6 +208,7 @@ class GameManager {
         this.#clock = new THREE.Clock();
         this.timeDelta = this.#clock.getDelta();
         this.timeScaledSpeed = this.speed * this.timeDelta;
+        this.maxFrameDelay = 0.1;
 
         this.#frameDeltas = [];
         this.FPSBufferSize = 10;
@@ -300,6 +301,10 @@ class GameManager {
     #frameSetUp() {
         // Set up frame timing data
         this.timeDelta = this.#clock.getDelta();
+        if (this.timeDelta > this.maxFrameDelay) {
+            this.timeDelta = this.maxFrameDelay;
+        }
+
         this.timeScaledSpeed = this.speed * this.timeDelta;
 
         this.#frameDeltas.push(this.timeDelta);

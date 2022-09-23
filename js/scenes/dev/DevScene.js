@@ -108,7 +108,7 @@ class DevScene extends THREE.Scene4D {
             'Lowpoly_tree_sample.obj', 
             function ( object ) {
                 object.position.y = -1.6;
-                object.position.w = -3;
+                object.position.w = -10;
                 object.scale.x = 0.5;
                 object.scale.y = 0.5;
                 object.scale.z = 0.5;
@@ -270,7 +270,8 @@ class DevScene extends THREE.Scene4D {
             var cube = new THREE.PhysicsMesh4D(buff, material);
             cube.name = "Falling Cube " + i;
             cube.position.y = i;
-            cube.position.w = i % 2;
+            cube.position.w = (i % 2) * 5;
+            cube.bounciness = (i % 2) * 0.9;
             cube.castShadow = true;
             cube.receiveShadow = true;
             cube.isAffectedByGravity = true;
@@ -299,7 +300,7 @@ class DevScene extends THREE.Scene4D {
         floor2.name = "floor2";
         floor2.isAffectedByGravity = false;
         floor2.position.y = -10.5;
-        floor2.position.w = 1
+        floor2.position.w = 5
         floor2.castShadow = true;
         floor2.receiveShadow = true;
 
@@ -316,14 +317,14 @@ class DevScene extends THREE.Scene4D {
             var textGeo = new THREE.TextGeometry4D(
                 "This is a work in progress.\n" + 
                 "Epilepsy warning: Graphical bugs may flash quickly.\n\n" + 
+                "Click twice to lock the cursor\n" +
                 "Use WASD keys + Mouse to move\n" +
                 "Use Space + CAPS to go up and down\n" +
-                "Click twice to lock the cursor\n" +
                 "Hold shift to enter 4D mode\n" +
                 "Press ~ to toggle camera type\n" +
                 "Press R to reset camera orientation\n" +
                 "Use the scrollwheel for an additional 4D rotation\n\n" +
-                "Press ESC to start", {font: font, size: 1, height: 0});
+                "", {font: font, size: 1, height: 0});
             var textmat = new THREE.MeshBasicMaterial( { color: 0x380404 } );
             var textMesh = new THREE.Mesh4D(textGeo, textmat)
             textMesh.position.y = 9;
@@ -362,7 +363,7 @@ class DevScene extends THREE.Scene4D {
         sphere.position.x = -2.5;
         sphere.position.y = -0;
         sphere.position.z = 2;
-        sphere.position.w = 1;
+        sphere.position.w = 5;
         this.add(sphere);
 
 
@@ -371,7 +372,7 @@ class DevScene extends THREE.Scene4D {
         sphere2.position.x = -2.4;
         sphere2.position.y = 5;
         sphere2.position.z = 2.1;
-        sphere2.position.w = 1;
+        sphere2.position.w = 5;
         this.add(sphere2);
 
     }
