@@ -45,8 +45,8 @@ class QuadScene extends THREE.Scene4D {
                 "{",
                     "vec4 rgbaDepth = texture2D (map, vUv);",
                     "float fDepth = unpack_depth (rgbaDepth);",
-                    "gl_FragColor = vec4 (vec3 (fDepth), 1.0);",
-                    "//gl_FragColor = vec4(rgbaDepth.x, rgbaDepth.y, rgbaDepth.z, 1.0);",
+                    "//gl_FragColor = vec4 (vec3 (fDepth), 1.0);",
+                    "gl_FragColor = vec4(rgbaDepth.x, rgbaDepth.y, rgbaDepth.z, 1.0);",
                 "}"
             ].join("\n"),
             blending: THREE.NoBlending,
