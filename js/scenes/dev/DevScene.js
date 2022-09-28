@@ -1,5 +1,9 @@
-import * as THREE from "../../three.js/build/three.module.js";
+import * as THREEsource from "../../three.js/src/Three.js";
+import * as THREEbuild from "../../three.js/build/three.module.js";
 import { Gizmo } from "../../objectLoaders/Gizmo.js";
+import { Object4D } from "../../three.js/src/core/Object4D.js";
+
+const THREE = THREEsource ? THREEsource : THREEbuild
 
 // TODO: Better objects definition for Scenes
 class DevScene extends THREE.Scene4D {
@@ -108,15 +112,19 @@ class DevScene extends THREE.Scene4D {
             'Lowpoly_tree_sample.obj', 
             function ( object ) {
                 object.position.y = -1.6;
-                //object.position.w = -3;
+                object.position.w = -3;
                 object.scale.x = 0.5;
                 object.scale.y = 0.5;
                 object.scale.z = 0.5;
                 object.scale.w = 0.5;
 
+                for (var child of object.children) {
+                    child.castShadow = true;
+                }
+
                 //object.rotation.zw = Math.PI * 0.5;
                 //object.rotation.xz = Math.PI;
-                //thisscene.add( object );
+                thisscene.add( object );
                 console.log(object);
             }, 
             // called when loading is in progresses
@@ -195,6 +203,7 @@ class DevScene extends THREE.Scene4D {
         tess.position.x += 8;
         tess.position.w = 0;
         tess.name = "Tesseract";
+        tess.castShadow = true;
 
         var pi_4 = Math.PI * 0.25;
 
@@ -213,7 +222,7 @@ class DevScene extends THREE.Scene4D {
         
         
         
-        //this.add(tess);
+        this.add(tess);
 
         var cbuff = new THREE.BoxGeometry4D( 2, 2, 2, 1, 1, 1 );
         var cmaterial = new THREE.MeshLambertMaterial( { color: 0x8080ff, transparent: true, opacity: 0.75, alphaMap: amap } );
@@ -232,8 +241,10 @@ class DevScene extends THREE.Scene4D {
 
         refcube.update = function(delta, scene) { }
 
+        refcube.castShadow = true;
+        refcube2.castShadow = true;
         refcube.add(refcube2);
-        //this.add(refcube);
+        this.add(refcube);
         
 
         var buff2 = new THREE.BoxGeometry4D( 20, 0.5, 20, 1, 1, 1 );
@@ -243,10 +254,10 @@ class DevScene extends THREE.Scene4D {
         floor2.isAffectedByGravity = false;
         floor2.position.y = -10.5;
         floor2.position.w = 1
-        floor2.castShadow = true;
+        floor2.castShadow = false;
         floor2.receiveShadow = true;
 
-        //this.add(floor2);
+        this.add(floor2);
 
 
         const fontloader = new THREE.FontLoader();
@@ -304,41 +315,59 @@ class DevScene extends THREE.Scene4D {
 
         var spherbuf = new THREE.SphereGeometry4D(  );
         var sphere = new THREE.PhysicsMesh4D( spherbuf, cylmat );
-        sphere.position.x = -2.5;
-        sphere.position.y = -0;
-        sphere.position.z = 2;
+        sphere.position.x = 2.5;
+        sphere.position.y = 7;
+        sphere.position.z = -3;
         sphere.position.w = 1;
-        //this.add(sphere);
+        sphere.bounciness = 1.0;
+        sphere.castShadow = true;
+        this.add(sphere);
 
 
         var spherbuf2 = new THREE.SphereGeometry4D(  );
         var sphere2 = new THREE.PhysicsMesh4D( spherbuf2, cylmat );
         sphere2.position.x = -2.4;
-        sphere2.position.y = 5;
+        sphere2.position.y = 10;
         sphere2.position.z = 2.1;
         sphere2.position.w = 1;
-        //this.add(sphere2);
+        sphere2.bounciness = 1.0;
+        sphere2.castShadow = true;
+        this.add(sphere2);
 
 
 
         var dlight = new THREE.DirectionalLight4D(0xffffff, 1);
-        dlight.position.set(0, 0, 0, 0);
+        dlight.position.set(3, 10, -5, -5);
+        dlight.target = new Object4D();
+        dlight.target.position.set(0,0,0,-5);
         dlight.name = "grey directional light";
         dlight.castShadow = true;
+        dlight.shadow.camera.left = -20;
+        dlight.shadow.camera.right = 20;
+        dlight.shadow.camera.bottom = -20;
+        dlight.shadow.camera.top = 20;
+        dlight.shadow.mapSize.width = 2048;
+        dlight.shadow.mapSize.height = 2048;
+        dlight.shadow.bias = -0.01;
 
         dlight.shadow.camera.rotation._onChangeCallback = function() {
-            console.log("Changed!");;
+            //console.log("Changed!");;
         }
 
         //this.add( dlight );
+        dlight.shadow.camera.scale.y = -1;
         this.light = dlight;
 
         var buff = new THREE.BoxGeometry4D( 0.1, 0.1, 0.1, 1, 1, 1 );
-        var material = new THREE.MeshLambertMaterial( { color: 0xff0000 } );
+        var material = new THREE.MeshLambertMaterial( { color: 0xffffff } );
         var pcube = new THREE.PhysicsMesh4D(buff, material);
-        pcube.position.set(0, 0, 1, 0);
+        pcube.position.set(1, 3, 1, 0);
         //pcube.rotation.zw = Math.PI;
         pcube.isAffectedByGravity = false;
+
+        pcube.rotation.yz = -0.3;
+        pcube.rotation.zx = 0.5;
+
         var time = 0;
 
 
@@ -346,9 +375,9 @@ class DevScene extends THREE.Scene4D {
         
         pcube.update = function(delta, scene) {
             time += delta;
-            pcube.rotation.xy = time;
             pcube.rotation.yz = time;
-            pcube.rotation.zx = time;
+            //pcube.rotation.zx = time;
+            //pcube.rotation.zx = time;
             //pcube.position.w = Math.sin(time) * 5;
             //pcube.position.z = Math.cos(time) * 5;
         }
@@ -356,8 +385,23 @@ class DevScene extends THREE.Scene4D {
 
         pcube.name = "white point light cube";
 
+        var pcube2 = pcube.clone();
+        pcube2.position.set(0, 0, -0.5, 0);
+
+        
+        pcube2.update = function(delta, scene) {
+            return;
+            time += delta;
+            //pcube2.rotation.zx = time;
+            pcube2.position.x = Math.sin(time) ;
+            pcube2.position.y = Math.cos(time) ;
+        }
+
+
         pcube.add(dlight);
-        this.add( pcube );
+        pcube.add(pcube2);
+        //this.add( pcube );
+        this.add(dlight);
 
         var buff = new THREE.BoxGeometry4D( 10, 0.5, 10, 1, 1, 1 );
         var material = new THREE.MeshLambertMaterial( { color: 0xffffff } );
@@ -365,31 +409,42 @@ class DevScene extends THREE.Scene4D {
         floor.name = "floor";
         floor.isAffectedByGravity = false;
         floor.position.y = -2.5;
-        floor.castShadow = true;
+        floor.castShadow = false;
         floor.receiveShadow = true;
         //floor.position.w = 1
-        //this.add(floor);
+        this.add(floor);
 
         var bfloatingcube = new THREE.BoxGeometry4D( 1, 1, 1, 1, 1, 1 );
-        var fmaterial = new THREE.MeshLambertMaterial( { color: 0xff0000 } );
+        var fmaterial = new THREE.MeshLambertMaterial( { color: 0x00ff00 } );
         var floatingcube = new THREE.PhysicsMesh4D(bfloatingcube, fmaterial);
         floatingcube.name = "floating cube";
         floatingcube.isAffectedByGravity = false;
         floatingcube.position.z = -10;
         floatingcube.position.y = 0;
+        floatingcube.position.x = 0.5;
+        floatingcube.position.w = 0;
         floatingcube.castShadow = true;
-        floatingcube.receiveShadow = true;
+        floatingcube.receiveShadow = false;
+        
         //floor.position.w = 1
-        this.add(floatingcube);
+        //this.add(floatingcube);
+
+        floatingcube.update = function(delta, scene) {
+            //floatingcube.position.w = Math.sin(time) * 2;
+        }
 
         //dlight.target = floatingcube;
 
         var giveshadow = floatingcube.clone();
+        giveshadow.material = new THREE.MeshLambertMaterial( { color: 0xff0000 } );
         giveshadow.isAffectedByGravity = false;
-        giveshadow.position.z = -30;
+        giveshadow.position.z = -12;
+        giveshadow.position.w = -1;
         giveshadow.scale.x = 30;
         giveshadow.scale.y = 30;
-        this.add(giveshadow);
+        giveshadow.castShadow = false;
+        giveshadow.receiveShadow = true;
+        //this.add(giveshadow);
 
 
         /*
@@ -452,7 +507,7 @@ class DevScene extends THREE.Scene4D {
                     "vec4 rgbaDepth = texture2D (map, vUv);",
                     "float fDepth = unpackRGBAToDepth (rgbaDepth);",
                     "if (fDepth < 1.0) {",
-                        "gl_FragColor = vec4 (vec3 (0.0), 1.0);",
+                        "gl_FragColor = vec4 (fDepth, 0.0, 0.0, 1.0);",
                     "}", 
                     "else {",
                         "gl_FragColor = vec4 (vec3 (1.0), 1.0);",
@@ -471,28 +526,14 @@ class DevScene extends THREE.Scene4D {
 
         var dgeo = new THREE.PlaneGeometry4D(5, 5);
         var dmesh = new THREE.Mesh4D(dgeo, this.quadMaterial)
-        dmesh.position.z = -20;
+        dmesh.position.x = 20;
+        dmesh.rotation.zx = -Math.PI * 0.5;
 
         this.add( dmesh );
 
-        floatingcube.update = function(delta, scene) {
-            /*
-            thisscene.light.shadow.camera.matrixAutoUpdate = false;
-            thisscene.light.shadow.camera.matrixWorld = new THREE.Matrix5();
-            thisscene.light.shadow.camera.matrixWorldInverse = new THREE.Matrix5();
-            thisscene.light.shadow.camera.matrix = new THREE.Matrix5();
-            thisscene.light.shadow.camera.matrix = new THREE.Matrix5();
-            thisscene.light.shadow.camera.projectionMatrix4D = new THREE.Matrix5();
-            thisscene.light.shadow.camera.projectionMatrix = new THREE.Matrix4();
-            */
-            //thisscene.light.shadow.camera.rotation.set(0,0,0,0,0,0);
-            //thisscene.quadMaterial.uniforms.map.value = thisscene.light.shadow.map.texture;
-        }
-
-
 
         
-        var numcubes = 100;
+        var numcubes = 5;
         var radius = 10;
         var size = 1;
         
@@ -503,12 +544,12 @@ class DevScene extends THREE.Scene4D {
             //var material = new THREE.MeshDepthMaterial( { depthPacking: THREE.RGBADepthPacking } );
             var cube = new THREE.Mesh4D(buff, material);
             cube.name = "Falling Cube " + i;
-            cube.position.set(Math.random() * radius - radius/2, Math.random() * radius - radius/2, Math.random() * radius - radius/2, Math.random() * radius - radius/2);
+            cube.position.set(Math.random() * radius - radius/2, Math.random() * radius - radius/2, -10, 2);
             
             //cube.position.y = i;
             //cube.position.w = i % 2;
             cube.castShadow = true;
-            cube.receiveShadow = true;
+            cube.receiveShadow = false;
             cube.isAffectedByGravity = true;
             //cube.rotation.zx = 0.2;
             cubes.push(cube);

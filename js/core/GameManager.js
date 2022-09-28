@@ -1,4 +1,5 @@
-import * as THREE from "../three.js/build/three.module.js";
+import * as THREEsource from "../three.js/src/Three.js";
+import * as THREEbuild from "../three.js/build/three.module.js";
 import { GameState } from "./GameState.js"
 import { keyPressed, keyReleased, 
     pressedKeys, heldKeys, releasedKeys, 
@@ -10,6 +11,8 @@ import { dialogueControls } from "../controls/DialogueControls.js"
 import { editorControls } from "../controls/EditorControls.js"
 import { DialogueManager } from "../dialogue/DialogueManager.js"
 import { QuadScene } from "../scenes/util/QuadScene.js";
+
+const THREE = THREEsource ? THREEsource : THREEbuild
 
 var instance = null;
 
@@ -176,6 +179,7 @@ class GameManager {
         //this.camera = new THREE.OrthographicCamera4D();
         this.#resize();
         this.renderer.shadowMap.enabled = true
+        this.renderer.shadowMap.type = THREE.BasicShadowMap;
         document.body.appendChild( this.renderer.domElement );
         
         this.scene = new THREE.Scene4D();
@@ -186,10 +190,11 @@ class GameManager {
         this.camera.position.y = 1;
         this.camera.position.w = 0.2;
         this.player.isAffectedByGravity = false;
+        this.player.castShadow = true;
         this.player.renderLayer = -1;
         this.player.add(this.camera);
 
-        this.player.position.z = -5;
+        this.player.position.z = 5;
         this.player.position.w = 1.2;
         this.scene.add(this.player);
 
@@ -295,8 +300,8 @@ class GameManager {
         this.renderer.render( this.scene, this.scene.light.shadow.camera );
         this.renderer.setRenderTarget(oldrendertarget);
         
-        this.scene.quadMaterial.uniforms.map.value = this.renderTarget.texture;
-        //this.scene.quadMaterial.uniforms.map.value = this.scene.light.shadow.map.texture;
+        //this.scene.quadMaterial.uniforms.map.value = this.renderTarget.texture;
+        this.scene.quadMaterial.uniforms.map.value = this.scene.light.shadow.map.texture;
 
         this.renderer.render( this.scene, this.camera );
 
