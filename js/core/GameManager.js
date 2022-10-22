@@ -1,4 +1,4 @@
-import * as THREEsource from "../three.js/src/Three.js";
+//import * as THREE from "../three.js/src/Three.js";
 import * as THREEbuild from "../three.js/build/three.module.js";
 import { GameState } from "./GameState.js"
 import { keyPressed, keyReleased, 
@@ -12,7 +12,7 @@ import { editorControls } from "../controls/EditorControls.js"
 import { DialogueManager } from "../dialogue/DialogueManager.js"
 import { QuadScene } from "../scenes/util/QuadScene.js";
 
-const THREE = THREEsource ? THREEsource : THREEbuild
+const THREE = THREEbuild
 
 var instance = null;
 
@@ -175,13 +175,26 @@ class GameManager {
     #setUpRenderingPipeline() {
         this.resolution = 800;
         this.renderer = new THREE.WebGLRenderer({logarithmicDepthBuffer: true, antialias: false});
-        this.camera = new THREE.PerspectiveCamera4D( 75, window.innerWidth / window.innerHeight, 0.1, 1000, 0.1, 1000 );
-        //this.camera = new THREE.OrthographicCamera4D();
-        this.#resize();
         this.renderer.shadowMap.enabled = true
         this.renderer.shadowMap.type = THREE.BasicShadowMap;
         document.body.appendChild( this.renderer.domElement );
         
+        this.quadRenderer = new THREE.WebGLRenderer({logarithmicDepthBuffer: true, antialias: false});
+        this.quadScene = new QuadScene();
+        this.quadCamera = new THREE.OrthographicCamera4D( -5, 5 ,5, -5, 0.1, 1000 );
+        this.quadCamera.target = new THREE.Object4D();
+        this.quadCamera.position.z = 5;
+        this.quadRenderer.domElement.style.zIndex = 1000;
+        this.quadRenderer.domElement.style.position = "fixed";
+        this.quadRenderer.domElement.style.bottom = "0";
+        this.quadRenderer.domElement.style.right = "0";
+        this.quadRenderer.domElement.style.display = "none";
+        this.quadRenderer.shadowMap.enabled = true
+        this.quadRenderer.shadowMap.type = THREE.BasicShadowMap;
+        document.body.appendChild( this.quadRenderer.domElement );
+
+        this.camera = new THREE.PerspectiveCamera4D( 75, window.innerWidth / window.innerHeight, 0.1, 1000, 0.1, 1000 ); 
+        //this.camera = new THREE.OrthographicCamera4D();
         this.scene = new THREE.Scene4D();
 
         var playerMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff, transparent: true, opacity: 0 } );
@@ -194,19 +207,19 @@ class GameManager {
         this.player.renderLayer = -1;
         this.player.add(this.camera);
 
-        this.player.position.z = 5;
+        this.player.position.z = 35;
         this.player.position.w = 1.2;
-        this.scene.add(this.player);
 
-        this.quadScene = new QuadScene();
-        this.quadCamera = new THREE.OrthographicCamera4D( -50, 50 ,50, -50, -1000, 1000 );
-        this.quadCamera.position.z = 100;
+        //this.#setUpPhysicalPlayer();
+
+        this.scene.add(this.player);
 
         document.body.requestPointerLock = document.body.requestPointerLock ||
              element.mozRequestPointerLock ||
              element.webkitRequestPointerLock;
 
         document.body.requestPointerLock();
+        this.#resize();
     }
 
     /**
@@ -234,6 +247,14 @@ class GameManager {
         this.controlsFunction[GameState.PAUSED] = pausedControls;
         this.controlsFunction[GameState.DIALOGUE] = dialogueControls;
         this.controlsFunction[GameState.EDITOR] = editorControls;
+    }
+
+    /**
+    */
+    #setUpPhysicalPlayer() {
+        this.speed = 10.0;
+        this.player.aerodynamics = 0.90;
+        this.player.isAffectedByGravity = true;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -295,17 +316,20 @@ class GameManager {
         this.#updateDialogue();
         //this.scene.light.shadow.camera = this.camera.clone();
         
-        var oldrendertarget = this.renderer.getRenderTarget();
-        this.renderer.setRenderTarget(this.renderTarget);
-        this.renderer.render( this.scene, this.scene.light.shadow.camera );
-        this.renderer.setRenderTarget(oldrendertarget);
+        //var oldrendertarget = this.quadRenderer.getRenderTarget();
+        //this.quadRenderer.setRenderTarget(this.renderTarget);
+        this.quadRenderer.render( this.scene, this.camera );
+        //this.quadRenderer.setRenderTarget(oldrendertarget);
         
         //this.scene.quadMaterial.uniforms.map.value = this.renderTarget.texture;
-        this.scene.quadMaterial.uniforms.map.value = this.scene.light.shadow.map.texture;
-
+        //this.quadScene.quadMaterial.uniforms.map.value = this.renderTarget.texture;
+        if (this.scene.light.shadow.map) {
+            this.quadScene.quadMaterial.uniforms.map.value = this.scene.light.shadow.map.texture;
+            //this.scene.quadMaterial.uniforms.map.value = this.scene.light.shadow.map.texture;
+        }
+       
+        this.quadRenderer.render( this.quadScene, this.quadCamera );
         this.renderer.render( this.scene, this.camera );
-
-        //this.renderer.render( this.quadScene, this.quadCamera );
 
         this.controlsFunction[this.gameState](this);
         this.#frameTearDown();
@@ -355,6 +379,9 @@ class GameManager {
      * Apply physics simulation to every physics object in the scene.
      */
     #updatePhysicsObjects() {
+        if (!this.scene.ready) {
+            return;
+        }
         // Do not apply physics when paused
         if (this.gameState === GameState.PAUSED) return;
 
@@ -391,6 +418,8 @@ class GameManager {
         this.renderer.setPixelRatio(this.resolution / maxDim);
         this.renderer.setSize( window.innerWidth, window.innerHeight );
         this.#dialogueManager.resize();
+
+        this.quadRenderer.setSize(200, 200);
     }
 }
 
