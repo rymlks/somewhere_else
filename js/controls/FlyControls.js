@@ -129,8 +129,16 @@ function flyControls(GM) {
 		GM.beginDialogue(dialogue2);
 	}
 
+	// util
 	if (GM.heldKeys[KeyCode.KEY_L] === true || GM.pressedMouseButtons[0] === true) {
 		document.body.requestPointerLock();
+	}
+	if (GM.pressedKeys[KeyCode.KEY_M] === true) {
+		if (GM.quadRenderer.domElement.style.display == "none") {
+			GM.quadRenderer.domElement.style.display = "inline-block";
+		} else {
+			GM.quadRenderer.domElement.style.display = "none";
+		}
 	}
 
 	tabToChangeCamera(GM);
