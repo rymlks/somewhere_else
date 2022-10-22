@@ -1,5 +1,6 @@
 import {GameManager} from "./core/GameManager.js";
 import {DevScene} from "./scenes/dev/DevScene.js";
+import {IntroScene} from "./scenes/levels/IntroScene.js";
 import {DemoScene} from "./scenes/dev/DemoScene.js";
 import {EditorScene} from "./scenes/util/EditorScene.js";
 import {QuadScene} from "./scenes/util/QuadScene.js";
@@ -16,6 +17,10 @@ GM.FPSBufferSize = 100;
 
 var infodiv = document.getElementById("info");
 function updateInfoDiv() {
+	if (!GM.scene.ready) {
+		infodiv.innerHTML = "Loading...";
+	}
+
 	infodiv.innerHTML  = "x: " + GM.player.position.x.toPrecision(4) + ", ";
 	infodiv.innerHTML += "y: " + GM.player.position.y.toPrecision(4) + ", ";
 	infodiv.innerHTML += "z: " + GM.player.position.z.toPrecision(4) + ", ";

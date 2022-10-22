@@ -1,15 +1,17 @@
-import * as THREEsource from "../../three.js/src/Three.js";
+//import * as THREE from "../../three.js/src/Three.js";
 import * as THREEbuild from "../../three.js/build/three.module.js";
 import { Gizmo } from "../../objectLoaders/Gizmo.js";
 import { Object4D } from "../../three.js/src/core/Object4D.js";
 
-const THREE = THREEsource ? THREEsource : THREEbuild
+const THREE = THREEbuild
 
 // TODO: Better objects definition for Scenes
 class DevScene extends THREE.Scene4D {
     constructor() {
         super();
-
+        this.ready = false;
+        this.textready = false;
+        this.treeready = false;
 
         /*
         var testEuler = new THREE.Euler4D(0.1, 0.2, 0.3, 0.4, 0.5, 0.6);
@@ -112,7 +114,7 @@ class DevScene extends THREE.Scene4D {
             'Lowpoly_tree_sample.obj', 
             function ( object ) {
                 object.position.y = -1.6;
-                object.position.w = -3;
+                object.position.w = -10;
                 object.scale.x = 0.5;
                 object.scale.y = 0.5;
                 object.scale.z = 0.5;
@@ -120,12 +122,18 @@ class DevScene extends THREE.Scene4D {
 
                 for (var child of object.children) {
                     child.castShadow = true;
+                    child.receiveShadow = true;
                 }
 
                 //object.rotation.zw = Math.PI * 0.5;
                 //object.rotation.xz = Math.PI;
                 thisscene.add( object );
                 console.log(object);
+                
+                thisscene.treeready = true;
+                if (thisscene.textready && thisscene.treeready) {
+                    thisscene.ready = true;
+                }
             }, 
             // called when loading is in progresses
             function ( xhr ) {
@@ -254,7 +262,7 @@ class DevScene extends THREE.Scene4D {
         floor2.isAffectedByGravity = false;
         floor2.position.y = -10.5;
         floor2.position.w = 1
-        floor2.castShadow = false;
+        floor2.castShadow = true;
         floor2.receiveShadow = true;
 
         this.add(floor2);
@@ -263,7 +271,7 @@ class DevScene extends THREE.Scene4D {
         const fontloader = new THREE.FontLoader();
 
         var scene = this;
-        /*
+        
         fontloader.load( 'assets/unlicensed/fonts/helvetiker_regular.typeface.json', function ( response ) {
 
             var font = response;
@@ -282,18 +290,32 @@ class DevScene extends THREE.Scene4D {
             var textmat = new THREE.MeshBasicMaterial( { color: 0x380404 } );
             var textMesh = new THREE.Mesh4D(textGeo, textmat)
             textMesh.position.y = 9;
-            textMesh.position.z = -25;
+            textMesh.position.z = 15;
             textMesh.position.x = -15;
+            textMesh.position.w = 50;
             //textMesh.rotation.zx = -Math.PI * 0.5;
             scene.add(textMesh);
 
+
+            var dgeo = new THREE.PlaneGeometry4D(35, 25);
+            var dmat = new THREE.MeshBasicMaterial( { color: 0x808080, transparent: true, opacity: 0.7 } );
+            var dmesh = new THREE.Mesh4D(dgeo, dmat)
+            dmesh.position.z = 14.5;
+            dmesh.position.w = 50;
+            scene.add(dmesh);
+
+            scene.textready = true;
+            if (scene.textready && scene.treeready) {
+                scene.ready = true;
+            }
+
         } );
-        */
+        
 
         var cylmat = new THREE.MeshLambertMaterial( { color: 0x326e2d } );
-        /*
+        
         var basebuf = new THREE.SphereBufferGeometry4D(  );
-        var testbuf = new THREE.ModelExtrudeGeometry4D(basebuf, {});
+        var testbuf = new THREE.ModelExtrudeGeometry4D(basebuf, {depth: 4});
         var cylmat = new THREE.MeshLambertMaterial( { color: 0x326e2d } );
         var cylmesh = new THREE.PhysicsMesh4D( testbuf, cylmat );
         cylmesh.name = "3d cylinder";
@@ -302,7 +324,7 @@ class DevScene extends THREE.Scene4D {
         cylmesh.position.y = 0;
         cylmesh.position.z = -2;
         cylmesh.position.w = -1;
-        this.add(cylmesh);
+        //this.add(cylmesh);
 
         cylmesh.update = function(delta, scene) {
             cylmesh.rotation.zw += delta;
@@ -310,7 +332,7 @@ class DevScene extends THREE.Scene4D {
             cylmesh.rotation.yz += delta;
             cylmesh.rotation.xw += delta;
         }
-        */
+        
 
 
         var spherbuf = new THREE.SphereGeometry4D(  );
@@ -321,6 +343,7 @@ class DevScene extends THREE.Scene4D {
         sphere.position.w = 1;
         sphere.bounciness = 1.0;
         sphere.castShadow = true;
+        sphere.receiveShadow = true;
         this.add(sphere);
 
 
@@ -332,23 +355,26 @@ class DevScene extends THREE.Scene4D {
         sphere2.position.w = 1;
         sphere2.bounciness = 1.0;
         sphere2.castShadow = true;
+        sphere2.receiveShadow = true;
         this.add(sphere2);
 
 
 
         var dlight = new THREE.DirectionalLight4D(0xffffff, 1);
-        dlight.position.set(3, 10, -5, -5);
+        dlight.position.set(3, 20, -15, 0);
         dlight.target = new Object4D();
-        dlight.target.position.set(0,0,0,-5);
+        dlight.target.position.set(0,0,0,0);
         dlight.name = "grey directional light";
         dlight.castShadow = true;
+        
         dlight.shadow.camera.left = -20;
         dlight.shadow.camera.right = 20;
         dlight.shadow.camera.bottom = -20;
         dlight.shadow.camera.top = 20;
+        
         dlight.shadow.mapSize.width = 2048;
         dlight.shadow.mapSize.height = 2048;
-        dlight.shadow.bias = -0.01;
+        dlight.shadow.bias = -0.001;
 
         dlight.shadow.camera.rotation._onChangeCallback = function() {
             //console.log("Changed!");;
@@ -361,12 +387,9 @@ class DevScene extends THREE.Scene4D {
         var buff = new THREE.BoxGeometry4D( 0.1, 0.1, 0.1, 1, 1, 1 );
         var material = new THREE.MeshLambertMaterial( { color: 0xffffff } );
         var pcube = new THREE.PhysicsMesh4D(buff, material);
-        pcube.position.set(1, 3, 1, 0);
+        pcube.position.set(0, 0, 0, 0);
         //pcube.rotation.zw = Math.PI;
         pcube.isAffectedByGravity = false;
-
-        pcube.rotation.yz = -0.3;
-        pcube.rotation.zx = 0.5;
 
         var time = 0;
 
@@ -375,7 +398,7 @@ class DevScene extends THREE.Scene4D {
         
         pcube.update = function(delta, scene) {
             time += delta;
-            pcube.rotation.yz = time;
+            //pcube.rotation.yz = time;
             //pcube.rotation.zx = time;
             //pcube.rotation.zx = time;
             //pcube.position.w = Math.sin(time) * 5;
@@ -398,8 +421,8 @@ class DevScene extends THREE.Scene4D {
         }
 
 
-        pcube.add(dlight);
-        pcube.add(pcube2);
+        dlight.add(pcube);
+        //pcube.add(pcube2);
         //this.add( pcube );
         this.add(dlight);
 
@@ -409,7 +432,8 @@ class DevScene extends THREE.Scene4D {
         floor.name = "floor";
         floor.isAffectedByGravity = false;
         floor.position.y = -2.5;
-        floor.castShadow = false;
+        floor.position.w = -5;
+        floor.castShadow = true;
         floor.receiveShadow = true;
         //floor.position.w = 1
         this.add(floor);
@@ -419,9 +443,9 @@ class DevScene extends THREE.Scene4D {
         var floatingcube = new THREE.PhysicsMesh4D(bfloatingcube, fmaterial);
         floatingcube.name = "floating cube";
         floatingcube.isAffectedByGravity = false;
-        floatingcube.position.z = -10;
+        //floatingcube.position.z = -10;
         floatingcube.position.y = 0;
-        floatingcube.position.x = 0.5;
+        floatingcube.position.x = 10;
         floatingcube.position.w = 0;
         floatingcube.castShadow = true;
         floatingcube.receiveShadow = false;
@@ -430,7 +454,8 @@ class DevScene extends THREE.Scene4D {
         //this.add(floatingcube);
 
         floatingcube.update = function(delta, scene) {
-            //floatingcube.position.w = Math.sin(time) * 2;
+            time += delta;
+            floatingcube.position.z = (Math.sin(time) + 1) * 0.5 * 500;
         }
 
         //dlight.target = floatingcube;
@@ -529,7 +554,7 @@ class DevScene extends THREE.Scene4D {
         dmesh.position.x = 20;
         dmesh.rotation.zx = -Math.PI * 0.5;
 
-        this.add( dmesh );
+        //this.add( dmesh );
 
 
         
@@ -549,7 +574,7 @@ class DevScene extends THREE.Scene4D {
             //cube.position.y = i;
             //cube.position.w = i % 2;
             cube.castShadow = true;
-            cube.receiveShadow = false;
+            cube.receiveShadow = true;
             cube.isAffectedByGravity = true;
             //cube.rotation.zx = 0.2;
             cubes.push(cube);
