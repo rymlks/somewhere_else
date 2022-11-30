@@ -9,36 +9,13 @@ import { Object4D } from "../../three.js/src/core/Object4D.js";
 class IntroScene extends THREE.Scene4D {
     constructor() {
         super();
-
+        this.loadBackground();
         this.createLights();
+        this.createFloor();
         this.loadGlobe();
         this.loadCage();
 
-        const bgloader = new THREE.CubeTextureLoader4D();
-        const bgtexture = bgloader.load([
-            'assets/unlicensed/textures/interstellar_skybox/xpos.png',
-            'assets/unlicensed/textures/interstellar_skybox/xneg.png',
-            'assets/unlicensed/textures/interstellar_skybox/ypos.png',
-            'assets/unlicensed/textures/interstellar_skybox/yneg.png',
-            'assets/unlicensed/textures/interstellar_skybox/zpos.png',
-            'assets/unlicensed/textures/interstellar_skybox/zneg.png',
-        ]);
-        this.background = bgtexture;
-
-        var plight = new THREE.PointLight4D( 0xffffff, 0.1, 1000 );
-        plight.name = "white point light";
-
-        var buff = new THREE.BoxGeometry4D( 10, 0.5, 10, 1, 1, 1 );
-        var material = new THREE.MeshLambertMaterial( { color: 0xffffff } );
-        var floor = new THREE.PhysicsMesh4D(buff, material);
-        floor.name = "floor";
-        floor.isAffectedByGravity = false;
-        floor.position.y = -2.5;
-        floor.castShadow = false;
-        floor.receiveShadow = true;
-        //floor.position.w = 1
-        //this.add(floor);
-        
+        // Below is all testing code
         const textureLoader = new THREE.TextureLoader();
         const texture = textureLoader.load( "assets/textures/testing.png" );
         texture.magFilter = THREE.NearestFilter;
@@ -76,12 +53,14 @@ class IntroScene extends THREE.Scene4D {
             objLoader.load( 
             'world.obj', 
             function ( object ) {
-                object.position.y = 0;
-                object.position.w = -3;
+                object.position.set(0, 3.5, -10, -3);
+                object.scale.multiplyScalar(10.5);
+                /*
                 object.scale.x = 10.5;
                 object.scale.y = 10.5;
                 object.scale.z = 10.5;
                 object.scale.w = 10.5;
+                */
 
                 for (var child of object.children) {
                     child.castShadow = true;
@@ -118,17 +97,15 @@ class IntroScene extends THREE.Scene4D {
             objLoader.setMaterials( materials );
             objLoader.path = "assets/blender/cage/";
             objLoader.load( 
-            'Cage.obj', 
+            'Cage (1).obj', 
             function ( object ) {
                 
-                object.position.y = 0;
-                object.position.w = 0;
-                object.scale.x = 0.5;
-                object.scale.y = 0.5;
-                object.scale.z = 0.5;
-                object.scale.w = 0.5;
+                object.scale.x = 1.0;
+                object.scale.y = 1.0;
+                object.scale.z = 1.0;
+                object.scale.w = 1.0;
 
-                object.position.set(-3,0,3,0);
+                object.position.set(0, 3.5, -10 ,0);
                 
 
                 for (var child of object.children) {
@@ -159,6 +136,8 @@ class IntroScene extends THREE.Scene4D {
         light.name = "grey ambient light";
         this.add( light );
 
+        // var plight = new THREE.PointLight4D( 0xffffff, 0.1, 1000 );
+        // plight.name = "white point light";
 
         var dlight = new THREE.DirectionalLight4D(0xffffff, 1);
         dlight.position.set(3, 15, -10, 0);
@@ -172,7 +151,7 @@ class IntroScene extends THREE.Scene4D {
         dlight.shadow.camera.top = 20;
         dlight.shadow.mapSize.width = 2048;
         dlight.shadow.mapSize.height = 2048;
-        dlight.shadow.bias = -0.01;
+        dlight.shadow.bias = -0.001;
 
         //this.add( dlight );
         dlight.shadow.camera.scale.y = -1;
@@ -187,6 +166,39 @@ class IntroScene extends THREE.Scene4D {
 
         dlight.add(pcube);
         this.add(dlight);
+    }
+
+    createFloor() {
+        var buff = new THREE.BoxGeometry4D( 30, 0.5, 30 );
+        var material = new THREE.MeshLambertMaterial( { color: 0xffffff } );
+        var floor = new THREE.PhysicsMesh4D(buff, material);
+        floor.name = "floor";
+        floor.isAffectedByGravity = false;
+        floor.position.set(0, -2.5, 0, 0);
+        floor.castShadow = true;
+        floor.receiveShadow = true;
+        //floor.position.w = 1
+        this.add(floor);
+
+
+        var floor2 = floor.clone();
+        floor2.position.set(0, -2.5, 0, 0);
+        floor2.rotation.zw = Math.PI * 0.5;
+        this.add(floor2);
+
+    }
+
+    loadBackground() {
+        const bgloader = new THREE.CubeTextureLoader4D();
+        const bgtexture = bgloader.load([
+            'assets/unlicensed/textures/interstellar_skybox/xpos.png',
+            'assets/unlicensed/textures/interstellar_skybox/xneg.png',
+            'assets/unlicensed/textures/interstellar_skybox/ypos.png',
+            'assets/unlicensed/textures/interstellar_skybox/yneg.png',
+            'assets/unlicensed/textures/interstellar_skybox/zpos.png',
+            'assets/unlicensed/textures/interstellar_skybox/zneg.png',
+        ]);
+        this.background = bgtexture;
     }
 }
 

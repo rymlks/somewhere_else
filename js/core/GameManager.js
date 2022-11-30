@@ -1,4 +1,4 @@
-//import * as THREE from "../three.js/src/Three.js";
+import * as THREE from "../three.js/src/Three.js";
 import * as THREEbuild from "../three.js/build/three.module.js";
 import { GameState } from "./GameState.js"
 import { keyPressed, keyReleased, 
@@ -12,7 +12,7 @@ import { editorControls } from "../controls/EditorControls.js"
 import { DialogueManager } from "../dialogue/DialogueManager.js"
 import { QuadScene } from "../scenes/util/QuadScene.js";
 
-const THREE = THREEbuild
+// const THREE = THREEbuild
 
 var instance = null;
 
@@ -175,6 +175,10 @@ class GameManager {
     #setUpRenderingPipeline() {
         this.resolution = 800;
         this.renderer = new THREE.WebGLRenderer({logarithmicDepthBuffer: true, antialias: false});
+
+        //this.renderer.dumpVertexShader = true;
+        //this.renderer.dumpFragmentShader = true;
+
         this.renderer.shadowMap.enabled = true
         this.renderer.shadowMap.type = THREE.BasicShadowMap;
         document.body.appendChild( this.renderer.domElement );
@@ -207,10 +211,10 @@ class GameManager {
         this.player.renderLayer = -1;
         this.player.add(this.camera);
 
-        this.player.position.z = 35;
+        this.player.position.z = 15;
         this.player.position.w = 1.2;
 
-        //this.#setUpPhysicalPlayer();
+        this.#setUpPhysicalPlayer();
 
         this.scene.add(this.player);
 
@@ -324,7 +328,7 @@ class GameManager {
         
         //this.scene.quadMaterial.uniforms.map.value = this.renderTarget.texture;
         //this.quadScene.quadMaterial.uniforms.map.value = this.renderTarget.texture;
-        if (this.scene.light.shadow.map) {
+        if (this.scene.light !== undefined && this.scene.light.shadow.map) {
             this.quadScene.quadMaterial.uniforms.map.value = this.scene.light.shadow.map.texture;
             //this.scene.quadMaterial.uniforms.map.value = this.scene.light.shadow.map.texture;
         }

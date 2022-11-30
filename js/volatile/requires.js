@@ -1,7 +1,5 @@
 import {KeyCode} from "../KeyCode/keycode.min.js"
 
-console.log(KeyCode);
-
 var bondage = {};
 var fs = {};
 

@@ -1,3 +1,4 @@
+import { KeyCode } from "../KeyCode/keycode.min.js";
 import * as THREE from "../three.js/build/three.module.js";
 
 // General utils
@@ -62,16 +63,26 @@ function keyReleased(e) {
 	heldKeys[e.keyCode] = false; 
 	releasedKeys[e.keyCode] = true; 
 	
-	e.preventDefault()
+	preventDefault(e);
 }
 
 function keyPressed(e) {
 	if (heldKeys[e.keyCode] !== true) {
 		pressedKeys[e.keyCode] = true; 
 	}
-	heldKeys[e.keyCode] = true; 
+	heldKeys[e.keyCode] = true;
+
+	preventDefault(e);
+}
+
+var allowDefaultKeys = [
+	KeyCode.KEY_ALT,
+]
+function preventDefault(e) {
 	
-	e.preventDefault()
+	if (heldKeys[KeyCode.KEY_CONTROL] !== true && !allowDefaultKeys.includes(e.keyCode)) {
+		e.preventDefault()
+	}
 }
 
 function mouseMoved(e) {

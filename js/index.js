@@ -2,14 +2,12 @@ import {GameManager} from "./core/GameManager.js";
 import {DevScene} from "./scenes/dev/DevScene.js";
 import {IntroScene} from "./scenes/levels/IntroScene.js";
 import {DemoScene} from "./scenes/dev/DemoScene.js";
+import {GLTFScene} from "./scenes/dev/GLTFScene.js";
 import {EditorScene} from "./scenes/util/EditorScene.js";
 import {QuadScene} from "./scenes/util/QuadScene.js";
 
-var devScene = new DevScene();
 var GM = new GameManager();
-//GM.setScene(new EditorScene());
-//GM.setScene(new DemoScene());
-GM.setScene(devScene);
+GM.setScene(new IntroScene());
 GM.play();
 //GM.beginEditor();
 GM.FPSBufferSize = 100;

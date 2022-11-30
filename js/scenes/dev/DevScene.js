@@ -261,7 +261,7 @@ class DevScene extends THREE.Scene4D {
         floor2.name = "floor2";
         floor2.isAffectedByGravity = false;
         floor2.position.y = -10.5;
-        floor2.position.w = 5
+        floor2.position.w = 1
         floor2.castShadow = true;
         floor2.receiveShadow = true;
 
