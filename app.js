@@ -13,8 +13,8 @@ function createWindow () {
 
   // Create the browser window.
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1,
+    height: 1,
     // TODO: Don't make this conditional. Editor should also be secure.
     webPreferences: {
       nodeIntegration: editor, // is default value after Electron v5
@@ -23,8 +23,12 @@ function createWindow () {
       preload: path.join(__dirname, "preload.js"), // use a preload script
       webSecurity: !editor  // Enable web security settings (idk what that actually means)
     },
-    acceptFirstMouse: true
+    acceptFirstMouse: true,
+    autoHideMenuBar: true,
+    show: false,
   });
+  win.maximize();
+  win.show()
 
   // and load the index.html of the app.
   var index = 'index.html';

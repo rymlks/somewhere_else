@@ -166,7 +166,7 @@ class GameManager {
      * Creates a WebGLRenderer, a PerspectiveCamera4D, and a Scene4D, and moves the camera to a default position at 0, 0, 5, 5
      */
     #setUpRenderingPipeline() {
-        this.resolution = 800;
+        this.resolution = 2560;
         this.renderer = new THREE.WebGLRenderer({logarithmicDepthBuffer: true, antialias: false});
         this.camera = new THREE.PerspectiveCamera4D( 75, window.innerWidth / window.innerHeight, 0.1, 1000, 0.1, 1000 );
         this.#resize();
