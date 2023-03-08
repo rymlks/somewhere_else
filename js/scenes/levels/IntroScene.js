@@ -149,8 +149,8 @@ class IntroScene extends THREE.Scene4D {
         dlight.shadow.camera.right = 20;
         dlight.shadow.camera.bottom = -20;
         dlight.shadow.camera.top = 20;
-        dlight.shadow.mapSize.width = 2048;
-        dlight.shadow.mapSize.height = 2048;
+        dlight.shadow.mapSize.width = 4096;
+        dlight.shadow.mapSize.height = 4096;
         dlight.shadow.bias = -0.001;
 
         //this.add( dlight );

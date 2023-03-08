@@ -67,8 +67,8 @@ class DemoScene extends THREE.Scene4D {
         sky.name = "sky";
         sky.isAffectedByGravity = false;
         sky.position.set(0,0,0,0);
-        GM.player.add(sky);
-        //this.add(floor);
+        //GM.player.add(sky);
+        this.add(floor);
 
         sky.update = function(delta, scene) {
             //var step = delta * 2.5;

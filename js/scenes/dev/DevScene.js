@@ -361,7 +361,7 @@ class DevScene extends THREE.Scene4D {
 
 
         var dlight = new THREE.DirectionalLight4D(0xffffff, 1);
-        dlight.position.set(3, 20, -15, 0);
+        dlight.position.set(3, 20, -15, 5);
         dlight.target = new Object4D();
         dlight.target.position.set(0,0,0,0);
         dlight.name = "grey directional light";
@@ -563,7 +563,7 @@ class DevScene extends THREE.Scene4D {
         var size = 1;
         
         for (var i=0; i<numcubes; i+= 1) {
-            var buff = new THREE.BoxBufferGeometry4D( size, size, size, 1, 1, 1 );
+            var buff = new THREE.BoxGeometry4D( size, size, size, 1, 1, 1 );
             var material = new THREE.MeshLambertMaterial( { color: Math.floor(Math.random()*16777215) } );
             //var material = new THREE.MeshLambertMaterial( { color: 0x00ff00 } );
             //var material = new THREE.MeshDepthMaterial( { depthPacking: THREE.RGBADepthPacking } );

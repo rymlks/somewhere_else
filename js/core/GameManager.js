@@ -176,11 +176,11 @@ class GameManager {
         this.resolution = 800;
         this.renderer = new THREE.WebGLRenderer({logarithmicDepthBuffer: true, antialias: false});
 
-        //this.renderer.dumpVertexShader = true;
+        this.renderer.dumpVertexShader = true;
         //this.renderer.dumpFragmentShader = true;
 
         this.renderer.shadowMap.enabled = true
-        this.renderer.shadowMap.type = THREE.BasicShadowMap;
+        //this.renderer.shadowMap.type = THREE.BasicShadowMap;
         document.body.appendChild( this.renderer.domElement );
         
         this.quadRenderer = new THREE.WebGLRenderer({logarithmicDepthBuffer: true, antialias: false});

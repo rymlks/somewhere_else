@@ -57,7 +57,7 @@ class GLTFScene extends THREE.Scene4D {
             'assets/unlicensed/textures/interstellar_skybox/zpos.png',
             'assets/unlicensed/textures/interstellar_skybox/zneg.png',
         ]);
-        //this.background = bgtexture;
+        this.background = bgtexture;
     }
 
     loadGLTFFile() {
@@ -85,7 +85,7 @@ class GLTFScene extends THREE.Scene4D {
                 for (var child of gltf.scene.children) {
                     console.log(child);
                     t.add(child);
-                    child.material = new THREE.MeshLambertMaterial({transparent: false, color: 0xffff00, opacity: 1})
+                    child.material = new THREE.MeshLambertMaterial({transparent: true, color: 0xffff00, opacity: 1, depthTest: false})
                 }
             },
             (xhr) => {
