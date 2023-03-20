@@ -176,7 +176,7 @@ class GameManager {
         this.resolution = 800;
         this.renderer = new THREE.WebGLRenderer({logarithmicDepthBuffer: true, antialias: false});
 
-        this.renderer.dumpVertexShader = true;
+        //this.renderer.dumpVertexShader = true;
         //this.renderer.dumpFragmentShader = true;
 
         this.renderer.shadowMap.enabled = true
@@ -205,14 +205,15 @@ class GameManager {
         var playerGeometry = new THREE.GlomeCapsuleGeometry4D( );
         this.player = new THREE.PhysicsMesh4D(playerGeometry, playerMaterial);
         this.camera.position.y = 1;
-        this.camera.position.w = 0.2;
+        this.camera.position.w = 1.0;
         this.player.isAffectedByGravity = false;
         this.player.castShadow = true;
         this.player.renderLayer = -1;
+        this.player.name = "Player";
         this.player.add(this.camera);
 
         this.player.position.z = 15;
-        this.player.position.w = 1.2;
+        this.player.position.y = 5;
 
         this.#setUpPhysicalPlayer();
 
@@ -257,8 +258,9 @@ class GameManager {
     /**
     */
     #setUpPhysicalPlayer() {
-        this.speed = 10.0;
+        //this.speed = 30.0;
         this.player.aerodynamics = 0.90;
+        this.player.dynamicFriction = 0.90;
         this.player.isAffectedByGravity = true;
     }
 

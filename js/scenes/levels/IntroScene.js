@@ -36,6 +36,8 @@ class IntroScene extends THREE.Scene4D {
         cage2.rotation.xw = Math.PI * 0.5;
         //this.add(cage2);
 
+        this.ready = true;
+
     }
 
     loadGlobe() {
@@ -65,20 +67,24 @@ class IntroScene extends THREE.Scene4D {
                 for (var child of object.children) {
                     child.castShadow = true;
                     child.receiveShadow = true;
+                    child.isAffectedByGravity = false;
+                    child.tags.push("static");
                 }
 
+                object.isAffectedByGravity = false;
+                object.tags.push("static");
                 //object.rotation.zw = Math.PI * 0.5;
                 //object.rotation.xz = Math.PI;
                 thisscene.add( object );
-                console.log(object);
+                //console.log(object);
             }, 
             // called when loading is in progresses
             function ( xhr ) {
-                console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+                //console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
             },
             // called when loading has errors
             function ( error ) {
-                console.log( 'An error happened' );
+                //console.log( 'An error happened' );
             } );
 
         });
@@ -111,20 +117,26 @@ class IntroScene extends THREE.Scene4D {
                 for (var child of object.children) {
                     child.castShadow = true;
                     child.receiveShadow = true;
+                    child.isAffectedByGravity = false;
+                    child.tags.push("static");
                 }
 
+                object.tags.push("static");
+                object.isAffectedByGravity = false;
+                
                 //object.rotation.zw = Math.PI * 0.5;
                 //object.rotation.xz = Math.PI;
                 thisscene.add( object );
-                console.log(object);
+
+                //console.log(object);
             }, 
             // called when loading is in progresses
             function ( xhr ) {
-                console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+                //console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
             },
             // called when loading has errors
             function ( error ) {
-                console.log( 'An error happened' );
+                //console.log( 'An error happened' );
             } );
 
         });
@@ -169,7 +181,7 @@ class IntroScene extends THREE.Scene4D {
     }
 
     createFloor() {
-        var buff = new THREE.BoxGeometry4D( 30, 0.5, 30 );
+        var buff = new THREE.BoxGeometry4D( 50, 0.5, 50 );
         var material = new THREE.MeshLambertMaterial( { color: 0xffffff } );
         var floor = new THREE.PhysicsMesh4D(buff, material);
         floor.name = "floor";
@@ -177,14 +189,24 @@ class IntroScene extends THREE.Scene4D {
         floor.position.set(0, -2.5, 0, 0);
         floor.castShadow = true;
         floor.receiveShadow = true;
+        floor.tags.push("floor");
         //floor.position.w = 1
         this.add(floor);
 
-
+        
         var floor2 = floor.clone();
-        floor2.position.set(0, -2.5, 0, 0);
+        floor2.name = "floor2";
+        floor2.position.set(0, -2.5, -10, 0);
         floor2.rotation.zw = Math.PI * 0.5;
+        floor2.tags.push("floor");
         this.add(floor2);
+
+        var floor3 = floor.clone();
+        floor3.name = "floor3";
+        floor3.position.w = -3;
+        floor3.tags.push("floor");
+        this.add(floor3);
+        
 
     }
 

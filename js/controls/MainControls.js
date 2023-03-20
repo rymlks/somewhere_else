@@ -6,7 +6,8 @@ import { flyControls } from "./FlyControls.js"
  * @param {GameManager} GM 
  */
 function mainControls(GM) {
-	flyControls(GM);
+	GM.renderer.showBoundingBoxes = true;
+	walkControls(GM);
 }
 
 export { mainControls };

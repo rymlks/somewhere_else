@@ -22,6 +22,8 @@ var ssquodward = new THREE.Vector5();
 
 var dialogue = "assets/yarn/test.json";
 
+var speed = 10;
+
 /**
  * Handle inputs for the main game loop
  * @param {GameManager} GM 
@@ -115,12 +117,14 @@ function walkControls(GM) {
 	}
 	
 	// Dialogue
+	/*
 	if (GM.pressedKeys[KeyCode.KEY_T] === true) {
 		GM.beginDialogue(dialogue);
 	}
 	if (GM.pressedKeys[KeyCode.KEY_Y] === true) {
 		GM.beginDialogue(dialogue2);
 	}
+	*/
 
 	if (GM.heldKeys[KeyCode.KEY_L] === true) {
 		document.body.requestPointerLock();
@@ -131,7 +135,13 @@ function walkControls(GM) {
 
 	_euler.zw += wheelDelta * rotationspeed;
 
-    _vel.multiplyScalar(2);
+    _vel.multiplyScalar(speed);
+	
+
+	if (GM.pressedKeys[KeyCode.KEY_SPACE] === true) {
+		_vel.y += 50;
+		GM.player.position.y += 0.1;
+	}
 
 	GM.player.velocity.add(_vel);
 	GM.camera.rotation.lerp(_euler, rotationLerp);
